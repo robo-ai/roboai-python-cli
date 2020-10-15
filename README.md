@@ -2,7 +2,7 @@
 
 # ROBO.AI Bot Runtime manager CLI tool #
 
-<img align="right" width="200" height="201" alt="robo-bot" src="./robo-bot.png)"></img>
+<img align="right" width="200" height="200" alt="robo-bot" src="robo-bot.png"></img>
 This tool allows anyone to create, train, deploy, monitor and manage a Rasa based bot on the ROBO.AI platform.  
 Check our [CHANGELOG](CHANGELOG.md) for the latest changes. 
 
