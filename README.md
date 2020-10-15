@@ -11,45 +11,20 @@ Check our [CHANGELOG](CHANGELOG.md) for the latest changes.
 #### Requirements ####
 
 * Python 3.6 or 3.7
-* Pip
-* Git
-* SSH client
-* Rasa 1.10.0
+* Pip or anaconda
 
 We recommend the usage of a Virtual Environment.
 
 #### Install the ROBO.AI tool ####
 
-Assuming you have Python and pip already installed in your machine, to install the tool you need to run
-**one of the the following commands**:
-
-##### Git authentication
-
-The following steps assume you're using Git and you have your SSH key configured in your GitHub account.
-
-If you'd like to test if your authentication is fine, execute the following command:
-```
-ssh -T git@github.com
-```
-
-And you should get a message similar to the one below:
-```
-Hi <your username>!
-
-You've succesfully authenticated, but GitHub does not provide shell access.
-```
-
-If you do not have your SSH key configured, please follow [GitHub's instructions](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) to do so. 
-
-
-##### Using Pip #####
+Assuming you have Python and pip already installed in your machine, to install the tool you need to run the following command:
 
 ```
-pip install git+ssh://git@github.com:robo-ai/roboai-python-cli.git@develop
+pip install robo-bot
 ```
 
-After installing using any of the options described, you should be able to execute
-the robo-ai command in your terminal.
+After installing the library you should be able to execute
+the robo-bot command in your terminal.
 
 #### Usage ####
 
@@ -155,6 +130,10 @@ To create a bot you can use the **seed** command:
 
 ```
 robo-bot seed [language-codes] [--path <path> --language-detection --chit-chat --coref-resolution]
+```
+i.e.:
+```
+robo-bot seed en de --path bot/ --language-detection --chit-chat --coref-resolution
 ```
 
 The first argument of the seed command is the language-codes which indicate the languages the bot will be built upon. 
