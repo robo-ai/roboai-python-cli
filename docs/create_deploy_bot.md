@@ -134,12 +134,6 @@ robo-bot diff en de
 ```
 Alternatively you can also not pass any language code and it will check for differences between all available bots.
 
-Another natural step in the flow is to generate test stories for our bot to see how it is behaving, at least for simple dialogues. The *test* command generates test stories automatically for you based on the bot stories.md file. Using this command does not necessarily mean that you won't have to manually build some test cases but most of the work should be done. If you run 
-```sh
-robo-bot diff de
-```
-it will check if no test stories already exist and if so it'll automatically create them. After that it will run the rasa test command to run the tests. If there is already a file containing test dialogues then it'll check if the intents registered in the domain are already covered in these dialogues and prompt the user to continue with the tests or not. 
-
 Training a bot, launching a shell and running the action server is intended to work exactly as rasa commands. These commands are just wrappers and we only included arguments we thought are the most used among ourselves so if you're missing some argument that you believe should be added please let us know. You can run 
 ```sh
 robo-bot train/shell/run --help
@@ -161,6 +155,11 @@ Just like in Rasa we also have to launch the action server so that our bot's act
 ```sh
 robo-bot run actions
 ```
+Another natural step in the flow is to generate test stories for our bot to see how it is behaving, at least for simple dialogues. The *test* command generates test stories automatically for you based on the bot stories.md file. Using this command does not necessarily mean that you won't have to manually build some test cases but most of the work should be done. If you run 
+```sh
+robo-bot test en
+```
+it will check if no test stories already exist and if so it'll automatically create them. After that it will run the rasa test command to run the tests. If there is already a file containing test dialogues then it'll list the intents which are not covered in these dialogues and prompt you to continue with the tests or not.  
 
 Once you're happy with your bot you can deploy it on the Robo AI platform. This part of the tutorial assumes you already have set up an account, you already have enabled an API key and you have already created a bot on the platform. You can check [this tutorial](create_roboai_account.md) in case you haven't followed those steps. 
 This tool already provides you with the environment configuration you need to have for deploying a bot, you just need to activate it. To do so you only need to run
