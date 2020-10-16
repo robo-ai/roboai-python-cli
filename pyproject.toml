@@ -1,0 +1,29 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "robo_bot_cli"
+author = "ROBO.AI"
+author-email = "info@robo-ai.com"
+home-page = "https://robo-ai.com/"
+requires = [
+    "click ==7.1.2",
+    "pyfiglet ==0.8.post1",
+    "colorama ==0.4.3",
+    "termcolor ==1.1.0",
+    "halo ==0.0.29",
+    "polling ==0.3.1",
+    "requests >=2.23.0",
+    "cattrs >=1.0.0",
+    "attrs >=19.3.0",
+    "robo-ai >=0.1.1",
+    "rasa ==1.10.0",
+    "openpyxl==3.0.4",
+    "pandas==1.0.5",
+    "pytablewriter==0.57.0",
+    "configparser; python_version >= '3.6'",
+]
+
+[tool.flit.entrypoints.console_scripts]
+robo-bot = "robo_bot_cli:run"
