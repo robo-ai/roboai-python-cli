@@ -4,27 +4,33 @@
 
 <img align="right" width="200" height="200" alt="robo-bot" src="robo-bot.png"></img>
 This tool allows anyone to create, train, deploy, monitor and manage a Rasa based bot on the ROBO.AI platform.  
-Check our [CHANGELOG](CHANGELOG.md) for the latest changes. 
+Check our [CHANGELOG](CHANGELOG.md) for the latest changes.
+
+Tutorials: 
+* [How to create and manage an account on the ROBO.AI platform](docs/create_deploy_bot.md)
+* [Creating and deploying a Rasa chatbot on the ROBO.AI platform](docs/create_deploy_bot.md)
 
 ### How to install ###
 
 #### Requirements ####
 
 * Python 3.6 or 3.7
-* Pip or anaconda
+* Pip and/or anaconda
 
-We recommend the usage of a Virtual Environment.
+You can create a virtual environment using conda:
+```sh
+conda create -n robo-bot python=3.7
+conda activate robo-bot
+```
 
 #### Install the ROBO.AI tool ####
 
-Assuming you have Python and pip already installed in your machine, to install the tool you need to run the following command:
-
+Assuming you are already in your virtual environment with Python 3.6 or 3.7, you can install the tool with the following command:
 ```
 pip install robo-bot
 ```
 
-After installing the library you should be able to execute
-the robo-bot command in your terminal.
+After installing the library you should be able to execute the robo-bot command in your terminal.
 
 #### Usage ####
 

@@ -1,6 +1,6 @@
 robo_bot_cli/example
 tests/test_bots
-.vscode
+.vscode/
 README.html
 # Byte-compiled / optimized / DLL files
 __pycache__/
