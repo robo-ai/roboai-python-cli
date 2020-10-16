@@ -66,9 +66,9 @@ Commands:
 ``` 
 
 ## Usage
-As of now, the tool provides you with two major features: 
-(1) creating and managing Rasa chatbots
-(2) deploying Rasa chatbots on the Robo AI platform.
+As of now, the tool provides you with two major features: <br>
+(1) creating and managing Rasa chatbots <br>
+(2) deploying Rasa chatbots on the Robo AI platform. <br>
 For simplicity purposes we will use the tool to generate a new bot and stories for it. For the remaining of the tutorial we will use our <a href="https://github.com/robo-ai/roboai-demo-faq-chatbot">demo chatbot</a> which you can clone to follow along. 
 
 ### Creating a bot
