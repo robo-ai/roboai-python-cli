@@ -157,7 +157,7 @@ robo-bot run actions
 ```
 Another natural step in the flow is to generate test stories for our bot to see how it is behaving, at least for simple dialogues. The *test* command generates test stories automatically for you based on the bot stories.md file. Using this command does not necessarily mean that you won't have to manually build some test cases but most of the work should be done. If you run 
 ```sh
-robo-bot test en
+robo-bot \test en
 ```
 it will check if no test stories already exist and if so it'll automatically create them. After that it will run the rasa test command to run the tests. If there is already a file containing test dialogues then it'll list the intents which are not covered in these dialogues and prompt you to continue with the tests or not.  
 
