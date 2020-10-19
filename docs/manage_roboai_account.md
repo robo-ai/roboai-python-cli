@@ -20,7 +20,7 @@ If you click one of the bots you'll be shown the following panel:
 The Info tab (current one) shows you general information about the bot and allows you to define some additional settings: <br>
 - General Settings: number of minutes a conversation will stay active while idle.
 - Conversational Engine: you can check the Runtime status of your bot.
-<img align="right" width="500" height="202" alt="rasa-runtime" src="assets/rasa_runtime.png"></img>
+<img align="right" width="500" height="237" alt="rasa-runtime" src="assets/rasa_runtime.png"></img>
 - Text to Speech: Enable or disable Text to Speech and select engines and speaking rates.
 - Speech to Text: Enable or disable Speech to Text and select engines
 - Sentiment: Enable or disable sentiment and select engines
@@ -51,9 +51,13 @@ The Channels tab looks like the image below and it allows you to manage the chan
 ### Creating a bot
 From any of the previous tabs you can click on the "Create New Bot" button to generate a new bot.
 When clicking that button you'll be prompted with a pop-up window like the following:
-<img align="right" width="470" height="415" alt="channels" src="assets/create_new_bot.png"></img>
+<img align="right" width="470" height="420" alt="channels" src="assets/create_new_bot.png"></img>
 In this menu you can assign a name to your bot, enter a description and choose the number of minutes a conversation will stay active while being idle. Only the name of the bot is a mandatory field. The description and Maximum idle conversation time fields can be defined later.
 Creating a bot on the Robo AI platform will generate a unique ID which will be used later when you deploy bots. It's important that you remember that this is only an interface to the content of your bot and that this entity must exist before you deploy a bot. 
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 
