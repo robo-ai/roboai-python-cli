@@ -50,8 +50,8 @@ The Channels tab looks like the image below and it allows you to manage the chan
 
 ### Creating a bot
 From any of the previous tabs you can click on the "Create New Bot" button to generate a new bot.
-When clicking that button you'll be prompted with a pop-up window like the following:<br>
-<img align="center" width="470" height="420" alt="channels" src="assets/create_new_bot.png"></img>
+When clicking that button you'll be prompted with a pop-up window like the following:
+<img align="center" width="470" height="420" alt="channels" src="assets/create_new_bot.png"></img><br>
 In this menu you can assign a name to your bot, enter a description and choose the number of minutes a conversation will stay active while being idle. Only the name of the bot is a mandatory field. The description and Maximum idle conversation time fields can be defined later.
 Creating a bot on the Robo AI platform will generate a unique ID which will be used later when you deploy bots. It's important that you remember that this is only an interface to the content of your bot and that this entity must exist before you deploy a bot. 
 
