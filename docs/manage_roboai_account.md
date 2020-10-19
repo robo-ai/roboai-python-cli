@@ -1,4 +1,4 @@
-# Managing a ROBO.AI account
+# The ROBO.AI platform - creating bots and API keys for deployment
 The Robo AI platform allows you to monitor the usage of your bots, create new ones and generate API keys for deploying a bot in the system.
 In this tutorial we will give you an overview of how to accomplish these things. 
 
