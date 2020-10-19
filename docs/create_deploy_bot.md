@@ -1,4 +1,4 @@
-# Creating and deploying a bot with 
+# Creating and deploying a bot with Robo AI's Bot Manager Tool
 This tutorial intends to give you an overview of how to create and deploy a simple Rasa chatbot using Robo AI's Bot Manager Command Line Tool. 
 For any doubts you might have, please refer to our [README](../README.md) and if you cannot find the answer to your query, you may contact us at info@robo-ai.com. 
 
