@@ -38,6 +38,7 @@ You can also filter and export the data for further analysis. <br>
 ### Logs tab
 <img align="center" alt="logs" src="assets/logs_tab.png"></img>
 <br>
+<br>
 The Logs tab shows you the interactions between bot and users across channels and throughout time. 
 It shows you the dialogues by Date/Time and Conversation ID. You're also able to see how the intents are being classified and which entites are being picked up. 
 In this page, filtering the logs and export them for further analysis is also an option.
