@@ -51,7 +51,7 @@ The Channels tab looks like the image below and it allows you to manage the chan
 ### Creating a bot
 From any of the previous tabs you can click on the "Create New Bot" button to generate a new bot.
 When clicking that button you'll be prompted with a pop-up window like the following:<br>
-<img align="center" width="470" height="420" alt="channels" src="assets/create_new_bot.png"></img><br>
+<img align="center" width="470" height="420" alt="channels" src="assets/create_new_bot.png"></img>
 In this menu you can assign a name to your bot, enter a description and choose the number of minutes a conversation will stay active while being idle. Only the name of the bot is a mandatory field. The description and Maximum idle conversation time fields can be defined later.
 Creating a bot on the Robo AI platform will generate a unique ID which will be used later when you deploy bots. It's important that you remember that this is only an interface to the content of your bot and that this entity must exist before you deploy a bot. 
 
@@ -62,7 +62,7 @@ One of the available options will be API Keys. If you select that, you'll see th
 <img align="center" alt="api-keys" src="assets/api_keys.png"></img>
 These are the available and enabled API keys. If you select "Show key" the key will be visible and you can copy it for your purpose. 
 
-To create a new key select New API Key. You'll be prompted with a pop-up window where you can label your API key. 
+To create a new key select New API Key. You'll be prompted with a pop-up window where you can label your API key. <br>
 <b>Note:</b> When you create a new API Key you must enable it before using it otherwise deployments and other actions will not work. (To enable an API Key, click on the three dots next to "Disabled" and click "Enable").
 
 These are the main features to manage and get around with the Robo AI platform. If you have any doubts don't hesitate to contact us.  
