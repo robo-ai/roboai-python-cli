@@ -4,7 +4,7 @@ For any doubts you might have, please refer to our [README](../README.md) and if
 Prerequisites of this tutorial: <br>
 - An account on the Robo AI platform<br>
 - A preexisting bot created on the Robo AI platform <br>
-- A valid API key
+- A valid API key<br>
 If you have trouble setting up the above please follow this [guide](manage_roboai_account.md).
 
 
