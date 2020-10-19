@@ -1,6 +1,12 @@
 # Creating and deploying a bot with Robo AI's Bot Manager Tool
 This tutorial intends to give you an overview of how to create and deploy a simple Rasa chatbot using Robo AI's Bot Manager Command Line Tool. 
-For any doubts you might have, please refer to our [README](../README.md) and if you cannot find the answer to your query, you may contact us at info@robo-ai.com. 
+For any doubts you might have, please refer to our [README](../README.md) and if you cannot find the answer to your query, you may contact us at info@robo-ai.com.
+Prerequisites of this tutorial: <br>
+- An account on the Robo AI platform<br>
+- A preexisting bot created on the Robo AI platform <br>
+- A valid API key
+If you have trouble setting up the above please follow this [guide](manage_roboai_account.md).
+
 
 ## Robo AI Bot Manager Command Line Tool  
 Robo AI Bot Manager is a CLI tool which allows you to create, manage and deploy Rasa chatbots on the Robo AI platform.
@@ -151,7 +157,7 @@ robo-bot shell en
 ```
 It will launch the shell for the English bot. In this case it is mandatory that you pass only one language code. 
 
-Just like in Rasa we also have to launch the action server so that our bot's actions can be executed:
+Just like in Rasa we also have to launch the action server so that our bot's actions can be executed. In a separate terminal window you can run the following command to run the action server:
 ```sh
 robo-bot run actions
 ```
@@ -161,14 +167,14 @@ robo-bot test en
 ```
 it will check if no test stories already exist and if so it'll automatically create them. After that it will run the rasa test command to run the tests. If there is already a file containing test dialogues then it'll list the intents which are not covered in these dialogues and prompt you to continue with the tests or not.  
 
-Once you're happy with your bot you can deploy it on the Robo AI platform. This part of the tutorial assumes you already have set up an account, you already have enabled an API key and you have already created a bot on the platform. You can check [this tutorial](create_roboai_account.md) in case you haven't followed those steps. 
+Once you're happy with your bot you can deploy it on the Robo AI platform. This part of the tutorial assumes you already have set up an account, you already have enabled an API key and you have already created a bot on the platform. You can check [this tutorial](manage_roboai_account.md) in case you haven't followed those steps. 
 This tool already provides you with the environment configuration you need to have for deploying a bot, you just need to activate it. To do so you only need to run
 ```sh
 robo-bot environment activate production
 ```
 This command will create a hidden file in your filesystem with the configuration needed for the following steps. There are other options under the environment command but they are out of scope in this tutorial. 
 
-After activating the environment we can log in on the platform. For that we can use the *login* command in the following way: 
+After activating the environment we can log in on the platform. For that we can use the *login* command in the following way (note that this is a dummy API key): 
 ```sh
 robo-bot login --api-key=9e4r5877-56e5-4211-8d92-c33757bc3f54	
 ```
@@ -184,7 +190,7 @@ After being done with this step we can finally deploy our bot in the platform by
 ```sh
 robo-bot deploy en
 ```
-This will generate an image of the bot which will be running on a docker container which you can also check and manage through some available commands. The *logs* command will show you the logs of the bot which should be useful to track some eventual errors. 
+This will generate an image of the bot which will be running on a docker container which you can also check and manage through some available commands. The *logs* command will show you the logs of the bot which should be useful to track some eventual errors.
 ```sh
 robo-bot logs en
 ```
