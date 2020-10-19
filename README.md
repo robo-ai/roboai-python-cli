@@ -7,7 +7,7 @@ This tool allows anyone to create, train, deploy, monitor and manage a Rasa base
 Check our [CHANGELOG](CHANGELOG.md) for the latest changes.
 
 Tutorials: 
-* [How to create and manage an account on the ROBO.AI platform](docs/manage_roboai_account.md)
+* [The ROBO.AI platform - creating bots and API keys for deployment](docs/manage_roboai_account.md)
 * [Creating and deploying a Rasa chatbot on the ROBO.AI platform](docs/create_deploy_bot.md)
 
 ### How to install ###
