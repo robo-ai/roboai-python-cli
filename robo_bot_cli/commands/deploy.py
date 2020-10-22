@@ -53,10 +53,12 @@ def command(language: tuple, skip_packaging: bool, package_file: str, bot_uuid: 
 
     validate_bot(bot_uuid)
 
-    if not skip_packaging:
+    if package_file:
+        validate_package_file(package_file)
+    elif not skip_packaging:
         package_file = create_package(bot_dir, bot_ignore_dir)
     elif not package_file:
-        package_file = get_default_package_path()  # TODO CHECK THIS
+        package_file = get_default_package_path()
 
     validate_package_file(package_file)
 
