@@ -43,7 +43,7 @@ def command(languages: tuple, covered_intents: bool):
 def generate_stories(languages_path: list, multi_language_bot: bool) -> None:
     for language in languages_path:
         lang = basename(language) if basename(language) != 'bot' else 'the'
-        print_info(f"Generating stories for {lang} bot")
+
         if multi_language_bot:
             stories_dir_path = join(abspath('.'), 'languages')
         else:
@@ -62,8 +62,12 @@ def generate_stories(languages_path: list, multi_language_bot: bool) -> None:
             )
             if overwrite:
                 generate_stories_md(language, multi_language_bot)
+            else:
+                exit(0)
         else:
             generate_stories_md(language, multi_language_bot)
+
+        print_info(f"Generated stories for {lang} bot")
 
 
 def check_covered_intents(language_path: list, multi_language_bot: bool):

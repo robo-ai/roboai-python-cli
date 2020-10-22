@@ -77,13 +77,13 @@ def activate_environment(settings, env_name):
 def remove_environment(settings, env_name):
     env_name = env_name[0]
     settings.remove_environment(env_name)
-    print_success(f"'{env_name}' has been successfully removed.")
+    print_success(f"'{env_name}' has been removed successfully.")
 
 
 def which_environment(settings):
     current_environment = settings.get_current_environment()
     if not current_environment:
-        print_info("No environment is currently activated.\nRun 'robo-bot activate <env-name>' to activate"
+        print_info("No environment is currently activated.\nRun 'robo-bot environment activate <env-name>' to activate"
                    "an environment.")
     else:
         print_info(f"The '{current_environment.environment_name}' environment is currently activated.")

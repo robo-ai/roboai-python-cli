@@ -275,7 +275,7 @@ You can also create new environments by executing:
 
 
 ```
-robo-bot environment create <environment name> <base-url> [--username <username> --password <password>]
+robo-bot environment create <environment name> --base-url <base-url> [--username <username> --password <password>]
 ```
 
 The base-url refers to the environment URL and you can optionally pass a username

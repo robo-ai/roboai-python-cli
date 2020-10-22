@@ -1,6 +1,6 @@
 import click
 import os
-from os.path import abspath, join, exists, isfile, basename
+from os.path import abspath, join, exists, isfile, basename, dirname
 from os import listdir, mkdir
 import json
 from pytablewriter import MarkdownTableWriter
@@ -128,7 +128,7 @@ def generate_conversation_md_from_stories(path_to_language: str, multi_language_
         multi_language_bot (bool): flag indicating whether the bot is single or multi language
     """
     if multi_language_bot:
-        stories_path = join(path_to_language)
+        stories_path = dirname(join(path_to_language))
     else:
         stories_path = join(path_to_language, 'data')
 
