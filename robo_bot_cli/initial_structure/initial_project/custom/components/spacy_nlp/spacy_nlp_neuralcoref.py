@@ -1,15 +1,14 @@
-from rasa.nlu.utils.spacy_utils import SpacyNLP
-
 import logging
 import typing
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Text, Tuple
 
+from rasa.core.slots import TextSlot
 from rasa.nlu.components import Component
 from rasa.nlu.config import RasaNLUModelConfig, override_defaults
-from rasa.nlu.training_data import Message, TrainingData
 from rasa.nlu.model import InvalidModelError
-from rasa.core.slots import TextSlot
-from datetime import datetime
+from rasa.nlu.training_data import Message, TrainingData
+from rasa.nlu.utils.spacy_utils import SpacyNLP
 
 logger = logging.getLogger(__name__)
 
@@ -17,13 +16,15 @@ if typing.TYPE_CHECKING:
     from spacy.language import Language
     from spacy.tokens.doc import Doc  # pytype: disable=import-error
     from rasa.nlu.model import Metadata
-from spacy.tokens.doc import Doc
-from rasa.nlu.constants import TEXT, SPACY_DOCS, DENSE_FEATURIZABLE_ATTRIBUTES
-from os.path import exists, join
-import os
 
-from rasa.core.trackers import DialogueStateTracker
+import os
+from os.path import exists, join
+
 import spacy
+from rasa.core.trackers import DialogueStateTracker
+from rasa.nlu.constants import DENSE_FEATURIZABLE_ATTRIBUTES, SPACY_DOCS, TEXT
+from spacy.tokens.doc import Doc
+
 
 class SpacyNLPNeuralCoref(SpacyNLP):
 
@@ -40,10 +41,12 @@ class SpacyNLPNeuralCoref(SpacyNLP):
         "case_sensitive": False,
     }
 
-    def __init__(self,
-                component_config: Dict[Text, Any] = None,
-                nlp: "Language" = None,
-                max_history: int = 2) -> None:
+    def __init__(
+        self,
+        component_config: Dict[Text, Any] = None,
+        nlp: "Language" = None,
+        max_history: int = 2,
+    ) -> None:
         print("init Spacy")
         self.session_token = str(datetime.now().strftime("%Y%m%d_%H%M%S.%f"))
         self.max_history = max_history
@@ -71,7 +74,7 @@ class SpacyNLPNeuralCoref(SpacyNLP):
         # nlp = spacy.load("en_neuralcoref")
         # print(nlp==self.nlp)
         # doc = nlp(text)
-        if not self.history: 
+        if not self.history:
             # if history list is empty (ie contains no previous user messages)
             # generate doc with current message
             # this doc is generated to have access to doc._.coref_resolved
@@ -80,19 +83,21 @@ class SpacyNLPNeuralCoref(SpacyNLP):
             result = doc._.coref_resolved
             # we can now add this doc._.coref_resolved to the history list
             self.history.append(result)
-        elif self.history: 
-            # if history list contains previous user messages 
-            # we retrieve the last self.max_history sentences and join them 
-            # with the current one 
+        elif self.history:
+            # if history list contains previous user messages
+            # we retrieve the last self.max_history sentences and join them
+            # with the current one
             # this way, it's possible for the algo to match any pronoun in the current msg
-            # with previous saved nouns. 
-            lines = self.history[-self.max_history:]
-            previous_sentences = (' ').join(lines)
+            # with previous saved nouns.
+            lines = self.history[-self.max_history :]
+            previous_sentences = (" ").join(lines)
             to_evaluate = previous_sentences + " " + text
             preprocessed_text = self.preprocess_text(to_evaluate)
             doc = self.nlp(preprocessed_text)
-            # we want to keep the current message only with the pronoun replaced with the noun 
-            result = doc._.coref_resolved[-((len(doc._.coref_resolved)-len(previous_sentences))-1):]
+            # we want to keep the current message only with the pronoun replaced with the noun
+            result = doc._.coref_resolved[
+                -((len(doc._.coref_resolved) - len(previous_sentences)) - 1) :
+            ]
             self.history.append(result)
         # now we generate a new doc based on the result we obtained with doc._.coref_resolved
         new_doc = self.nlp(self.preprocess_text(result))

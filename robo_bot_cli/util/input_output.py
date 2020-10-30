@@ -7,7 +7,7 @@ def load_yaml(path: str) -> dict:
     :param path: path where the file is stored.
     :return: dictionary with the loaded .yml file.
     """
-    with open(path, 'r', encoding="UTF-8") as ymlfile:
+    with open(path, "r", encoding="UTF-8") as ymlfile:
         return yaml.load(ymlfile, Loader=yaml.FullLoader)
 
 
@@ -17,10 +17,10 @@ def save_yaml(path: str, yaml_dict: dict) -> None:
     :param path: path where the file should be saved.
     :param yaml_dict: dictionary to be saved.
     """
-    with open(path, 'w', encoding="UTF-8") as ymlfile:
+    with open(path, "w", encoding="UTF-8") as ymlfile:
         for key, value in yaml_dict.items():
             yaml.dump(data={key: value}, stream=ymlfile, sort_keys=False)
-            ymlfile.write('\n')
+            ymlfile.write("\n")
 
 
 def load_md(path: str) -> list:
@@ -31,13 +31,13 @@ def load_md(path: str) -> list:
 
     :return: list with the lines from the file
     """
-    with open(path, 'r', encoding='UTF-8') as mdfile:
+    with open(path, "r", encoding="UTF-8") as mdfile:
         return mdfile.readlines()
 
 
 def write_requirements(path: str, req_list: list):
 
-    with open(path, 'a+') as f:
+    with open(path, "a+") as f:
         appendEOL = False
         # Move read cursor to the start of file.
         f.seek(0)

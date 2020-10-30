@@ -4,7 +4,9 @@ from robo_bot_cli.config.tool_settings import ToolSettings
 from robo_bot_cli.util.cli import print_success
 
 
-@click.command(name='logout', help='Close the current session in the ROBO.AI platform.')
+@click.command(
+    name="logout", help="Close the current session in the ROBO.AI platform."
+)
 def command():
     """
     Close the current session in the ROBO.AI platform.
@@ -15,7 +17,7 @@ def command():
     current_environment.api_key = None
     settings.update_environment(current_environment)
     settings.set_current_environment(None)
-    print_success('Your session was successfully terminated.\n')
+    print_success("Your session was successfully terminated.\n")
 
 
 if __name__ == "__main__":

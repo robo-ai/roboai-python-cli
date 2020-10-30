@@ -1,12 +1,12 @@
-import os
 import json
+import os
 from typing import List
 
-MANIFEST_FILE = 'robo-manifest.json'
-BOT_ID_SETTING = 'bot_id'
-BOT_RUNTIME_BASE_VERSION_SETTING = 'base_version'
-EXCLUSIONS_SETTING = 'exclusions'
-DEFAULT_RUNTIME_BASE_VERSION = 'rasa-1.10.0'
+MANIFEST_FILE = "robo-manifest.json"
+BOT_ID_SETTING = "bot_id"
+BOT_RUNTIME_BASE_VERSION_SETTING = "base_version"
+EXCLUSIONS_SETTING = "exclusions"
+DEFAULT_RUNTIME_BASE_VERSION = "rasa-1.10.0"
 
 DEFAULT_MANIFEST = {
     BOT_ID_SETTING: None,
@@ -71,7 +71,7 @@ class BotManifest:
 
     def __save_settings(self, settings):
         manifest_path = self.__get_manifest_path()
-        with open(manifest_path, 'w') as file:
+        with open(manifest_path, "w") as file:
             json.dump(settings, file, indent=4, sort_keys=True)
 
     def __get_manifest_path(self):

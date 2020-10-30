@@ -1,4 +1,3 @@
-
 def get_index(lista: list, value: str) -> int:
     """
     Gets the list index of a given value if it exists.
@@ -8,9 +7,9 @@ def get_index(lista: list, value: str) -> int:
     """
     i = 0
     length = len(lista)
-    while i < length and lista[i]['name'] != value:
-        i = i+1
+    while i < length and lista[i]["name"] != value:
+        i = i + 1
     if i == length:
-        return 'value not found'
+        return "value not found"
     else:
         return i

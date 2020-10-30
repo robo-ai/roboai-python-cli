@@ -1,6 +1,6 @@
+import json
 import os
 import sys
-import json
 
 
 def getConfigDir():
@@ -26,7 +26,7 @@ def createConfig(path, defaults, **kwargs):
     pathEntry = os.path.join(configDir, kwargs["pathEntry"])
     createPath(pathEntry)
     if os.path.exists(pathEntry) and not os.path.isfile(path):
-        with open(path, 'w') as cf:
+        with open(path, "w") as cf:
             json.dump(defaults, cf)
 
 
@@ -38,13 +38,13 @@ def createConfigPathSync(path):
 def loadConfigs(path):
     createConfigPathSync(path)
     if os.path.isfile(path):
-        with open(path, 'rb') as fp:
+        with open(path, "rb") as fp:
             jsonConfigs = dict(json.load(fp))
         return jsonConfigs
 
 
 def writeConfigs(path, jsonData):
-    with open(path, 'w') as fp:
+    with open(path, "w") as fp:
         json.dump(jsonData, fp)
 
 
@@ -88,7 +88,7 @@ def getConfigSize(path):
 
 def dotnotation(key, value):
     key = key.replace("\\.", "~=~")
-    keyArr = key.split('.')[::-1]
+    keyArr = key.split(".")[::-1]
     for arr in keyArr:
-        value = {arr.replace('~=~', '.'): value}
+        value = {arr.replace("~=~", "."): value}
     return value

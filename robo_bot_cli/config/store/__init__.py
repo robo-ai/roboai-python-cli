@@ -1,11 +1,19 @@
 from os.path import join
 
-from .utils import getConfigDir, createConfig, loadConfigs, getConfigSize, \
-    getConfigs, setConfigs, hasConfigs, deleteConfigs, clearConfigs
+from .utils import (
+    clearConfigs,
+    createConfig,
+    deleteConfigs,
+    getConfigDir,
+    getConfigs,
+    getConfigSize,
+    hasConfigs,
+    loadConfigs,
+    setConfigs,
+)
 
 
 class ConfigStore:
-
     def __init__(self, name, defaults={}, globalConfigPath=False):
         self.name = name
         self.defaults = defaults
@@ -14,11 +22,11 @@ class ConfigStore:
         self.configDir = getConfigDir()
 
         if self.globalConfigPath:
-            self.pathPrefix = join(name, 'config.json')
+            self.pathPrefix = join(name, "config.json")
             pathEntry = name
         else:
-            self.pathPrefix = join('configstore', '{}.json'.format(name))
-            pathEntry = 'configstore'
+            self.pathPrefix = join("configstore", "{}.json".format(name))
+            pathEntry = "configstore"
 
         self.path = join(self.configDir, self.pathPrefix)
         # self.all = {}

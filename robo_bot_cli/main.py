@@ -1,16 +1,37 @@
 import click
-from robo_bot_cli.commands import login, logout, connect, deploy, remove, stop, \
-                                  start, seed, status, environment, package, clean, \
-                                  logs, diff, train, run, shell, test, interactive, stories
 from pyfiglet import Figlet
 
-from robo_bot_cli.__init__ import __version__  # this is wrong but won't work otherwise
+from robo_bot_cli.__init__ import (
+    __version__,
+)  # this is wrong but won't work otherwise
+from robo_bot_cli.commands import (
+    clean,
+    connect,
+    deploy,
+    diff,
+    environment,
+    interactive,
+    login,
+    logout,
+    logs,
+    package,
+    remove,
+    run,
+    seed,
+    shell,
+    start,
+    status,
+    stop,
+    stories,
+    test,
+    train,
+)
 from robo_bot_cli.util.cli import print_message
 from robo_bot_cli.util.text import remove_last_line
 
 
-@click.group(help=f'robo-bot {__version__}')
-@click.version_option(version=__version__, message=f'robo-bot {__version__}')
+@click.group(help=f"robo-bot {__version__}")
+@click.version_option(version=__version__, message=f"robo-bot {__version__}")
 def cli():
     pass
 
@@ -45,8 +66,8 @@ except any:
 
 
 def get_motd():
-    figlet = Figlet(font='standard')
-    logo = figlet.renderText('ROBO . AI')
+    figlet = Figlet(font="standard")
+    logo = figlet.renderText("ROBO . AI")
     logo = remove_last_line(remove_last_line(logo))
     logo += "\nBot Management Tool             robo-ai.com\n"
     return logo
@@ -57,5 +78,5 @@ def run():
     cli()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

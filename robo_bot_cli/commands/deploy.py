@@ -1,29 +1,62 @@
 from os.path import abspath, dirname, join
 
 import click
+
 from robo_bot_cli.util.cli import print_message, print_success
-from robo_bot_cli.util.robo import (create_package, create_runtime,
-                                    does_the_runtime_exist,
-                                    get_current_bot_base_version,
-                                    get_current_bot_uuid,
-                                    get_default_package_path, update_runtime,
-                                    validate_bot, validate_package_file,
-                                    validate_robo_session)
+from robo_bot_cli.util.robo import (
+    create_package,
+    create_runtime,
+    does_the_runtime_exist,
+    get_current_bot_base_version,
+    get_current_bot_uuid,
+    get_default_package_path,
+    update_runtime,
+    validate_bot,
+    validate_package_file,
+    validate_robo_session,
+)
 
 
-@click.command(name='deploy',
-               help='Deploy the current bot into the ROBO.AI platform.')
-@click.argument('language', nargs=-1,)
-@click.option('--skip-packaging', is_flag=True, type=bool, default=False,
-              help='Skips the packaging process, assuming the package is already built.')
-@click.option('--package-file', type=str, default=None,
-              help='Path to the package file to be deployed, '
-              'setting this option will skip the packaging process.')
-@click.option('--bot-uuid', type=str, default=None,
-              help='Overrides the bot UUID from the current bot manifest file.')
-@click.option('--runtime-base-version', type=str, default=None,
-              help='Overrides the runtime base version from the current bot manifest file.')
-def command(language: tuple, skip_packaging: bool, package_file: str, bot_uuid: str, runtime_base_version: str):
+@click.command(
+    name="deploy", help="Deploy the current bot into the ROBO.AI platform."
+)
+@click.argument(
+    "language",
+    nargs=-1,
+)
+@click.option(
+    "--skip-packaging",
+    is_flag=True,
+    type=bool,
+    default=False,
+    help="Skips the packaging process, assuming the package is already built.",
+)
+@click.option(
+    "--package-file",
+    type=str,
+    default=None,
+    help="Path to the package file to be deployed, "
+    "setting this option will skip the packaging process.",
+)
+@click.option(
+    "--bot-uuid",
+    type=str,
+    default=None,
+    help="Overrides the bot UUID from the current bot manifest file.",
+)
+@click.option(
+    "--runtime-base-version",
+    type=str,
+    default=None,
+    help="Overrides the runtime base version from the current bot manifest file.",
+)
+def command(
+    language: tuple,
+    skip_packaging: bool,
+    package_file: str,
+    bot_uuid: str,
+    runtime_base_version: str,
+):
     """
     Deploy a bot into the ROBO.AI platform.
 
@@ -37,12 +70,12 @@ def command(language: tuple, skip_packaging: bool, package_file: str, bot_uuid: 
     validate_robo_session()
 
     if len(language) == 0:
-        bot_dir = bot_ignore_dir = abspath('.')
+        bot_dir = bot_ignore_dir = abspath(".")
     elif len(language) == 1:
-        bot_dir = abspath(join('.', 'languages', language[0]))
+        bot_dir = abspath(join(".", "languages", language[0]))
         bot_ignore_dir = dirname(dirname(bot_dir))
     else:
-        print_message('Please select only one bot to deploy.')
+        print_message("Please select only one bot to deploy.")
         exit(0)
 
     if not bot_uuid:
@@ -67,7 +100,7 @@ def command(language: tuple, skip_packaging: bool, package_file: str, bot_uuid: 
     else:
         create_runtime(bot_uuid, package_file, runtime_base_version)
 
-    print_success('Deployment complete')
+    print_success("Deployment complete")
 
 
 if __name__ == "__main__":

@@ -18,5 +18,5 @@ __all__ = [
     "shell",
     "test",
     "interactive",
-    "stories"
+    "stories",
 ]

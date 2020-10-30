@@ -1,6 +1,13 @@
 from robo_bot_cli.config.store import ConfigStore
-from .environment_constants import DEFAULT_SETTINGS, PACKAGE_NAME, API_KEY_SETTING, \
-    API_AUTH_TOKEN_SETTING, API_ENDPOINT_SETTING, CURRENT_ENVIRONMENT
+
+from .environment_constants import (
+    API_AUTH_TOKEN_SETTING,
+    API_ENDPOINT_SETTING,
+    API_KEY_SETTING,
+    CURRENT_ENVIRONMENT,
+    DEFAULT_SETTINGS,
+    PACKAGE_NAME,
+)
 from .environment_settings import Environment, EnvironmentAuth
 
 
@@ -28,11 +35,16 @@ class ToolSettings:
     def get_environment(self, environment_name: str) -> Environment:
         environment_config = self._store.get(environment_name)
         if environment_config is not None:
-            return Environment(environment_name, api_key=environment_config['API_KEY'],
-                               api_auth_token=environment_config['API_AUTH_TOKEN'],
-                               base_url=environment_config['API_ENDPOINT']['url'],
-                               api_auth_setting=EnvironmentAuth(environment_config['API_ENDPOINT']['username'],
-                               environment_config['API_ENDPOINT']['password']))
+            return Environment(
+                environment_name,
+                api_key=environment_config["API_KEY"],
+                api_auth_token=environment_config["API_AUTH_TOKEN"],
+                base_url=environment_config["API_ENDPOINT"]["url"],
+                api_auth_setting=EnvironmentAuth(
+                    environment_config["API_ENDPOINT"]["username"],
+                    environment_config["API_ENDPOINT"]["password"],
+                ),
+            )
         else:
             return None
 
@@ -50,11 +62,16 @@ class ToolSettings:
         environment_name = self._store.get(CURRENT_ENVIRONMENT)
         environment_config = self._store.get(environment_name)
         if environment_config is not None:
-            return Environment(environment_name, api_key=environment_config['API_KEY'],
-                               api_auth_token=environment_config['API_AUTH_TOKEN'],
-                               base_url=environment_config['API_ENDPOINT']['url'],
-                               api_auth_setting=EnvironmentAuth(environment_config['API_ENDPOINT']['username'],
-                               environment_config['API_ENDPOINT']['password']))
+            return Environment(
+                environment_name,
+                api_key=environment_config["API_KEY"],
+                api_auth_token=environment_config["API_AUTH_TOKEN"],
+                base_url=environment_config["API_ENDPOINT"]["url"],
+                api_auth_setting=EnvironmentAuth(
+                    environment_config["API_ENDPOINT"]["username"],
+                    environment_config["API_ENDPOINT"]["password"],
+                ),
+            )
         else:
             return None
 
