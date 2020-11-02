@@ -7,6 +7,8 @@ SETUP_DIR = pathlib.Path(__file__).parent
 
 README = (SETUP_DIR / "README.md").read_text()
 
+REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
+
 setup(
     name='robo-bot',
     version=__version__,
@@ -22,20 +24,7 @@ setup(
     package_data={'': ['initial_structure']},
     setup_requires=['setuptools_scm'],
     include_package_data=True,
-    install_requires=[
-        'click',
-        'colorama',
-        'cursor',
-        'halo',
-        'polling',
-        'pyfiglet',
-        'termcolor',
-        'robo-ai',
-        'rasa',
-        'pandas',
-        'openpyxl',
-        'pytablewriter'
-    ],
+    install_requires=REQUIREMENTS,
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "Operating System :: OS Independent",
