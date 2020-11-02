@@ -273,7 +273,7 @@ def format_results(language_path: str):
             column_len = max(
                 confusion_list[col].astype(str).str.len().max(), len(col) + 2
             )
-            worksheet.set_column(i + 1, i + 1, column_len)
+            worksheet.set_column(i, i, column_len)
 
         misclassified_intents.to_excel(
             excel_writer=xlsx_writer, sheet_name="Misclassified Intents", index=False
@@ -287,7 +287,7 @@ def format_results(language_path: str):
                 misclassified_intents[col].astype(str).str.len().max(),
                 len(col) + 2,
             )
-            worksheet.set_column(i + 1, i + 1, column_len)
+            worksheet.set_column(i, i, column_len)
 
     # with open(join(language_path, "results", "intents_details.md"), "w") as f:
     #     f.write(confusion_list)
