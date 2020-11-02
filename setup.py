@@ -1,4 +1,5 @@
 import pathlib
+from pip.req import parse_requirements
 
 from setuptools import setup, find_packages
 from robo_bot_cli import __version__
@@ -7,7 +8,8 @@ SETUP_DIR = pathlib.Path(__file__).parent
 
 README = (SETUP_DIR / "README.md").read_text()
 
-REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
+install_reqs = parse_requirements("requirements.txt")
+reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
     name='robo-bot',
@@ -24,7 +26,7 @@ setup(
     package_data={'': ['initial_structure']},
     setup_requires=['setuptools_scm'],
     include_package_data=True,
-    install_requires=REQUIREMENTS,
+    install_requires=reqs,
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "Operating System :: OS Independent",
