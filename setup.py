@@ -35,7 +35,8 @@ setup(
         'rasa',
         'pandas',
         'openpyxl',
-        'pytablewriter'
+        'pytablewriter',
+        'xlsxwriter'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.7",
