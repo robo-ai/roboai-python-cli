@@ -206,6 +206,11 @@ def generate_conversation_md_from_stories(
                     out_f.write(
                         f"* {first_intent}: {get_intent_example(first_intent, all_nlu)}\n"
                     )
+                elif "form:" in line.lower():
+                    intent_in_form = intent.split()[1]
+                    out_f.write(
+                        f"* form: {intent_in_form}: {get_intent_example(intent_in_form, all_nlu)}\n"
+                    )
                 else:
                     intent = (
                         sub(r"\{[^)]*\}", "", line)
