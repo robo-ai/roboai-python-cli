@@ -46,7 +46,7 @@ def command(languages: tuple):
 def test(languages_path: list, multi_language_bot: bool) -> None:
     for language in languages_path:
         lang = basename(language) if basename(language) != "bot" else "the"
-        print_info(f"Starting tests for {lang} bot")
+        print_info(f"Starting test process for {lang} bot")
         # Check if tests folder exists
         if exists(join(language, "tests")):
             # Check if tests folder contains any file
@@ -134,11 +134,11 @@ def get_intent_example(intent: str, nlu) -> str:
         ):
             if comment is False:
                 copy = False
-        elif line.startswith("<!--") and line.endswith("-->\n"):
+        elif line.strip().startswith("<!--") and line.strip().endswith("-->"):
             comment = False
-        elif line.startswith("<!--"):
+        elif line.startswith("<!--") or line.strip().startswith("<!------------------"):
             comment = True
-        elif line.endswith("-->\n"):
+        elif line.endswith("-->\n") or line.strip().endswith("------------------->"):
             comment = False
         elif copy:
             # keep entities

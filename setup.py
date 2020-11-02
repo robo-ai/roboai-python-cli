@@ -32,7 +32,7 @@ setup(
         'pyfiglet',
         'termcolor',
         'robo-ai',
-        'rasa',
+        'rasa==1.10.0',
         'pandas',
         'openpyxl',
         'pytablewriter',
