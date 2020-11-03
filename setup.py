@@ -7,6 +7,7 @@ SETUP_DIR = pathlib.Path(__file__).parent
 
 README = (SETUP_DIR / "README.md").read_text()
 
+
 setup(
     name='robo-bot',
     version=__version__,
@@ -31,10 +32,11 @@ setup(
         'pyfiglet',
         'termcolor',
         'robo-ai',
-        'rasa',
+        'rasa==1.10.0',
         'pandas',
         'openpyxl',
-        'pytablewriter'
+        'pytablewriter',
+        'xlsxwriter'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.7",
