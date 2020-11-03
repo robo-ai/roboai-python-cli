@@ -60,7 +60,7 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
                 if check_covered_intents(language):
                     test_bot(language)
                 else:
-                    exit(0)
+                    continue
             # If tests folder is empty, generate a test stories file
             else:
                 generate_conversation_md_from_stories(
@@ -71,7 +71,7 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
                 ):
                     test_bot(language)
                 else:
-                    exit(0)
+                    continue
         # If tests folder doesn't exist, create it and generate a test stories file
         else:
             generate_conversation_md_from_stories(language, multi_language_bot)
@@ -80,7 +80,7 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
             ):
                 test_bot(language)
             else:
-                exit(0)
+                continue
         format_results(language)
         print_info(f"Finished testing {lang} bot")
 
