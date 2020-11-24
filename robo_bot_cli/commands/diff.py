@@ -38,8 +38,8 @@ def command(languages: tuple, path: str):
 
 def diff(domain_a: dict, domain_b: dict):
     def print_diff_list(first_list, second_list):
-        sys.stdout.writelines(difflib.unified_diff([item + '\n' for item in first_list],
-                                                   [item + '\n' for item in second_list]))
+        sys.stdout.writelines(difflib.unified_diff([item + '\n' if isinstance(item, str) else list(item.keys())[0] + '\n' for item in first_list],
+                                                   [item + '\n' if isinstance(item, str) else list(item.keys())[0] + '\n' for item in second_list]))
 
     def print_diff_keys(first_dict, second_dict):
         sys.stdout.writelines(difflib.unified_diff([key + '\n' for key in first_dict.keys()],

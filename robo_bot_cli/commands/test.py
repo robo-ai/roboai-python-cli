@@ -410,8 +410,7 @@ def get_all_languages(path: str, languages: tuple) -> list:
         languages_paths = [
             join(path, "languages", folder)
             for folder in os.listdir(join(path, "languages"))
-            if os.path.isdir(os.path.join(path, "languages", folder))
-            and folder in languages
+            if os.path.isdir(os.path.join(path, "languages", folder)) and folder in languages
         ]
     return languages_paths
 
