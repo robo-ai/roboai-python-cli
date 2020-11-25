@@ -8,19 +8,22 @@ from robo_bot_cli.util.cli import print_info
 @click.command(name='train', help='Train Rasa models for the required bots.')
 @click.argument('languages', nargs=-1,)
 @click.option('--path', default='.', type=click.Path(), help="Directory of your bot to be trained.")
+@click.option('--dev-config', default='config.yml', type=str,
+              help="Name of the config file to be used. If this is not passed, default 'config.yml' is used.")
 @click.option('--nlu', '-n', 'nlu', is_flag=True,
               help="Train exclusively the RASA nlu model for the given languages")
 @click.option('--core', '-c', 'core', is_flag=True,
               help="Train exclusively the RASA core model for the given languages")
 @click.option('--augmentation', 'augmentation', default=50, help="How much data augmentation to use during training. \
               (default: 50)")
-def command(languages: tuple, path: str, nlu: bool, core: bool, augmentation: int):
+def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool, augmentation: int):
     """
     Wrapper of rasa train for multi-language bots.
 
     Args:
         languages: language code of the bots to be trained
         path: path where the bot is stored
+        dev_config (str): Name of the config file to be used. If this is not passed, default config.yml is used.
         nlu (bool): flag indicating whether only NLU should be trained
         core (bool): flag indicating whether only core should be trained
         augmentation (int): augmentation option
@@ -29,11 +32,11 @@ def command(languages: tuple, path: str, nlu: bool, core: bool, augmentation: in
     languages_paths = get_all_languages(path=path, languages=languages)
 
     if nlu:
-        train_nlu(path, languages_paths)
+        train_nlu(path, languages_paths, dev_config)
     if core:
-        train_core(path, languages_paths, augmentation)
+        train_core(path, languages_paths, augmentation, dev_config)
     else:
-        train(path, languages_paths, augmentation)
+        train(path, languages_paths, augmentation, dev_config)
 
     # print_success("All training tasks completed")
 
@@ -56,32 +59,29 @@ def get_all_languages(path: str, languages: tuple):
     return languages_paths
 
 
-def train(path: str, languages_paths: list, augmentation: int):
+def train(path: str, languages_paths: list, augmentation: int, dev_config: str):
     stories_path = join(path, 'languages', 'stories.md')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train --config {join(language_path,'config.yml')} --domain {join(language_path,'domain.yml')} \
+        os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path,'domain.yml')} \
         --data {join(language_path,'data')} {stories_path} --augmentation {augmentation} \
         --out {join(language_path, 'models')} --fixed-model-name model-{lang}")
-        # print_success(f"Bot \'{lang}\' successfully trained!")
 
 
-def train_nlu(path: str, languages_paths: list):
+def train_nlu(path: str, languages_paths: list, dev_config: str):
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train nlu --nlu {join(language_path,'data')} --config {join(language_path,'config.yml')} \
+        os.system(f"rasa train nlu --nlu {join(language_path,'data')} --config {join(language_path, dev_config)} \
                   --out {join(language_path, 'models')} --fixed-model-name nlu-model-{lang}")
-        # print_success(f"Bot \'{lang}\' successfully trained!")
 
 
-def train_core(path: str, languages_paths: list, augmentation: int):
+def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str):
     stories_path = join(path, 'languages', 'stories.md')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
         os.system(f"rasa train core --domain {join(language_path,'domain.yml')} --stories {stories_path} \
-                  --augmentation {augmentation} --config {join(language_path,'config.yml')} \
+                  --augmentation {augmentation} --config {join(language_path, dev_config)} \
                   --out {join(language_path, 'models')} --fixed-model-name core-model-{lang}")
-        # print_success(f"Bot \'{lang}\' successfully trained!")
 
 
 if __name__ == "__main__":

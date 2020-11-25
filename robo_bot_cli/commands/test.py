@@ -12,6 +12,7 @@ from pytablewriter import MarkdownTableWriter
 
 from robo_bot_cli.util.cli import print_error, print_info
 from robo_bot_cli.util.input_output import load_md, load_yaml
+from robo_bot_cli.util.helpers import clean_intents
 
 
 @click.command(name="test", help="Test Rasa models for the required bots.")
@@ -98,6 +99,7 @@ def check_covered_intents(language_path: str) -> bool:
         print_error("No intents were found.\n")
         exit(0)
     else:
+        intents = clean_intents(intents)
         for filename in listdir(join(language_path, "tests")):
             if filename.endswith(".md"):
                 lines = load_md(join(language_path, "tests", filename))
@@ -410,8 +412,7 @@ def get_all_languages(path: str, languages: tuple) -> list:
         languages_paths = [
             join(path, "languages", folder)
             for folder in os.listdir(join(path, "languages"))
-            if os.path.isdir(os.path.join(path, "languages", folder))
-            and folder in languages
+            if os.path.isdir(os.path.join(path, "languages", folder)) and folder in languages
         ]
     return languages_paths
 
