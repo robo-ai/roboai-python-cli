@@ -1,9 +1,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.3] - 2020-12-02
+## [0.1.3] - 2020-11-25
 
+Bugfixes:
 * [#11](https://github.com/robo-ai/roboai-python-cli/issues/11): There was a bug in the diff command whenever there were intents which trigger actions defined in the domain.
+* [#12](https://github.com/robo-ai/roboai-python-cli/issues/12): There was a bug in the test command whenever there were intents which trigger actions defined in the domain. The same applies also to the stories command.
+
+Features:
+* Added a Rasa component (ExactMatchClassifier) which tries to match an intent existent in the NLU. A development pipeline was also added to the initial structure where this component is used instead of a Machine Learning model.
+
 
 ## [0.1.2] - 2020-11-03
 
