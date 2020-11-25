@@ -5,6 +5,7 @@ from os import listdir
 
 from robo_bot_cli.util.cli import print_info, print_error
 from robo_bot_cli.util.input_output import load_md, load_yaml
+from robo_bot_cli.util.helpers import clean_intents
 
 
 @click.command(name='stories', help='Generate stories for a Rasa bot.')
@@ -77,6 +78,7 @@ def check_covered_intents(language_path: list, multi_language_bot: bool):
             print_error("No intents were found.\n")
             exit(0)
         else:
+            intents = clean_intents(intents)
             check_specific_stories = False
             if multi_language_bot:
                 stories_dir_path = join(abspath('.'), 'languages')
@@ -115,6 +117,7 @@ def generate_stories_md(path_to_language: str, multi_language_bot: bool):
         print_error("No intents were found.")
         exit(0)
     elif intents_list:
+        intents_list = clean_intents(intents_list)
         if multi_language_bot:
             output_path = join(abspath('.'), 'languages', 'stories.md')
         else:
