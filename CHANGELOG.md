@@ -1,7 +1,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.3] - 2020-11-25
+## [0.1.3.1] - 2020-11-25
 
 Bugfixes:
 * [#11](https://github.com/robo-ai/roboai-python-cli/issues/11): There was a bug in the diff command whenever there were intents which trigger actions defined in the domain.
@@ -9,7 +9,7 @@ Bugfixes:
 
 Features:
 * Added a Rasa component (ExactMatchClassifier) which tries to match an intent existent in the NLU. A development pipeline was also added to the initial structure where this component is used instead of a Machine Learning model.
-
+* As a consequence of the topic above, the train command also suffered modifications. Now you can pass a specific config file to be ran (i.e. --dev-config config-dev-.yml). If this option is not passed, the default config.yml will be used.
 
 ## [0.1.2] - 2020-11-03
 
