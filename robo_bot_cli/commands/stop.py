@@ -2,7 +2,7 @@ import click
 from os.path import abspath, join
 
 from robo_bot_cli.util.cli import print_success, print_message
-from robo_bot_cli.util.robo import validate_bot, validate_robo_session, get_current_bot_uuid, stop_runtime
+from robo_bot_cli.util.robo import validate_robo_session, get_current_bot_uuid, stop_runtime
 
 
 @click.command(name='stop', help='Stop a bot running in the ROBO.AI platform.')
@@ -30,6 +30,6 @@ def command(language: tuple, bot_uuid: str):
     if not bot_uuid:
         bot_uuid = get_current_bot_uuid(bot_dir)
 
-    validate_bot(bot_uuid)
+    # validate_bot(bot_uuid)
     stop_runtime(bot_uuid)
     print_success('The bot runtime was successfully stopped.')

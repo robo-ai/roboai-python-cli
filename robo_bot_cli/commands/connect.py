@@ -21,7 +21,6 @@ from robo_bot_cli.util.cli import (
 from robo_bot_cli.util.robo import (
     get_robo_client,
     get_supported_base_versions,
-    validate_bot,
     validate_robo_session,
 )
 
@@ -67,7 +66,7 @@ def command(
     if not bot_uuid:
         bot_uuid = get_bot_uuid()
 
-    validate_bot(bot_uuid)
+    # validate_bot(bot_uuid)
 
     if len(language) == 0:
         bot_dir = bot_ignore_dir = (

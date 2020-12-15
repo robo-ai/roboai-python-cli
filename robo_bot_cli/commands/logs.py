@@ -3,7 +3,7 @@ from os.path import abspath, join
 import click
 from robo_bot_cli.util.cli import loading_indicator, print_info, print_message
 from robo_bot_cli.util.robo import (get_current_bot_uuid, get_runtime_logs,
-                                    validate_bot, validate_robo_session)
+                                    validate_robo_session)
 
 
 @click.command(name='logs', help='Display selected bot runtime logs.')
@@ -34,7 +34,7 @@ def command(language: tuple, bot_uuid: str):
     if not bot_uuid:
         bot_uuid = get_current_bot_uuid(bot_dir)
 
-    validate_bot(bot_uuid)
+    # validate_bot(bot_uuid)
 
     with loading_indicator('Fetching logs from server...'):
         logs = get_runtime_logs(bot_uuid)
