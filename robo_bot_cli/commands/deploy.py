@@ -7,7 +7,7 @@ from robo_bot_cli.util.robo import (create_package, create_runtime,
                                     get_current_bot_base_version,
                                     get_current_bot_uuid,
                                     get_default_package_path, update_runtime,
-                                    validate_bot, validate_package_file,
+                                    validate_package_file,
                                     validate_robo_session)
 
 
@@ -51,7 +51,7 @@ def command(language: tuple, skip_packaging: bool, package_file: str, bot_uuid: 
     if not runtime_base_version:
         runtime_base_version = get_current_bot_base_version(bot_dir)
 
-    validate_bot(bot_uuid)
+    # validate_bot(bot_uuid)
 
     if package_file:
         validate_package_file(package_file)

@@ -11,7 +11,7 @@ README = (SETUP_DIR / "README.md").read_text()
 setup(
     name='robo-bot',
     version=__version__,
-    description='A command line tool to create, manage and deploy Rasa chatbots.',
+    description='A command line tool to create, manage and deploy Rasa chatbots on the Robo.AI platform.',
     long_description=README,
     long_description_content_type="text/markdown",
     author='ROBO.AI',
