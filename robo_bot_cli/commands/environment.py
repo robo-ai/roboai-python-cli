@@ -59,7 +59,7 @@ def create_environment(settings, new_env_name, base_url, username, password):
     settings.update_environment(environment)
 
     print_success(f"The environment was successfully created.\nYou can now activate it by running "
-                  f"'robo-bot activate {new_env_name}'.\n")
+                  f"'robo-bot environment activate {new_env_name}'.\n")
 
 
 def activate_environment(settings, env_name):

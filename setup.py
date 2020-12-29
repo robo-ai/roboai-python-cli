@@ -7,10 +7,11 @@ SETUP_DIR = pathlib.Path(__file__).parent
 
 README = (SETUP_DIR / "README.md").read_text()
 
+
 setup(
     name='robo-bot',
     version=__version__,
-    description='A command line tool to create, manage and deploy Rasa chatbots.',
+    description='A command line tool to create, manage and deploy Rasa chatbots on the Robo.AI platform.',
     long_description=README,
     long_description_content_type="text/markdown",
     author='ROBO.AI',
@@ -31,10 +32,11 @@ setup(
         'pyfiglet',
         'termcolor',
         'robo-ai',
-        'rasa',
+        'rasa==1.10.0',
         'pandas',
         'openpyxl',
-        'pytablewriter'
+        'pytablewriter',
+        'xlsxwriter'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.7",

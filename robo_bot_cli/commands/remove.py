@@ -3,7 +3,7 @@ from os.path import abspath, join
 import click
 from robo_bot_cli.util.cli import print_success, print_message
 from robo_bot_cli.util.robo import (get_current_bot_uuid, remove_runtime,
-                                    validate_bot, validate_robo_session)
+                                    validate_robo_session)
 
 
 @click.command(name='remove',
@@ -33,6 +33,6 @@ def command(language: tuple, bot_uuid: str):
     if not bot_uuid:
         bot_uuid = get_current_bot_uuid(bot_dir)
 
-    validate_bot(bot_uuid)
+    # validate_bot(bot_uuid)
     remove_runtime(bot_uuid)
     print_success('The bot runtime was successfully removed.')
