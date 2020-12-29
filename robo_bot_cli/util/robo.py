@@ -272,12 +272,11 @@ def copy_dir(source_path: str, dest_path: str):
 
 
 def copy_file(source_path: str, dest_path: str):
-    copyfile(source_path, dest_path)
-    # try:
-    #     # print("Trying to copy file from {} to {}".format(source_path, dest_path))
-    #     copyfile(source_path, dest_path)
-    # except Exception:
-    #     print("Couldn't copy file from {} to {}".format(source_path, dest_path))
+    try:
+        # print("Trying to copy file from {} to {}".format(source_path, dest_path))
+        copyfile(source_path, dest_path)
+    except Exception:
+        print("Couldn't copy file from {} to {}".format(source_path, dest_path))
 
 
 def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
