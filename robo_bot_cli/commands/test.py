@@ -12,9 +12,11 @@ from robo_bot_cli.util.cli import print_info, print_error
 from robo_bot_cli.util.input_output import load_md, load_yaml
 
 
-@click.command(name='test', help='Test Rasa models for the required bots.')
-@click.argument('languages', nargs=-1,)
-def command(languages: tuple):
+@click.command(name="test", help="Test Rasa models for the required bots.")
+@click.argument("languages", nargs=-1,)
+@click.option("--cross-validation", is_flag=True, default=False, help="Evaluates model in cross-validation mode.")
+@click.option("--folds", "-f", "folds", type=int, default=0, help="Number of folds to be applied in cross-validation mode.")
+def command(languages: tuple, cross_validation: bool, folds: int):
     """Tests a Rasa bot.
 
     Args:
@@ -35,10 +37,10 @@ def command(languages: tuple):
     else:
         multi_language_bot = True
         bot_dir = get_all_languages(path=abspath('.'), languages=languages)
-    test(bot_dir, multi_language_bot)
+    test(bot_dir, multi_language_bot, cross_validation, folds)
 
 
-def test(languages_path: list, multi_language_bot: bool) -> None:
+def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, folds: int) -> None:
     for language in languages_path:
         lang = basename(language) if basename(language) != 'bot' else 'the'
         print_info(f"Starting tests for {lang} bot")
@@ -50,24 +52,25 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
                 # If there are intents left to be tested, the user is prompted
                 # with an option to continue testing
                 if check_covered_intents(language):
-                    test_bot(language)
+                    test_bot(language, cross_validation, folds)
                 else:
                     exit(0)
             # If tests folder is empty, generate a test stories file
             else:
                 generate_conversation_md_from_stories(language, multi_language_bot)
-                test_bot(language)
+                test_bot(language, cross_validation, folds)
         # If tests folder doesn't exist, create it and generate a test stories file
         else:
             generate_conversation_md_from_stories(language, multi_language_bot)
-            test_bot(language)
+            test_bot(language, cross_validation, folds)
         format_results(language)
         print_info(f"Finished testing {lang} bot")
 
 
-def test_bot(language: str):
+def test_bot(language: str, cross_validation: bool, folds: int):
     os.system(f"rasa test --model {join(language, 'models')} --nlu {join(language, 'data')} \
-              --stories {join(language, 'tests')} --out {join(language, 'results')}")
+              --stories {join(language, 'tests')} {'--cross-validation' if cross_validation else ''} \
+              -f {folds} --out {join(language, 'results')}")
 
 
 def check_covered_intents(language_path: str) -> bool:
@@ -98,10 +101,10 @@ def get_intent_example(intent: str, nlu) -> str:
     copy = False
     comment = False
     for line in nlu:
-        if line.startswith("##") and search(r'\b'+intent+r'\b', line):
+        if line.startswith("##") and search(r'\b' + intent + r'\b', line):
             if comment is False:
                 copy = True
-        elif line.startswith('##') and not search(r'\b'+intent+r'\b', line):
+        elif line.startswith('##') and not search(r'\b' + intent + r'\b', line):
             if comment is False:
                 copy = False
         elif line.startswith('<!--'):

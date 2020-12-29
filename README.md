@@ -80,8 +80,8 @@ Commands:
   status       Display the bot status.
   stories      Generate stories for a Rasa bot.
   stop         Stop a bot running in the ROBO.AI platform.
-  test         Tests Rasa models for the required bots.
-  train        Trains Rasa models for the required bots.
+  test         Test Rasa models for the required bots.
+  train        Train Rasa models for the required bots.
 ``` 
 
 Each of the listed commands provides you a functionality to deal with your bots,
