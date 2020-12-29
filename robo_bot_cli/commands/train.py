@@ -17,7 +17,8 @@ from robo_bot_cli.util.cli import print_info
               help="Train exclusively the RASA core model for the given languages")
 @click.option("--augmentation", "augmentation", default=50, help="How much data augmentation to use during training. \
               (default: 50)")
-@click.option("--force", "force", is_flag=True, default=False, help="Force a model training even if the data has not changed. (default: False)")
+@click.option("--force", "-f", "force", is_flag=True, default=False,
+              help="Force a model training even if the data has not changed. (default: False)")
 def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool, augmentation: int, force: bool):
     """
     Wrapper of rasa train for multi-language bots.
@@ -34,7 +35,7 @@ def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool,
     languages_paths = get_all_languages(path=path, languages=languages)
 
     if nlu:
-        train_nlu(path, languages_paths, dev_config, force)
+        train_nlu(path, languages_paths, dev_config)
     elif core:
         train_core(path, languages_paths, augmentation, dev_config, force)
     else:
@@ -66,8 +67,8 @@ def train(path: str, languages_paths: list, augmentation: int, dev_config: str, 
     stories_path = join(path, "languages", "stories.md")
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path,'domain.yml')} \
-        --data {join(language_path,'data')} {stories_path} --augmentation {augmentation} {'--force' if force else ''} \
+        os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path, 'domain.yml')} \
+        --data {join(language_path, 'data')} {stories_path} --augmentation {augmentation} {'--force' if force else ''} \
         --out {join(language_path, 'models')} --fixed-model-name model-{lang}-{timestamp}")
 
 
@@ -75,8 +76,7 @@ def train_nlu(path: str, languages_paths: list, dev_config: str, force: bool):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train nlu --nlu {join(language_path,'data')} --config {join(language_path, dev_config)} \
-                  {'--force' if force else ''} \
+        os.system(f"rasa train nlu --nlu {join(language_path, 'data')} --config {join(language_path, dev_config)} \
                   --out {join(language_path, 'models')} --fixed-model-name nlu-model-{lang}-{timestamp}")
 
 
@@ -85,7 +85,7 @@ def train_core(path: str, languages_paths: list, augmentation: int, dev_config: 
     stories_path = join(path, 'languages', 'stories.md')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train core --domain {join(language_path,'domain.yml')} --stories {stories_path} \
+        os.system(f"rasa train core --domain {join(language_path, 'domain.yml')} --stories {stories_path} \
                   --augmentation {augmentation} --config {join(language_path, dev_config)} {'--force' if force else ''} \
                   --out {join(language_path, 'models')} --fixed-model-name core-model-{lang}-{timestamp}")
 
