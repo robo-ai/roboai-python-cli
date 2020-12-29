@@ -9,7 +9,6 @@ from datetime import datetime
 
 import click
 import pandas as pd
-from pytablewriter import MarkdownTableWriter
 
 from robo_bot_cli.util.cli import print_error, print_info
 from robo_bot_cli.util.input_output import load_md, load_yaml
@@ -314,8 +313,8 @@ def format_results(language_path: str, timestamp: str):
             worksheet.set_column(i, i, column_len)
 
 
-def misclassified_intents_df(language_path: str) -> pd.DataFrame:
-    with open(join(language_path, "results", "intent_errors.json"), "r") as f:
+def misclassified_intents_df(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_errors.json"), "r") as f:
         intent_errors = json.load(f)
 
     wrong_intents = defaultdict(lambda: defaultdict(list))
@@ -366,64 +365,6 @@ def confusion_table_df(language_path: str, timestamp: str) -> pd.DataFrame:
         confusion_list, columns=["intent", "confused_with", "count"]
     )
     return confusion_table.sort_values("count", ascending=False)
-
-
-def confusion_table(language_path: str, timestamp: str):
-    writer = MarkdownTableWriter()
-    writer.table_name = "Confusion table"
-
-    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
-        intent_report = json.load(f)
-
-    confusion_list = []
-    for key_, value_ in intent_report.items():
-        if key_ not in ["accuracy", "micro avg", "macro avg", "weighted avg"]:
-            for intent, count in value_["confused_with"].items():
-                confusion_list.append([key_, intent, count])
-    confusion_table = pd.DataFrame(
-        confusion_list, columns=["intent", "confused_with", "count"]
-    )
-    confusion_table = confusion_table.sort_values("count", ascending=False)
-
-    writer.headers = confusion_table.columns.tolist()
-
-    writer.value_matrix = [
-        [row["intent"]] + [row["confused_with"]] + [row["count"]]
-        for index, row in confusion_table.iterrows()
-    ]
-    return writer.dumps()
-
-
-def intent_table(language_path: str):
-    writer = MarkdownTableWriter()
-    writer.table_name = "Intents"
-
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
-        data = json.loads(f.read())
-
-    cols = ["support", "f1-score", "confused_with"]
-    writer.headers = ["class"] + cols
-
-    classes = [
-        key_
-        for key_ in data.keys()
-        if key_ not in ["accuracy", "micro avg", "macro avg", "weighted avg"]
-    ]
-    classes.sort(key=lambda x: data[x]["support"], reverse=True)
-
-    def format_cell(data, c, k):
-        if not data[c].get(k):
-            return "N/A"
-        if k == "confused_with":
-            return ", ".join([f"{k}({v})" for k, v in data[c][k].items()])
-        else:
-            return data[c][k]
-
-    writer.value_matrix = [
-        [c] + [format_cell(data, c, k) for k in cols] for c in classes
-    ]
-
-    return writer.dumps()
 
 
 def get_all_languages(path: str, languages: tuple) -> list:
