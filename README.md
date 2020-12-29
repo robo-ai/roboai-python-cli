@@ -210,11 +210,12 @@ If no language codes are passed, then it'll pair all the languages found and che
 You're now in a position to train the bot. To do so you only need to run the **train** command just as you would do in Rasa. 
 
 ```
-robo-bot train [language-codes] [--path <path> --nlu --core --augmentation <value>]
+robo-bot train [language-codes] [--path <path> --nlu --core --augmentation <value> --dev-config <path to config file> --force]
 ```
 
 It will train the bot and store the model in the language sub-directory. If no language codes are passed, 
-all bots will be trained. 
+all bots will be trained.  
+The **augmentation** and **force** options do not work in the case of NLU training.
 
 ##### Interacting with a bot #####
 

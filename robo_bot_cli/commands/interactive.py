@@ -1,6 +1,7 @@
 import click
 import os
 from os.path import join, abspath
+import glob
 
 
 @click.command(name='interactive', help='Run in interactive learning mode where you can \
@@ -18,8 +19,9 @@ def command(language: str):
 
 def start_interactive_mode(language: str):
 
-    model_path = join(abspath('.'), 'languages', language,
-                      'models', f'model-{language}.tar.gz')
+    list_of_models = glob.glob(join(abspath("."), "languages", language, "models", "*.tar.gz"))
+    latest_model = max(list_of_models, key=os.path.getctime)
+
     config_path = join(abspath('.'), 'languages', language, 'config.yml')
     domain_path = join(abspath('.'), 'languages', language, 'domain.yml')
     nlu_path = join(abspath('.'), 'languages', language, 'data')
@@ -27,7 +29,7 @@ def start_interactive_mode(language: str):
     endpoints_path = join(abspath('.'), 'endpoints.yml')
     out_path = join(abspath('.'), 'languages', language, 'interactive')
 
-    os.system(f'rasa interactive --model {model_path} --config {config_path} --domain {domain_path} \
+    os.system(f'rasa interactive --model {latest_model} --config {config_path} --domain {domain_path} \
             --data {stories_path} {nlu_path} --endpoints {endpoints_path} --out {out_path}')
 
 
