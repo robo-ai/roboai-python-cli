@@ -273,6 +273,7 @@ def format_results(language_path: str):
     # intents = intent_table(language_path)
     confusion_list = confusion_table_df(language_path)
     misclassified_intents = misclassified_intents_df(language_path)
+    statistics_table = stats_table(language_path)
     with pd.ExcelWriter(
         join(language_path, "results", "intent_details.xlsx"),
         engine="xlsxwriter",
@@ -302,11 +303,17 @@ def format_results(language_path: str):
             )
             worksheet.set_column(i, i, column_len)
 
-    # with open(join(language_path, "results", "intents_details.md"), "w") as f:
-    #     f.write(confusion_list)
-    #     f.write("\n\n\n")
-    #     # f.write(intents)
-    #     f.write(misclassified_intents)
+        statistics_table.to_excel(
+            excel_writer=xlsx_writer, sheet_name="Intent Statistics", index=False
+        )
+        worksheet = xlsx_writer.sheets["Intent Statistics"]
+
+        for i, col in enumerate(statistics_table.columns):
+            column_len = max(
+                statistics_table[col].astype(str).str.len().max(),
+                len(col) + 2,
+            )
+            worksheet.set_column(i, i, column_len)
 
 
 def misclassified_intents_df(language_path: str) -> pd.DataFrame:
