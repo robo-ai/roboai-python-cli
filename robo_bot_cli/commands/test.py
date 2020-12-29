@@ -273,9 +273,9 @@ def generate_conversation_md_from_domain(path_to_language: str):
 
 
 def format_results(language_path: str, timestamp: str):
-    confusion_list = confusion_table_df(language_path)
-    misclassified_intents = misclassified_intents_df(language_path)
-    statistics_table = stats_table(language_path)
+    confusion_list = confusion_table_df(language_path, timestamp)
+    misclassified_intents = misclassified_intents_df(language_path, timestamp)
+    statistics_table = stats_table(language_path, timestamp)
 
     with pd.ExcelWriter(
         join(language_path, "results", timestamp, "intent_details.xlsx"),
