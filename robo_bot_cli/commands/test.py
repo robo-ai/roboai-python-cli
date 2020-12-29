@@ -347,7 +347,7 @@ def stats_table(language_path: str) -> pd.DataFrame:
     stats_list = []
     for key_, value_ in intent_report.items():
         if key_ not in ["accuracy", "micro_avg", "macro_avg", "weighted_avg"]:
-            stats_list.append([key_, value_["precision"], value_["recall"], value_["f1-score"]])
+            stats_list.append([key_, round(value_["precision"], 3), round(value_["recall"], 3), round(value_["f1-score"], 3)])
 
     stats_table = pd.DataFrame(
         stats_list, columns=["intent", "precision", "recall", "f1-score"]
