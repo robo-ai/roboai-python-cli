@@ -5,10 +5,10 @@ from collections import defaultdict
 from os import listdir, mkdir
 from os.path import abspath, basename, dirname, exists, isfile, join
 from re import search, sub
+from datetime import datetime
 
 import click
 import pandas as pd
-from pytablewriter import MarkdownTableWriter
 
 from robo_bot_cli.util.cli import print_error, print_info
 from robo_bot_cli.util.input_output import load_md, load_yaml
@@ -16,11 +16,10 @@ from robo_bot_cli.util.helpers import clean_intents
 
 
 @click.command(name="test", help="Test Rasa models for the required bots.")
-@click.argument(
-    "languages",
-    nargs=-1,
-)
-def command(languages: tuple):
+@click.argument("languages", nargs=-1,)
+@click.option("--cross-validation", is_flag=True, default=False, help="Evaluates model in cross-validation mode.")
+@click.option("--folds", "-f", "folds", type=int, default=3, help="Number of folds to be applied in cross-validation mode.")
+def command(languages: tuple, cross_validation: bool, folds: int):
     """Tests a Rasa bot.
 
     Args:
@@ -40,12 +39,14 @@ def command(languages: tuple):
             multi_language_bot = False
     else:
         multi_language_bot = True
-        bot_dir = get_all_languages(path=abspath("."), languages=languages)
-    test(bot_dir, multi_language_bot)
+        bot_dir = get_all_languages(path=abspath('.'), languages=languages)
+    test(bot_dir, multi_language_bot, cross_validation, folds)
 
 
-def test(languages_path: list, multi_language_bot: bool) -> None:
+def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, folds: int) -> None:
+    timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
     for language in languages_path:
+        mkdir(join(language, "results", timestamp))
         lang = basename(language) if basename(language) != "bot" else "the"
         print_info(f"Starting test process for {lang} bot")
         # Check if tests folder exists
@@ -59,7 +60,7 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
                 # If there are intents left to be tested, the user is prompted
                 # with an option to continue testing
                 if check_covered_intents(language):
-                    test_bot(language)
+                    test_bot(language, cross_validation, folds, timestamp)
                 else:
                     continue
             # If tests folder is empty, generate a test stories file
@@ -70,7 +71,7 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
                 if proceed_with_test(
                     "Test stories have been generated. Continue testing?\n"
                 ):
-                    test_bot(language)
+                    test_bot(language, cross_validation, folds, timestamp)
                 else:
                     continue
         # If tests folder doesn't exist, create it and generate a test stories file
@@ -79,18 +80,25 @@ def test(languages_path: list, multi_language_bot: bool) -> None:
             if proceed_with_test(
                 "Test stories have been generated. Continue testing?\n"
             ):
-                test_bot(language)
+                test_bot(language, cross_validation, folds, timestamp)
             else:
                 continue
-        format_results(language)
+        format_results(language, timestamp)
         print_info(f"Finished testing {lang} bot")
 
 
-def test_bot(language: str):
-    os.system(
-        f"rasa test --model {join(language, 'models')} --nlu {join(language, 'data')} \
-              --stories {join(language, 'tests')} --out {join(language, 'results')}"
-    )
+def test_bot(language: str, cross_validation: bool, folds: int, timestamp: str):
+    if cross_validation:
+        os.system(
+            f"rasa test --model {join(language, 'models')} --nlu {join(language, 'data')} \
+                --cross-validation -f {folds} --config {join(language, 'config.yml')} \
+                --stories {join(language, 'tests')} --out {join(language, 'results', timestamp)}"
+        )
+    else:
+        os.system(
+            f"rasa test --model {join(language, 'models')} --nlu {join(language, 'data')} \
+                --stories {join(language, 'tests')} --out {join(language, 'results', timestamp)}"
+        )
 
 
 def check_covered_intents(language_path: str) -> bool:
@@ -263,19 +271,19 @@ def generate_conversation_md_from_domain(path_to_language: str):
                 out_f.write("\n")
 
 
-def format_results(language_path: str):
-    # intents = intent_table(language_path)
-    confusion_list = confusion_table_df(language_path)
-    misclassified_intents = misclassified_intents_df(language_path)
+def format_results(language_path: str, timestamp: str):
+    confusion_list = confusion_table_df(language_path, timestamp)
+    misclassified_intents = misclassified_intents_df(language_path, timestamp)
+    statistics_table = stats_table(language_path, timestamp)
+
     with pd.ExcelWriter(
-        join(language_path, "results", "intent_details.xlsx"),
+        join(language_path, "results", timestamp, "intent_details.xlsx"),
         engine="xlsxwriter",
     ) as xlsx_writer:
         confusion_list.to_excel(
             excel_writer=xlsx_writer, sheet_name="Confusion Table", index=False
         )
         worksheet = xlsx_writer.sheets["Confusion Table"]
-        # dynamically set column width
         for i, col in enumerate(confusion_list.columns):
             column_len = max(
                 confusion_list[col].astype(str).str.len().max(), len(col) + 2
@@ -286,9 +294,6 @@ def format_results(language_path: str):
             excel_writer=xlsx_writer, sheet_name="Misclassified Intents", index=False
         )
         worksheet = xlsx_writer.sheets["Misclassified Intents"]
-        # workbook = xlsx_writer.book
-        # wrap_format = workbook.add_format({"text_wrap": True})
-        #  dynamically set column width
         for i, col in enumerate(misclassified_intents.columns):
             column_len = max(
                 misclassified_intents[col].astype(str).str.len().max(),
@@ -296,15 +301,20 @@ def format_results(language_path: str):
             )
             worksheet.set_column(i, i, column_len)
 
-    # with open(join(language_path, "results", "intents_details.md"), "w") as f:
-    #     f.write(confusion_list)
-    #     f.write("\n\n\n")
-    #     # f.write(intents)
-    #     f.write(misclassified_intents)
+        statistics_table.to_excel(
+            excel_writer=xlsx_writer, sheet_name="Intent Statistics", index=False
+        )
+        worksheet = xlsx_writer.sheets["Intent Statistics"]
+        for i, col in enumerate(statistics_table.columns):
+            column_len = max(
+                statistics_table[col].astype(str).str.len().max(),
+                len(col) + 2,
+            )
+            worksheet.set_column(i, i, column_len)
 
 
-def misclassified_intents_df(language_path: str) -> pd.DataFrame:
-    with open(join(language_path, "results", "intent_errors.json"), "r") as f:
+def misclassified_intents_df(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_errors.json"), "r") as f:
         intent_errors = json.load(f)
 
     wrong_intents = defaultdict(lambda: defaultdict(list))
@@ -327,8 +337,23 @@ def misclassified_intents_df(language_path: str) -> pd.DataFrame:
     )
 
 
-def confusion_table_df(language_path: str) -> pd.DataFrame:
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
+def stats_table(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
+        intent_report = json.load(f)
+
+    stats_list = []
+    for key_, value_ in intent_report.items():
+        if key_ not in ["accuracy", "micro_avg", "macro_avg", "weighted_avg"]:
+            stats_list.append([key_, round(value_["precision"], 3), round(value_["recall"], 3), round(value_["f1-score"], 3)])
+
+    stats_table = pd.DataFrame(
+        stats_list, columns=["intent", "precision", "recall", "f1-score"]
+    )
+    return stats_table.sort_values("precision", ascending=True)
+
+
+def confusion_table_df(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
         intent_report = json.load(f)
 
     confusion_list = []
@@ -340,64 +365,6 @@ def confusion_table_df(language_path: str) -> pd.DataFrame:
         confusion_list, columns=["intent", "confused_with", "count"]
     )
     return confusion_table.sort_values("count", ascending=False)
-
-
-def confusion_table(language_path: str):
-    writer = MarkdownTableWriter()
-    writer.table_name = "Confusion table"
-
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
-        intent_report = json.load(f)
-
-    confusion_list = []
-    for key_, value_ in intent_report.items():
-        if key_ not in ["accuracy", "micro avg", "macro avg", "weighted avg"]:
-            for intent, count in value_["confused_with"].items():
-                confusion_list.append([key_, intent, count])
-    confusion_table = pd.DataFrame(
-        confusion_list, columns=["intent", "confused_with", "count"]
-    )
-    confusion_table = confusion_table.sort_values("count", ascending=False)
-
-    writer.headers = confusion_table.columns.tolist()
-
-    writer.value_matrix = [
-        [row["intent"]] + [row["confused_with"]] + [row["count"]]
-        for index, row in confusion_table.iterrows()
-    ]
-    return writer.dumps()
-
-
-def intent_table(language_path: str):
-    writer = MarkdownTableWriter()
-    writer.table_name = "Intents"
-
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
-        data = json.loads(f.read())
-
-    cols = ["support", "f1-score", "confused_with"]
-    writer.headers = ["class"] + cols
-
-    classes = [
-        key_
-        for key_ in data.keys()
-        if key_ not in ["accuracy", "micro avg", "macro avg", "weighted avg"]
-    ]
-    classes.sort(key=lambda x: data[x]["support"], reverse=True)
-
-    def format_cell(data, c, k):
-        if not data[c].get(k):
-            return "N/A"
-        if k == "confused_with":
-            return ", ".join([f"{k}({v})" for k, v in data[c][k].items()])
-        else:
-            return data[c][k]
-
-    writer.value_matrix = [
-        [c] + [format_cell(data, c, k) for k in cols] for c in classes
-    ]
-
-    return writer.dumps()
 
 
 def get_all_languages(path: str, languages: tuple) -> list:
