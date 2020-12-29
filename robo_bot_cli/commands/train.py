@@ -61,7 +61,7 @@ def get_all_languages(path: str, languages: tuple):
 
 
 def train(path: str, languages_paths: list, augmentation: int, dev_config: str):
-    timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     stories_path = join(path, 'languages', 'stories.md')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
@@ -71,7 +71,7 @@ def train(path: str, languages_paths: list, augmentation: int, dev_config: str):
 
 
 def train_nlu(path: str, languages_paths: list, dev_config: str):
-    timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
         os.system(f"rasa train nlu --nlu {join(language_path,'data')} --config {join(language_path, dev_config)} \
@@ -79,7 +79,7 @@ def train_nlu(path: str, languages_paths: list, dev_config: str):
 
 
 def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str):
-    timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     stories_path = join(path, 'languages', 'stories.md')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
