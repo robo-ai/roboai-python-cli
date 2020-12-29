@@ -5,6 +5,8 @@ from fnmatch import fnmatch
 from time import sleep
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
+import glob
+
 import click
 import polling
 from robo_bot_cli.config.bot_manifest import BotManifest
@@ -234,14 +236,21 @@ def assert_status_transition(current_status: AssistantRuntimeStatus, new_status:
         raise click.UsageError('The bot cannot be {0} when in the "{1}" status'.format(verb, current_status.value))
 
 
-def copy_directories(bot_language_dir: str, bot_root_dir: str):
+def copy_directories(bot_language_dir: str, bot_root_dir: str, model: str):
     """
     Copy files to a temporary directory
     """
     copy_dir(join(bot_root_dir, 'actions'), join(TEMP_DIR, 'actions'))
     copy_dir(join(bot_language_dir, 'data'), join(TEMP_DIR, 'data'))
     copy_file(join(bot_root_dir, 'languages', 'stories.md'), join(TEMP_DIR, 'data', 'stories.md'))
-    copy_dir(join(bot_language_dir, 'models'), join(TEMP_DIR, 'models'))
+    if model:
+        model_name = model.split("/")[-1]
+        copy_file(model, join(TEMP_DIR, "models", model_name))
+    else:
+        list_of_models = glob.glob(join(bot_language_dir, "models", "*.tar.gz"))
+        latest_file = max(list_of_models, key=os.path.getctime)
+        model_name = latest_file.split("/")[-1]
+        copy_file(latest_file, join(TEMP_DIR, "models", model_name))
     copy_dir(join(bot_root_dir, 'custom'), join(TEMP_DIR, 'custom'))
     copy_file(join(bot_language_dir, 'config.yml'), join(TEMP_DIR, 'config.yml'))
     copy_file(join(bot_root_dir, 'credentials.yml'), join(TEMP_DIR, 'credentials.yml'))
@@ -269,15 +278,15 @@ def copy_file(source_path: str, dest_path: str):
         print("Couldn't copy file from {} to {}".format(source_path, dest_path))
 
 
-def create_package(bot_language_dir: str, bot_root_dir: str) -> str:
+def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
     # manifest = BotManifest(bot_language_dir)
     exclusions = get_bot_ignore_content(bot_root_dir)  # manifest.get_exclusions()
     os.makedirs(BUILD_DIR, exist_ok=True)
     package_file_path = get_default_package_path()
 
-    package_zip = zipfile.ZipFile(package_file_path, 'w', zipfile.ZIP_DEFLATED)
+    package_zip = zipfile.ZipFile(package_file_path, "w", zipfile.ZIP_DEFLATED)
     os.makedirs(TEMP_DIR, exist_ok=True)
-    copy_directories(bot_language_dir, bot_root_dir)
+    copy_directories(bot_language_dir, bot_root_dir, model)
     all_artifacts = []
     for root, dirs, files in os.walk(TEMP_DIR, topdown=True):
         dirs[:] = [directory for directory in dirs
@@ -289,7 +298,7 @@ def create_package(bot_language_dir: str, bot_root_dir: str) -> str:
         all_artifacts.extend(actual_files)
         all_artifacts.extend(actual_dirs)
 
-    with click.progressbar(all_artifacts, label='Creating bot runtime package') as bar:
+    with click.progressbar(all_artifacts, label="Creating bot runtime package") as bar:
         for artifact in bar:
             package_zip.write(artifact, os.path.relpath(artifact, TEMP_DIR))
             sleep(0.05)  # hack to display the bar, if the process is too fast, the bar does not display
@@ -300,7 +309,7 @@ def create_package(bot_language_dir: str, bot_root_dir: str) -> str:
 
 
 def get_bot_ignore_content(bot_ignore_dir: str):
-    with open(join(bot_ignore_dir, '.botignore'), 'r') as f:
+    with open(join(bot_ignore_dir, ".botignore"), "r") as f:
         bot_ignore = f.read().splitlines()
         return ['%s' % s for s in bot_ignore]
 
@@ -344,7 +353,7 @@ def get_runtime_logs(bot_uuid: str) -> str:
     robo = get_robo_client(current_environment)
 
     if not does_the_runtime_exist(bot_uuid):
-        raise click.UsageError('The bot runtime does not exist.')
+        raise click.UsageError("The bot runtime does not exist.")
 
     logs = robo.assistants.runtimes.get_logs(bot_uuid)
     lines = logs.content.lines
