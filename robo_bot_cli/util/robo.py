@@ -243,6 +243,7 @@ def copy_directories(bot_language_dir: str, bot_root_dir: str, model: str):
     copy_dir(join(bot_root_dir, 'actions'), join(TEMP_DIR, 'actions'))
     copy_dir(join(bot_language_dir, 'data'), join(TEMP_DIR, 'data'))
     copy_file(join(bot_root_dir, 'languages', 'stories.md'), join(TEMP_DIR, 'data', 'stories.md'))
+    os.makedirs(join(TEMP_DIR, "models"), exist_ok=True)
     if model:
         model_name = model.split("/")[-1]
         copy_file(join(bot_language_dir, "models", model_name), join(TEMP_DIR, "models", model_name))
