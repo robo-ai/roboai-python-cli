@@ -353,11 +353,12 @@ When your bot is ready for deployment, you must train it first and remove any ol
 the bot root directory, and then just execute:
 
 ```
-robo-bot deploy [language-code]
+robo-bot deploy [language-code] --model <path to model file>
 ```
 
 It'll package your bot files and upload them to the ROBO.AI platform, starting a new deployment. This step may take
 some time.  
+If you want you can pass the path to the model you want to deploy. If no model path is passed then the most recent one will be picked up.
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
 
 ##### Checking a bot status #####
