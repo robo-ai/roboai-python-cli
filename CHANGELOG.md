@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 
 Bugfixes:
 * [#14](https://github.com/robo-ai/roboai-python-cli/issues/14): Remove engine validations since it was coming as None from the core.
+* [#19](https://github.com/robo-ai/roboai-python-cli/issues/19): Fix issue with model name when it's different than model-language.
 
 Features:
 * [#20](https://github.com/robo-ai/roboai-python-cli/issues/20): Add cross-validation option to test command.
 * Test results are now stored in a generated folder with the timestamp in which the tests were run.
 * Intent details spreadsheet now contains a separate tab with intent statistics (precision, recall and f1-score).
+* [#18](https://github.com/robo-ai/roboai-python-cli/issues/18): Add option to select a model when deploying or packaging a bot. If no model is passed the most recent one is picked up.
+* [#17](https://github.com/robo-ai/roboai-python-cli/issues/17): Add timestamp to model name.
+* Add force option to train command.
 
 ## [0.1.3.1] - 2020-11-25
 
