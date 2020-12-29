@@ -333,6 +333,21 @@ def misclassified_intents_df(language_path: str) -> pd.DataFrame:
     )
 
 
+def stats_table(language_path: str) -> pd.DataFrame:
+    with open(join(language_path, "results", "intent_report.json"), "r") as f:
+        intent_report = json.load(f)
+
+    stats_list = []
+    for key_, value_ in intent_report.items():
+        if key_ not in ["accuracy", "micro_avg", "macro_avg", "weighted_avg"]:
+            stats_list.append([key_, value_["precision"], value_["recall"], value_["f1-score"]])
+
+    stats_table = pd.DataFrame(
+        stats_list, columns=["intent", "precision", "recall", "f1-score"]
+    )
+    return stats_table.sort_values("precision", ascending=True)
+
+
 def confusion_table_df(language_path: str) -> pd.DataFrame:
     with open(join(language_path, "results", "intent_report.json"), "r") as f:
         intent_report = json.load(f)
