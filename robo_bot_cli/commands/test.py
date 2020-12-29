@@ -5,6 +5,7 @@ from collections import defaultdict
 from os import listdir, mkdir
 from os.path import abspath, basename, dirname, exists, isfile, join
 from re import search, sub
+from datetime import datetime
 
 import click
 import pandas as pd
@@ -274,8 +275,10 @@ def format_results(language_path: str):
     confusion_list = confusion_table_df(language_path)
     misclassified_intents = misclassified_intents_df(language_path)
     statistics_table = stats_table(language_path)
+    timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
+    mkdir(join(language_path, "results", timestamp))
     with pd.ExcelWriter(
-        join(language_path, "results", "intent_details.xlsx"),
+        join(language_path, "results", timestamp, "intent_details.xlsx"),
         engine="xlsxwriter",
     ) as xlsx_writer:
         confusion_list.to_excel(
