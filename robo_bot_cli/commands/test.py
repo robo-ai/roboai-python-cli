@@ -338,8 +338,8 @@ def misclassified_intents_df(language_path: str) -> pd.DataFrame:
     )
 
 
-def stats_table(language_path: str) -> pd.DataFrame:
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
+def stats_table(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
         intent_report = json.load(f)
 
     stats_list = []
@@ -353,8 +353,8 @@ def stats_table(language_path: str) -> pd.DataFrame:
     return stats_table.sort_values("precision", ascending=True)
 
 
-def confusion_table_df(language_path: str) -> pd.DataFrame:
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
+def confusion_table_df(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
         intent_report = json.load(f)
 
     confusion_list = []
@@ -368,11 +368,11 @@ def confusion_table_df(language_path: str) -> pd.DataFrame:
     return confusion_table.sort_values("count", ascending=False)
 
 
-def confusion_table(language_path: str):
+def confusion_table(language_path: str, timestamp: str):
     writer = MarkdownTableWriter()
     writer.table_name = "Confusion table"
 
-    with open(join(language_path, "results", "intent_report.json"), "r") as f:
+    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
         intent_report = json.load(f)
 
     confusion_list = []
