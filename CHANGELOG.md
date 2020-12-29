@@ -1,6 +1,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2020-12-29
+
+Bugfixes:
+* [#14](https://github.com/robo-ai/roboai-python-cli/issues/14): Remove engine validations since it was coming as None from the core.
+
+Features:
+* [#20](https://github.com/robo-ai/roboai-python-cli/issues/20): Add cross-validation option to test command.
+* Test results are now stored in a generated folder with the timestamp in which the tests were run.
+* Intent details spreadsheet now contains a separate tab with intent statistics (precision, recall and f1-score).
+
 ## [0.1.3.1] - 2020-11-25
 
 Bugfixes:
