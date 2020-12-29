@@ -245,7 +245,7 @@ def copy_directories(bot_language_dir: str, bot_root_dir: str, model: str):
     copy_file(join(bot_root_dir, 'languages', 'stories.md'), join(TEMP_DIR, 'data', 'stories.md'))
     if model:
         model_name = model.split("/")[-1]
-        copy_file(model, join(TEMP_DIR, "models", model_name))
+        copy_file(join(bot_language_dir, "models", model_name), join(TEMP_DIR, "models", model_name))
     else:
         list_of_models = glob.glob(join(bot_language_dir, "models", "*.tar.gz"))
         latest_file = max(list_of_models, key=os.path.getctime)
@@ -271,11 +271,12 @@ def copy_dir(source_path: str, dest_path: str):
 
 
 def copy_file(source_path: str, dest_path: str):
-    try:
-        # print("Trying to copy file from {} to {}".format(source_path, dest_path))
-        copyfile(source_path, dest_path)
-    except Exception:
-        print("Couldn't copy file from {} to {}".format(source_path, dest_path))
+    copyfile(source_path, dest_path)
+    # try:
+    #     # print("Trying to copy file from {} to {}".format(source_path, dest_path))
+    #     copyfile(source_path, dest_path)
+    # except Exception:
+    #     print("Couldn't copy file from {} to {}".format(source_path, dest_path))
 
 
 def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
