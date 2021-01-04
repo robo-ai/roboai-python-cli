@@ -210,11 +210,12 @@ If no language codes are passed, then it'll pair all the languages found and che
 You're now in a position to train the bot. To do so you only need to run the **train** command just as you would do in Rasa. 
 
 ```
-robo-bot train [language-codes] [--path <path> --nlu --core --augmentation <value>]
+robo-bot train [language-codes] [--path <path> --nlu --core --augmentation <value> --dev-config <path to config file> --force]
 ```
 
 It will train the bot and store the model in the language sub-directory. If no language codes are passed, 
-all bots will be trained. 
+all bots will be trained.  
+The **augmentation** and **force** options do not work in the case of NLU training.
 
 ##### Interacting with a bot #####
 
@@ -352,11 +353,12 @@ When your bot is ready for deployment, you must train it first and remove any ol
 the bot root directory, and then just execute:
 
 ```
-robo-bot deploy [language-code]
+robo-bot deploy [language-code] --model <path to model file>
 ```
 
 It'll package your bot files and upload them to the ROBO.AI platform, starting a new deployment. This step may take
 some time.  
+If you want you can pass the path to the model you want to deploy. If no model path is passed then the most recent one will be picked up.
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
 
 ##### Checking a bot status #####
