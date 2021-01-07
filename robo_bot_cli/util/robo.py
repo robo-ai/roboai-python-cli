@@ -280,8 +280,7 @@ def copy_file(source_path: str, dest_path: str):
 
 
 def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
-    # manifest = BotManifest(bot_language_dir)
-    exclusions = get_bot_ignore_content(bot_root_dir)  # manifest.get_exclusions()
+    exclusions, exceptions = get_bot_ignore_content(bot_root_dir)
     os.makedirs(BUILD_DIR, exist_ok=True)
     package_file_path = get_default_package_path()
 
@@ -291,11 +290,11 @@ def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
     all_artifacts = []
     for root, dirs, files in os.walk(TEMP_DIR, topdown=True):
         dirs[:] = [directory for directory in dirs
-                   if not any(fnmatch(directory, exclusion) for exclusion in exclusions)]
+                   if not any(fnmatch(directory, exclusion) for exclusion in exclusions) or any(fnmatch(directory, exception) for exception in exceptions)]
         actual_files = [os.path.join(root, file) for file in files
-                        if not any(fnmatch(file, exclusion) for exclusion in exclusions)]
+                        if not any(fnmatch(file, exclusion) for exclusion in exclusions) or any(fnmatch(file, exception) for exception in exceptions)]
         actual_dirs = [os.path.join(root, directory) for directory in dirs
-                       if not any(fnmatch(directory, exclusion) for exclusion in exclusions)]
+                       if not any(fnmatch(directory, exclusion) for exclusion in exclusions) or any(fnmatch(directory, exception) for exception in exceptions)]
         all_artifacts.extend(actual_files)
         all_artifacts.extend(actual_dirs)
 
@@ -312,7 +311,7 @@ def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
 def get_bot_ignore_content(bot_ignore_dir: str):
     with open(join(bot_ignore_dir, ".botignore"), "r") as f:
         bot_ignore = f.read().splitlines()
-        return ['%s' % s for s in bot_ignore]
+        return ["%s" % s for s in bot_ignore if not s.startswith("!")], ["%s" % s.replace("!", "").strip() for s in bot_ignore if s.startswith("!")]
 
 
 def get_default_package_path() -> str:

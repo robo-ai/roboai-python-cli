@@ -1,7 +1,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.4] - 2020-12-29
+## [0.1.4] - 2021-01-05
 
 Bugfixes:
 * [#14](https://github.com/robo-ai/roboai-python-cli/issues/14): Remove engine validations since it was coming as None from the core.
@@ -14,6 +14,7 @@ Features:
 * [#18](https://github.com/robo-ai/roboai-python-cli/issues/18): Add option to select a model when deploying or packaging a bot. If no model is passed the most recent one is picked up.
 * [#17](https://github.com/robo-ai/roboai-python-cli/issues/17): Add timestamp to model name.
 * Add force option to train command.
+* [#16](https://github.com/robo-ai/roboai-python-cli/issues/16): Add logic for when .botignore contains exceptions (defined with !).
 
 ## [0.1.3.1] - 2020-11-25
 
