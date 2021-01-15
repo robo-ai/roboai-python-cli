@@ -2,7 +2,7 @@ import json
 import os
 import random
 from collections import defaultdict
-from os import listdir, mkdir
+from os import listdir, mkdir, makedirs
 from os.path import abspath, basename, dirname, exists, isfile, join
 from re import search, sub
 from datetime import datetime
@@ -46,7 +46,7 @@ def command(languages: tuple, cross_validation: bool, folds: int):
 def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, folds: int) -> None:
     timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
     for language in languages_path:
-        mkdir(join(language, "results", timestamp))
+        makedirs(join(language, "results", timestamp), exist_ok=True)
         lang = basename(language) if basename(language) != "bot" else "the"
         print_info(f"Starting test process for {lang} bot")
         # Check if tests folder exists
