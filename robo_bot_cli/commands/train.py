@@ -37,7 +37,7 @@ def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool,
     languages_paths = get_all_languages(path=path, languages=languages)
 
     if nlu:
-        train_nlu(path, languages_paths, dev_config, debug)
+        train_nlu(path, languages_paths, dev_config, force, debug)
     elif core:
         train_core(path, languages_paths, augmentation, dev_config, force, debug)
     else:
