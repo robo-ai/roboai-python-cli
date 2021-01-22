@@ -1,7 +1,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.4] - 2021-01-05
+## [0.1.4] - 2021-01-25
 
 Bugfixes:
 * [#14](https://github.com/robo-ai/roboai-python-cli/issues/14): Remove engine validations since it was coming as None from the core.
