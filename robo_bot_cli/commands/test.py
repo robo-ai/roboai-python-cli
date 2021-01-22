@@ -27,6 +27,8 @@ def command(languages: tuple, cross_validation: bool, folds: int):
                            it checks if the current bot is a multi-language bot. If so
                            all bots will be tested. Otherwise the single-language bot will
                            be tested.
+        cross_validation (bool): Evaluates model in cross-validation mode.
+        folds (int): Number of folds to be applied in cross-validation mode.
     """
     if len(languages) == 0:
         if exists(join(abspath("."), "languages")):
@@ -272,45 +274,58 @@ def generate_conversation_md_from_domain(path_to_language: str):
 
 
 def format_results(language_path: str, timestamp: str):
-    confusion_list = confusion_table_df(language_path, timestamp)
-    misclassified_intents = misclassified_intents_df(language_path, timestamp)
-    statistics_table = stats_table(language_path, timestamp)
+    """
+    Format the results output by Rasa. This includes:
+        - confusion list stating how many times two intents are being confused
+        - misclassified intents: the same as above but it shows the specific utters
+        - statistics table: containing metrics like accuracy, precision, etc.
 
-    with pd.ExcelWriter(
-        join(language_path, "results", timestamp, "intent_details.xlsx"),
-        engine="xlsxwriter",
-    ) as xlsx_writer:
-        confusion_list.to_excel(
-            excel_writer=xlsx_writer, sheet_name="Confusion Table", index=False
-        )
-        worksheet = xlsx_writer.sheets["Confusion Table"]
-        for i, col in enumerate(confusion_list.columns):
-            column_len = max(
-                confusion_list[col].astype(str).str.len().max(), len(col) + 2
-            )
-            worksheet.set_column(i, i, column_len)
+    Args:
+        language_path (str): path to language folder.
+        timestamp (str): timestamp of when the test is run.
+    """
+    try:
+        confusion_list = confusion_table_df(language_path, timestamp)
+        misclassified_intents = misclassified_intents_df(language_path, timestamp)
+        statistics_table = stats_table(language_path, timestamp)
 
-        misclassified_intents.to_excel(
-            excel_writer=xlsx_writer, sheet_name="Misclassified Intents", index=False
-        )
-        worksheet = xlsx_writer.sheets["Misclassified Intents"]
-        for i, col in enumerate(misclassified_intents.columns):
-            column_len = max(
-                misclassified_intents[col].astype(str).str.len().max(),
-                len(col) + 2,
+        with pd.ExcelWriter(
+            join(language_path, "results", timestamp, "intent_details.xlsx"),
+            engine="xlsxwriter",
+        ) as xlsx_writer:
+            confusion_list.to_excel(
+                excel_writer=xlsx_writer, sheet_name="Confusion Table", index=False
             )
-            worksheet.set_column(i, i, column_len)
+            worksheet = xlsx_writer.sheets["Confusion Table"]
+            for i, col in enumerate(confusion_list.columns):
+                column_len = max(
+                    confusion_list[col].astype(str).str.len().max(), len(col) + 2
+                )
+                worksheet.set_column(i, i, column_len)
 
-        statistics_table.to_excel(
-            excel_writer=xlsx_writer, sheet_name="Intent Statistics", index=False
-        )
-        worksheet = xlsx_writer.sheets["Intent Statistics"]
-        for i, col in enumerate(statistics_table.columns):
-            column_len = max(
-                statistics_table[col].astype(str).str.len().max(),
-                len(col) + 2,
+            misclassified_intents.to_excel(
+                excel_writer=xlsx_writer, sheet_name="Misclassified Intents", index=False
             )
-            worksheet.set_column(i, i, column_len)
+            worksheet = xlsx_writer.sheets["Misclassified Intents"]
+            for i, col in enumerate(misclassified_intents.columns):
+                column_len = max(
+                    misclassified_intents[col].astype(str).str.len().max(),
+                    len(col) + 2,
+                )
+                worksheet.set_column(i, i, column_len)
+
+            statistics_table.to_excel(
+                excel_writer=xlsx_writer, sheet_name="Intent Statistics", index=False
+            )
+            worksheet = xlsx_writer.sheets["Intent Statistics"]
+            for i, col in enumerate(statistics_table.columns):
+                column_len = max(
+                    statistics_table[col].astype(str).str.len().max(),
+                    len(col) + 2,
+                )
+                worksheet.set_column(i, i, column_len)
+    except Exception:
+        print_error("One or more files necessary for the intent_details.xlsx file was not output by Rasa and thus this file cannot be generated.\n")
 
 
 def misclassified_intents_df(language_path: str, timestamp: str) -> pd.DataFrame:
