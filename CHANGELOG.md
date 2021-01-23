@@ -1,11 +1,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.4] - 2021-01-05
+## [0.1.4] - 2021-01-25
 
 Bugfixes:
 * [#14](https://github.com/robo-ai/roboai-python-cli/issues/14): Remove engine validations since it was coming as None from the core.
 * [#19](https://github.com/robo-ai/roboai-python-cli/issues/19): Fix issue with model name when it's different than model-language.
+* [#25](https://github.com/robo-ai/roboai-python-cli/issues/25): Fix bug in test command if results folder doesn't exist.
 
 Features:
 * [#20](https://github.com/robo-ai/roboai-python-cli/issues/20): Add cross-validation option to test command.
@@ -15,6 +16,8 @@ Features:
 * [#17](https://github.com/robo-ai/roboai-python-cli/issues/17): Add timestamp to model name.
 * Add force option to train command.
 * [#16](https://github.com/robo-ai/roboai-python-cli/issues/16): Add logic for when .botignore contains exceptions (defined with !).
+* [#26](https://github.com/robo-ai/roboai-python-cli/issues/26): Add debug option to train command.
+* [#27](https://github.com/robo-ai/roboai-python-cli/issues/27): Add forms comparison to diff command.
 
 ## [0.1.3.1] - 2020-11-25
 

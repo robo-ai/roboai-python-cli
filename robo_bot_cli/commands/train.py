@@ -19,7 +19,9 @@ from robo_bot_cli.util.cli import print_info
               (default: 50)")
 @click.option("--force", "-f", "force", is_flag=True, default=False,
               help="Force a model training even if the data has not changed. (default: False)")
-def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool, augmentation: int, force: bool):
+@click.option("--debug", "-vv", "debug", is_flag=True, default=False,
+              help="Print lots of debugging statements. Sets logging level")
+def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool, augmentation: int, force: bool, debug: bool):
     """
     Wrapper of rasa train for multi-language bots.
 
@@ -35,11 +37,11 @@ def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool,
     languages_paths = get_all_languages(path=path, languages=languages)
 
     if nlu:
-        train_nlu(path, languages_paths, dev_config)
+        train_nlu(path, languages_paths, dev_config, force, debug)
     elif core:
-        train_core(path, languages_paths, augmentation, dev_config, force)
+        train_core(path, languages_paths, augmentation, dev_config, force, debug)
     else:
-        train(path, languages_paths, augmentation, dev_config, force)
+        train(path, languages_paths, augmentation, dev_config, force, debug)
 
     # print_success("All training tasks completed")
 
@@ -62,32 +64,32 @@ def get_all_languages(path: str, languages: tuple):
     return languages_paths
 
 
-def train(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool):
+def train(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     stories_path = join(path, "languages", "stories.md")
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
         os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path, 'domain.yml')} \
         --data {join(language_path, 'data')} {stories_path} --augmentation {augmentation} {'--force' if force else ''} \
-        --out {join(language_path, 'models')} --fixed-model-name model-{lang}-{timestamp}")
+        {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name model-{lang}-{timestamp}")
 
 
-def train_nlu(path: str, languages_paths: list, dev_config: str, force: bool):
+def train_nlu(path: str, languages_paths: list, dev_config: str, force: bool, debug: bool):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
         os.system(f"rasa train nlu --nlu {join(language_path, 'data')} --config {join(language_path, dev_config)} \
-                  --out {join(language_path, 'models')} --fixed-model-name nlu-model-{lang}-{timestamp}")
+                  {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name nlu-model-{lang}-{timestamp}")
 
 
-def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool):
+def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     stories_path = join(path, 'languages', 'stories.md')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
         os.system(f"rasa train core --domain {join(language_path, 'domain.yml')} --stories {stories_path} \
                   --augmentation {augmentation} --config {join(language_path, dev_config)} {'--force' if force else ''} \
-                  --out {join(language_path, 'models')} --fixed-model-name core-model-{lang}-{timestamp}")
+                  {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name core-model-{lang}-{timestamp}")
 
 
 if __name__ == "__main__":
