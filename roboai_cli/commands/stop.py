@@ -1,8 +1,8 @@
 import click
 from os.path import abspath, join
 
-from robo_bot_cli.util.cli import print_success, print_message
-from robo_bot_cli.util.robo import validate_robo_session, get_current_bot_uuid, stop_runtime
+from roboai_cli.util.cli import print_success, print_message
+from roboai_cli.util.robo import validate_robo_session, get_current_bot_uuid, stop_runtime
 
 
 @click.command(name="stop", help="Stop a bot running in the ROBO.AI platform.")

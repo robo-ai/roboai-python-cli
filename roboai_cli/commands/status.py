@@ -1,9 +1,9 @@
 import click
 from os.path import abspath, join
-
-from robo_bot_cli.util.cli import print_message
 from datetime import datetime
-from robo_bot_cli.util.robo import (
+
+from roboai_cli.util.cli import print_message
+from roboai_cli.util.robo import (
     does_the_runtime_exist,
     validate_bot,
     validate_robo_session,
