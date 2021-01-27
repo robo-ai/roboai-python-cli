@@ -28,8 +28,8 @@ from roboai_cli.util.cli import print_message
 from roboai_cli.util.text import remove_last_line
 
 
-@click.group(help=f"robo-bot {__version__}")
-@click.version_option(version=__version__, message=f"robo-bot {__version__}")
+@click.group(help=f"roboai {__version__}")
+@click.version_option(version=__version__, message=f"roboai {__version__}")
 def cli():
     pass
 
