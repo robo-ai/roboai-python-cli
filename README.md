@@ -14,21 +14,22 @@ Tutorials:
 
 #### Requirements ####
 
-* Python 3.6 or 3.7
+* Python 3.7
 * Pip and/or anaconda
 
 You can create a virtual environment using conda:
 ```sh
-conda create -n robo-bot python=3.7
-conda activate robo-bot
+conda create -n roboai-cli python=3.7
+conda activate roboai-cli
 ```
 
 #### Install the ROBO.AI tool ####
 
-Assuming you are already in your virtual environment with Python 3.6 or 3.7, you can install the tool with the following command:
+Assuming you are already in your virtual environment with Python 3.7, you can install the tool with the following command:
 ```
-pip install robo-bot
+pip install robo-bot # TODO
 ```
+
 
 After installing the library you should be able to execute the robo-bot command in your terminal.
 
@@ -37,7 +38,7 @@ After installing the library you should be able to execute the robo-bot command 
 The command line tool is available through the following terminal command:
 
 ```
-robo-bot
+roboai
 ```
 
 When you execute it in a terminal you should see an output with a list of commands supported
@@ -45,7 +46,7 @@ by the tool.
 
 I.e:
 ```
-user@host:~$ robo-bot
+user@host:~$ roboai
  ____   ___  ____   ___           _    ___ 
 |  _ \ / _ \| __ ) / _ \         / \  |_ _|
 | |_) | | | |  _ \| | | |       / _ \  | | 
@@ -53,9 +54,9 @@ user@host:~$ robo-bot
 |_| \_\\___/|____/ \___/  (_) /_/   \_\___|
 Bot Management Tool             robo-ai.com
 
-Usage: robo-bot [OPTIONS] COMMAND [ARGS]...
+Usage: roboai [OPTIONS] COMMAND [ARGS]...
 
-  robo-bot 0.1.0
+  roboai 0.1.0
 
 Options:
   --version  Show the version and exit.
@@ -90,25 +91,25 @@ arguments are available.
 
 You can invoke each of the tool commands by following the pattern:
 ```
-robo-bot <command> [command arguments or options]
+roboai <command> [command arguments or options]
 ```
 
 i.e.:
 ```
-robo-bot login --api-key=my-apy-key
+roboai login --api-key=my-apy-key
 ```
 
 You can check the supported options and arguments for every command by following
 the pattern:
 
 ```
-robo-bot <command> --help
+roboai <command> --help
 ```
 
 i.e.:
 
 ```
-user@host:~$ robo-bot login --help
+user@host:~$ roboai login --help
  ____   ___  ____   ___           _    ___ 
 |  _ \ / _ \| __ ) / _ \         / \  |_ _|
 | |_) | | | |  _ \| | | |       / _ \  | | 
@@ -116,7 +117,7 @@ user@host:~$ robo-bot login --help
 |_| \_\\___/|____/ \___/  (_) /_/   \_\___|
 Bot Management Tool             robo-ai.com
 
-Usage: robo-bot login [OPTIONS]
+Usage: roboai login [OPTIONS]
 
   Initialize a new session using a ROBO.AI API key.
 
@@ -125,7 +126,7 @@ Options:
   --help          Show this message and exit.
 ```
 
-### Using robo-bot to create and maintain a bot ###
+### Using roboai-cli to create and maintain a bot ###
 
 ##### Generating an initial structure #####
 
@@ -135,11 +136,11 @@ before its deployment.
 To create a bot you can use the **seed** command:
 
 ```
-robo-bot seed [language-codes] [--path <path> --language-detection --chit-chat --coref-resolution]
+roboai seed [language-codes] [--path <path> --language-detection --chit-chat --coref-resolution]
 ```
 i.e.:
 ```
-robo-bot seed en de --path bot/ --language-detection --chit-chat --coref-resolution
+roboai seed en de --path bot/ --language-detection --chit-chat --coref-resolution
 ```
 
 The first argument of the seed command is the language-codes which indicate the languages the bot will be built upon. 
@@ -186,10 +187,10 @@ After defining intents and actions for a bot you need to combine these in storie
 Note: Manual checks will be needed to implement more complex stories but basic ping-pong dialogues should be covered with this feature. 
 Usage: 
 ```
-robo-bot stories [language-codes] [--check-covered-intents]
+roboai stories [language-codes] [--check-covered-intents]
 ```
 
-If no language-code is passed, robo-bot will assume you're working in a single-language bot (and thus the default Rasa structure). 
+If no language-code is passed, roboai-cli will assume you're working in a single-language bot (and thus the default Rasa structure). 
 The option --check-covered-intents will go through your stories file and check if the intents you have defined in the domain file are being covered in the dialogues. This command is more useful when you're deep in the development of your bot.
 
 
@@ -198,7 +199,7 @@ The option --check-covered-intents will go through your stories file and check i
 After making all the necessary changes to your bots, you want to make sure that all bots (languages) are coherent between each other (i.e. the same stories.md file will work for the nlu.md and domain.yml files configured for the different languages.) To know whether your bot is achieving this, you can use the **diff** command. 
 
 ```
-robo-bot diff [language-codes] [--path <path>]
+roboai diff [language-codes] [--path <path>]
 ```
 
 It will check for structural differences between the domain.yml and stories.md files for the same multi-language bot. 
@@ -210,7 +211,7 @@ If no language codes are passed, then it'll pair all the languages found and che
 You're now in a position to train the bot. To do so you only need to run the **train** command just as you would do in Rasa. 
 
 ```
-robo-bot train [language-codes] [--path <path> --nlu --core --augmentation <value> --dev-config <path to config file> --force]
+roboai train [language-codes] [--path <path> --nlu --core --augmentation <value> --dev-config <path to config file> --force]
 ```
 
 It will train the bot and store the model in the language sub-directory. If no language codes are passed, 
@@ -222,13 +223,13 @@ The **augmentation** and **force** options do not work in the case of NLU traini
 To interact with the bot, you can use the **shell** command. Before running it, you need to execute the **run actions** command. 
 
 ```
-robo-bot run actions [--debug]
+roboai run actions [--debug]
 ```
 
 After doing so, you can execute the shell command. 
 
 ```
-robo-bot shell [language-code] [--debug]
+roboai shell [language-code] [--debug]
 ```
 
 You need to specify what language (bot) you want to interact with - you can only interact with one bot at the time.
@@ -238,11 +239,11 @@ You need to specify what language (bot) you want to interact with - you can only
 Testing a bot is also probably in your pipeline. And this is possible with the **test** command.
 
 ```
-robo-bot test [language-code]
+roboai test [language-code]
 ```
 
 It'll test the bot with the conversation_tests.md file you have stored in your tests folder.  
-The results will be stored in the language sub-directory. Besides Rasa's default results, robo-bot also produces 
+The results will be stored in the language sub-directory. Besides Rasa's default results, roboai-cli also produces 
 an excel file with a confusion list of mistmatched intents.
 
 ##### Interactive learning #####
@@ -250,7 +251,7 @@ an excel file with a confusion list of mistmatched intents.
 If you want to use Rasa's interactive learning mode you can do this by using the interactive command. 
 
 ```
-robo-bot interactive [language-code]
+roboai interactive [language-code]
 ```
 
 It'll launch an interactive session where you can provide feedback to the bot. At the end don't forget to
@@ -258,7 +259,7 @@ adjust the paths to where the new files should be saved.
 
 By now you're probably ready to deploy your bot...
 
-### Using robo-bot to deploy a bot ###
+### Using roboai-cli to deploy a bot ###
 
 ##### Setting the target endpoint #####
 
@@ -269,14 +270,14 @@ The tool provides you with a default production environment in the ROBO.AI platf
 You can activate it by running:
 
 ```
-robo-bot environment activate production
+roboai environment activate production
 ```
 
 You can also create new environments by executing:
 
 
 ```
-robo-bot environment create <environment name> --base-url <base-url> [--username <username> --password <password>]
+roboai environment create <environment name> --base-url <base-url> [--username <username> --password <password>]
 ```
 
 The base-url refers to the environment URL and you can optionally pass a username
@@ -285,26 +286,26 @@ and password if your environment requires them.
 i.e.:
 
 ```
-robo-bot environment create development --base-url https://robo-core.my-robo-server.com --username m2m --password GgvJrZSCXger
+roboai environment create development --base-url https://robo-core.my-robo-server.com --username m2m --password GgvJrZSCXger
 ```
 
 After creating an environment, do not forget to activate it if you want to use it. 
 To know which environment is activated you can simply run:
 
 ```
-robo-bot environment which
+roboai environment which
 ```
 
 It's possible to check what environments are available in your configuration file by running: 
 
 ```
-robo-bot environment list
+roboai environment list
 ```
 
 You can also remove environments by executing:
 
 ```
-robo-bot environment remove <environment name>
+roboai environment remove <environment name>
 ```
 
 
@@ -318,13 +319,13 @@ an API key.
 
 i.e.:
 ```
-robo-bot login --api-key=my-api-key
+roboai login --api-key=my-api-key
 ```
 
 Or if you don't want to enter the api key in your command, you can enter it interactively by only executing:
 
 ```
-robo-bot login
+roboai login
 ```
 
 ##### Initializing a bot #####
@@ -333,13 +334,13 @@ In order to manage a bot runtime, it needs to be initialized so the tool will kn
 refers to. If you already have the Rasa bot initialized, just execute the following command:
 
 ```
-robo-bot connect [language-code] --target-dir <path to rasa bot files>
+roboai connect [language-code] --target-dir <path to rasa bot files>
 ```
 
 i.e.:
 
 ```
-robo-bot connect [language-code] --target-dir /path/to/rasa/bot
+roboai connect [language-code] --target-dir /path/to/rasa/bot
 ```
 
 First it'll ask you to pick an existing bot (if it does not exist, you must create it before executing this step).
@@ -353,7 +354,7 @@ When your bot is ready for deployment, you must train it first and remove any ol
 the bot root directory, and then just execute:
 
 ```
-robo-bot deploy [language-code] --model <path to model file>
+roboai deploy [language-code] --model <path to model file>
 ```
 
 It'll package your bot files and upload them to the ROBO.AI platform, starting a new deployment. This step may take
@@ -367,7 +368,7 @@ If you want to check your bot status, just run the following command from the sa
 your robo-manifest.json
 
 ```
-robo-bot status [language-code]
+roboai status [language-code]
 ```
 
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
@@ -377,7 +378,7 @@ robo-bot status [language-code]
 If you need to remove a bot, execute the following command from the bot root directory:
 
 ```
-robo-bot remove [language-code]
+roboai remove [language-code]
 ```
 
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
@@ -387,7 +388,7 @@ robo-bot remove [language-code]
 Sometimes it's useful to have a peak in the logs, for that you need to execute:
 
 ```
-robo-bot logs [language-code]
+roboai logs [language-code]
 ```
 
 It'll show you the latest 1000 lines from that rasa bot logs.  

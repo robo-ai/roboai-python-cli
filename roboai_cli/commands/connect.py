@@ -25,26 +25,10 @@ from roboai_cli.util.robo import (
 )
 
 
-@click.command(
-    name="connect",
-    help="Connect a local bot to a ROBO.AI server bot instance.",
-)
-@click.argument(
-    "language",
-    nargs=-1,
-)
-@click.option(
-    "--bot-uuid",
-    default=None,
-    type=str,
-    help="The bot UUID to assign to the bot implementation.",
-)
-@click.option(
-    "--target-dir",
-    default=None,
-    type=str,
-    help="The target directory where the bot will be setup.",
-)
+@click.command(name="connect", help="Connect a local bot to a ROBO.AI server bot instance.",)
+@click.argument("language", nargs=-1,)
+@click.option("--bot-uuid", default=None, type=str, help="The bot UUID to assign to the bot implementation.",)
+@click.option("--target-dir", default=None, type=str, help="The target directory where the bot will be setup.",)
 def command(
     language: tuple,
     bot_uuid: str,
@@ -60,6 +44,7 @@ def command(
         language: language code of the bot to be connected.
         bot_uuid (str): optional argument stating the ID of the bot.
         target_dir (str): optional argument stating where the robo-manifest file should be stored.
+        base_version (str): optional argument stating the engine base version. Defaults to 'rasa-1.10.0'
     """
     validate_robo_session()
 
