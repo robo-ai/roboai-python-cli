@@ -350,22 +350,19 @@ and the target bot.
 
 ##### Deploying a bot #####
 
-When your bot is ready for deployment, you must train it first and remove any older model, then ensure you're in
-the bot root directory, and then just execute:
+When your bot is ready for deployment, you must train it first and ensure you're in the bot root directory. You can then execute:
 
 ```
 roboai deploy [language-code] --model <path to model file>
 ```
 
-It'll package your bot files and upload them to the ROBO.AI platform, starting a new deployment. This step may take
-some time.  
+It'll package your bot files and upload them to the ROBO.AI platform, starting a new deployment. This step may take some time.  
 If you want you can pass the path to the model you want to deploy. If no model path is passed then the most recent one will be picked up.
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
 
 ##### Checking a bot status #####
 
-If you want to check your bot status, just run the following command from the same directory as of
-your robo-manifest.json
+If you want to check your bot status, just run the following command from the same directory as of your robo-manifest.json
 
 ```
 roboai status [language-code]
@@ -385,7 +382,7 @@ roboai remove [language-code]
 
 ##### Checking a deployed bot logs #####
 
-Sometimes it's useful to have a peak in the logs, for that you need to execute:
+Sometimes it's useful to have a look into the logs, for that you need to execute:
 
 ```
 roboai logs [language-code]
