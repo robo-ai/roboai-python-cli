@@ -7,7 +7,7 @@ from roboai_cli.util.cli import loading_indicator, print_message, print_success
 from roboai_cli.util.robo import BUILD_DIR
 
 
-@click.command(name='clean', help='Clean the last package')
+@click.command(name="clean", help="Clean the last package")
 def command():
     """
     Clean (remove) the package if this is available in the bot dir.
