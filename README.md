@@ -27,7 +27,7 @@ conda activate roboai-cli
 
 Assuming you are already in your virtual environment with Python 3.7, you can install the tool with the following command:
 ```
-pip install robo-bot # TODO
+pip install roboai-cli
 ```
 
 

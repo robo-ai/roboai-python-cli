@@ -22,7 +22,7 @@ conda activate roboai
 
 The package can then be installed via pip as follows:
 ```sh
-pip install roboai # TODO
+pip install roboai-cli
 ```
 
 After installing the command line tool, it should be available through the following terminal command: 
