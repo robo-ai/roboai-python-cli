@@ -1,6 +1,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2021-01-27
+
+Resetting version. Following [Semantic Versioning 2.0.0](https://semver.org/) from now on.
+
 ## [0.1.4] - 2021-01-25
 
 Bugfixes:
@@ -43,4 +47,4 @@ Bugfixes:
 
 ## [0.1.0] - 2020-10-14
 
-* Initial version.
+* Initial version migrated from bitbucket.
