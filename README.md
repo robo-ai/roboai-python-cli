@@ -23,7 +23,7 @@ conda create -n roboai-cli python=3.7
 conda activate roboai-cli
 ```
 
-#### Install the ROBO.AI tool ####
+#### Installing the ROBO.AI tool ####
 
 Assuming you are already in your virtual environment with Python 3.7, you can install the tool with the following command:
 ```
@@ -393,3 +393,19 @@ roboai logs [language-code]
 
 It'll show you the latest 1000 lines from that rasa bot logs.  
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
+
+
+## Code Style
+
+We use [Google Style Python Docstrings](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).   
+
+## Releases
+
+We follow [Semantic Versioning 2.0.0](https://semver.org/) standards.  
+
+Given a version number MAJOR.MINOR.PATCH, increment the:  
+
+- MAJOR version when you make incompatible API changes,  
+- MINOR version when you add functionality in a backwards compatible manner, and  
+- PATCH version when you make backwards compatible bug fixes.  
+Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.  
