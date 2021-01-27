@@ -5,7 +5,6 @@ from datetime import datetime
 from roboai_cli.util.cli import print_message
 from roboai_cli.util.robo import (
     does_the_runtime_exist,
-    validate_bot,
     validate_robo_session,
     get_current_bot_uuid,
     get_bot_runtime
@@ -36,8 +35,6 @@ def command(language: tuple, bot_uuid: str):
 
     if not bot_uuid:
         bot_uuid = get_current_bot_uuid(bot_dir)
-
-    validate_bot(bot_uuid)
 
     print_message("Bot UUID: {0}".format(bot_uuid))
 
