@@ -10,7 +10,7 @@ from roboai_cli.util.robo import BUILD_DIR
 @click.command(name='clean', help='Clean the last package')
 def command():
     """
-    Clean (removes) the package if this is available in the bot dir.
+    Clean (remove) the package if this is available in the bot dir.
     """
     print_message("Cleaning the packaging...")
     with loading_indicator("Cleaning package files..."):

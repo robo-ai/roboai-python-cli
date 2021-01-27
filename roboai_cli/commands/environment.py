@@ -59,7 +59,7 @@ def create_environment(settings, new_env_name, base_url, username, password):
     settings.update_environment(environment)
 
     print_success(f"The environment was successfully created.\nYou can now activate it by running "
-                  f"'robo-bot environment activate {new_env_name}'.\n")
+                  f"'roboai environment activate {new_env_name}'.\n")
 
 
 def activate_environment(settings, env_name):
@@ -83,7 +83,7 @@ def remove_environment(settings, env_name):
 def which_environment(settings):
     current_environment = settings.get_current_environment()
     if not current_environment:
-        print_info("No environment is currently activated.\nRun 'robo-bot environment activate <env-name>' to activate"
+        print_info("No environment is currently activated.\nRun 'roboai environment activate <env-name>' to activate"
                    "an environment.")
     else:
         print_info(f"The '{current_environment.environment_name}' environment is currently activated.")
@@ -91,7 +91,7 @@ def which_environment(settings):
 
 def list_environments(settings):
     environments_list = settings.get_environments()
-    print("# robo-bot environments:\n")
+    print("# roboai environments:\n")
     for environment in environments_list:
         print(environment)
 

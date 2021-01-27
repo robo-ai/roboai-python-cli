@@ -8,12 +8,12 @@ from roboai_cli.util.robo import get_robo_client
 
 @click.command(name='login', help='Initialize a new session using a ROBO.AI API key.')
 @click.option('--api-key', prompt='Please enter your ROBO.AI API key', help='The ROBO.AI platform API key.')
-def command(api_key):
+def command(api_key: str):
     """
     Initialize a new session using a ROBO.AI API key,
 
     Args:
-        api_key: API key
+        api_key (str): API key
     """
     settings = ToolSettings()
     current_environment = settings.get_current_environment()  # this should be an object now

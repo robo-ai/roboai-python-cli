@@ -48,7 +48,7 @@ def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool,
 
 def _inform_language() -> None:
     """
-    Auxiliary method to inform the user no languages were passed when executing the train command.
+    Inform the user no languages were passed when executing the train command.
     """
     print_info("No language was provided. Will train all available languages inside provided bot folder.")
 
