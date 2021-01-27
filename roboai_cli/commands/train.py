@@ -55,7 +55,7 @@ def _inform_language() -> None:
 
 def get_all_languages(path: str, languages: tuple):
     if len(languages) == 0:
-        _inform_language
+        _inform_language()
         languages_paths = [join(path, "languages", folder) for folder in os.listdir(join(path, "languages"))
                            if os.path.isdir(os.path.join(path, "languages", folder))]
     else:
