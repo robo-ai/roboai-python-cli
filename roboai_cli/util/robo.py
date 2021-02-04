@@ -270,7 +270,7 @@ def copy_directories(bot_language_dir: str, bot_root_dir: str, model: str):
     else:
         list_of_models = glob.glob(join(bot_language_dir, "models", "*.tar.gz"))
         latest_file = max(list_of_models, key=os.path.getctime)
-        model_name = path_leaf(model)
+        model_name = path_leaf(latest_file)
         copy_file(latest_file, join(TEMP_DIR, "models", model_name))
     copy_dir(join(bot_root_dir, "custom"), join(TEMP_DIR, "custom"))
     copy_file(join(bot_language_dir, "config.yml"), join(TEMP_DIR, "config.yml"))
