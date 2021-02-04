@@ -6,6 +6,7 @@ from time import sleep
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
 import glob
+import ntpath
 
 import click
 import polling
@@ -236,6 +237,25 @@ def assert_status_transition(current_status: AssistantRuntimeStatus, new_status:
         raise click.UsageError("The bot cannot be {0} when in the '{1}' status".format(verb, current_status.value))
 
 
+def path_leaf(path: str) -> str:
+    """
+    Taken from https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
+    (1) There's one caveat: Linux filenames may contain backslashes. So on linux, r'a/b\c' always refers to the file b\c in the a folder, while on Windows,
+    it always refers to the c file in the b subfolder of the a folder. So when both forward and backward slashes are used in a path,
+    you need to know the associated platform to be able to interpret it correctly.
+    In practice it's usually safe to assume it's a windows path since backslashes are seldom used in Linux filenames,
+    but keep this in mind when you code so you don't create accidental security holes.
+
+    Args:
+        path (str): path to get the basename
+
+    Returns:
+        [str]: basename
+    """
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
+
+
 def copy_directories(bot_language_dir: str, bot_root_dir: str, model: str):
     """
     Copy files to a temporary directory
@@ -245,12 +265,12 @@ def copy_directories(bot_language_dir: str, bot_root_dir: str, model: str):
     copy_file(join(bot_root_dir, "languages", "stories.md"), join(TEMP_DIR, "data", "stories.md"))
     os.makedirs(join(TEMP_DIR, "models"), exist_ok=True)
     if model:
-        model_name = model.split("/")[-1]
+        model_name = path_leaf(model)
         copy_file(join(bot_language_dir, "models", model_name), join(TEMP_DIR, "models", model_name))
     else:
         list_of_models = glob.glob(join(bot_language_dir, "models", "*.tar.gz"))
         latest_file = max(list_of_models, key=os.path.getctime)
-        model_name = latest_file.split("/")[-1]
+        model_name = path_leaf(model)
         copy_file(latest_file, join(TEMP_DIR, "models", model_name))
     copy_dir(join(bot_root_dir, "custom"), join(TEMP_DIR, "custom"))
     copy_file(join(bot_language_dir, "config.yml"), join(TEMP_DIR, "config.yml"))
