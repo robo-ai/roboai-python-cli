@@ -1,5 +1,10 @@
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/) starting with version 1.0.0.
+
+## [1.0.1] - 2021-02-04
+
+Bugfixes:
+* [#34](https://github.com/robo-ai/roboai-python-cli/issues/34): Fix issue with model path for Windows users. 
 
 ## [1.0.0] - 2021-01-27
 
