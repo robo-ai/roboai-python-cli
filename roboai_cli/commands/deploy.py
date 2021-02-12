@@ -4,12 +4,14 @@ import click
 from roboai_cli.util.cli import print_message, print_success
 from roboai_cli.util.robo import (
     create_package,
+    create_bot_metadata,
     create_runtime,
     does_the_runtime_exist,
     get_current_bot_base_version,
     get_current_bot_uuid,
     get_default_package_path,
     update_runtime,
+    validate_bot_metadata,
     validate_package_file,
     validate_robo_session,
 )
@@ -87,10 +89,14 @@ def command(
 
     validate_package_file(package_file)
 
+    bot_metadata_file = create_bot_metadata(bot_dir)
+
+    validate_bot_metadata(bot_metadata_file)
+
     if does_the_runtime_exist(bot_uuid):
-        update_runtime(bot_uuid, package_file, runtime_base_version)
+        update_runtime(bot_uuid, package_file, bot_metadata_file, runtime_base_version)
     else:
-        create_runtime(bot_uuid, package_file, runtime_base_version)
+        create_runtime(bot_uuid, package_file, bot_metadata_file, runtime_base_version)
 
     print_success("Deployment complete.\n")
 

@@ -1,5 +1,7 @@
 import yaml
 
+import pandas as pd
+
 
 def load_yaml(path: str) -> dict:
     """
@@ -55,3 +57,12 @@ def write_requirements(path: str, req_list: list):
                 appendEOL = True
             # Append element at the end of file
             f.write(req)
+
+
+def read_nlu(path: str) -> pd.DataFrame:
+
+    """
+    Path should be general and not only one file because there might be more than one nlu file
+    """
+
+    pass

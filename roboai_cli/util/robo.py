@@ -10,10 +10,12 @@ import ntpath
 
 import click
 import polling
+
 from roboai_cli.config.bot_manifest import BotManifest
 from roboai_cli.config.tool_settings import ToolSettings
 from roboai_cli.config.environment_settings import Environment
 from roboai_cli.util.cli import loading_indicator, print_warning
+from roboai_cli.util.input_output import read_nlu
 from robo_ai.exception.invalid_credentials_error import InvalidCredentialsError
 from robo_ai.exception.invalid_token_error import InvalidTokenError
 from robo_ai.exception.not_found_error import NotFoundError
@@ -25,6 +27,7 @@ from robo_ai.robo_ai import RoboAi
 SUPPORTED_BOT_TYPE = "RASA"
 
 PACKAGE_FILE_NAME = "package.zip"
+METADATA_FILE_NAME = "metadata.json"
 BUILD_DIR = "build"
 TEMP_DIR = "temp_dir"
 SUPPORTED_RUNTIME_BASE_VERSIONS = [
@@ -129,7 +132,7 @@ def wait_for_runtime_non_existence(bot_uuid: str):
     )
 
 
-def update_runtime(bot_uuid: str, package_file: str, base_version: str):
+def update_runtime(bot_uuid: str, package_file: str, bot_metadata_file: str, base_version: str):
     settings = ToolSettings()
     current_environment = settings.get_current_environment()
     robo = get_robo_client(current_environment)
@@ -139,22 +142,26 @@ def update_runtime(bot_uuid: str, package_file: str, base_version: str):
             robo.assistants.runtimes.stop(bot_uuid)
             wait_for_runtime_status(bot_uuid, AssistantRuntimeStatus.STOPPED)
 
-    total_file_size = os.path.getsize(package_file)
+    package_file_size = os.path.getsize(package_file)
+    bot_metadata_file_size = os.path.getsize(bot_metadata_file)
+    total_file_size = package_file_size + bot_metadata_file_size
     with click.progressbar(length=total_file_size, label="Uploading package", show_eta=False) as bar:
-        robo.assistants.runtimes.update(bot_uuid, package_file, base_version,
+        robo.assistants.runtimes.update(bot_uuid, package_file, bot_metadata_file, base_version,
                                         progress_callback=lambda bytes_read: bar.update(bytes_read - bar.pos))
 
     with loading_indicator("Waiting for the bot runtime to start..."):
         wait_for_runtime_status(bot_uuid, AssistantRuntimeStatus.RUNNING)
 
 
-def create_runtime(bot_uuid: str, package_file: str, base_version: str):
+def create_runtime(bot_uuid: str, package_file: str, bot_metadata_file: str, base_version: str):
     settings = ToolSettings()
     current_environment = settings.get_current_environment()
     robo = get_robo_client(current_environment)
-    total_file_size = os.path.getsize(package_file)
+    package_file_size = os.path.getsize(package_file)
+    bot_metadata_file_size = os.path.getsize(bot_metadata_file)
+    total_file_size = package_file_size + bot_metadata_file_size
     with click.progressbar(length=total_file_size, label="Uploading package", show_eta=False) as bar:
-        robo.assistants.runtimes.create(bot_uuid, package_file, base_version,
+        robo.assistants.runtimes.create(bot_uuid, package_file, bot_metadata_file, base_version,
                                         progress_callback=lambda bytes_read: bar.update(bytes_read - bar.pos))
 
     with loading_indicator("Waiting for the bot runtime to be ready (it may take several minutes)..."):
@@ -240,7 +247,7 @@ def assert_status_transition(current_status: AssistantRuntimeStatus, new_status:
 def path_leaf(path: str) -> str:
     """
     Taken from https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
-    (1) There's one caveat: Linux filenames may contain backslashes. So on linux, r'a/b\c' always refers to the file b\c in the a folder, while on Windows,
+    (1) There's one caveat: Linux filenames may contain backslashes. So on linux, r'a/b\\c' always refers to the file b\\c in the a folder, while on Windows,
     it always refers to the c file in the b subfolder of the a folder. So when both forward and backward slashes are used in a path,
     you need to know the associated platform to be able to interpret it correctly.
     In practice it's usually safe to assume it's a windows path since backslashes are seldom used in Linux filenames,
@@ -334,13 +341,39 @@ def get_bot_ignore_content(bot_ignore_dir: str):
         return ["%s" % s for s in bot_ignore if not s.startswith("!")], ["%s" % s.replace("!", "").strip() for s in bot_ignore if s.startswith("!")]
 
 
+def create_bot_metadata(bot_language_dir: str) -> str:
+
+    os.makedirs(BUILD_DIR, exist_ok=True)
+    metadata_file_path = get_default_package_path()
+
+    nlu_df = read_nlu(join(bot_language_dir, "data"))
+
+    with click.progressbar(nlu_df.iterrows(), label="Creating bot metadata") as bar:
+        for i, row in bar:
+            pass
+            # build metadata dict
+            sleep(0.05)
+
+        # save metadata dict as json
+    return metadata_file_path
+
+
 def get_default_package_path() -> str:
     return os.path.join(BUILD_DIR, PACKAGE_FILE_NAME)
+
+
+def get_default_metadata_path() -> str:
+    return os.path.join(BUILD_DIR, METADATA_FILE_NAME)
 
 
 def validate_package_file(path: str):
     if not os.path.exists(path):
         raise click.UsageError("The package file does not exist.")
+
+
+def validate_bot_metadata(path: str):
+    if not os.path.exists(path):
+        raise click.UsageError("The metadata file does not exist.")
 
 
 def get_current_bot_uuid(bot_dir: str):
