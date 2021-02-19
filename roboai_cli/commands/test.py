@@ -21,7 +21,8 @@ from roboai_cli.util.helpers import clean_intents
 @click.option("--folds", "-f", "folds", type=int, default=3, help="Number of folds to be applied in cross-validation mode.")
 @click.option("--test-data-path", default=None, type=click.Path(), help="Directory where test data is stored.")
 def command(languages: tuple, cross_validation: bool, folds: int, test_data_path: str):
-    """Tests a Rasa bot.
+    """
+    Test a Rasa bot.
 
     Args:
         languages (tuple): languages (bots) to be tested. If no language is passed
@@ -30,6 +31,7 @@ def command(languages: tuple, cross_validation: bool, folds: int, test_data_path
                            be tested.
         cross_validation (bool): Evaluates model in cross-validation mode.
         folds (int): Number of folds to be applied in cross-validation mode.
+        test_data_path (str): Path to testing data in case you have split it before.
     """
     if len(languages) == 0:
         if exists(join(abspath("."), "languages")):

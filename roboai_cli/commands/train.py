@@ -1,6 +1,6 @@
 import click
 import os
-from os.path import join
+from os.path import join, abspath
 from datetime import datetime
 
 from roboai_cli.util.cli import print_info
@@ -8,7 +8,6 @@ from roboai_cli.util.cli import print_info
 
 @click.command(name="train", help="Train Rasa models for the required bots.")
 @click.argument("languages", nargs=-1,)
-@click.option("--path", default=".", type=click.Path(), help="Directory of your bot to be trained.")
 @click.option("--dev-config", default="config.yml", type=str,
               help="Name of the config file to be used. If this is not passed, default 'config.yml' is used.")
 @click.option("--nlu", "-n", "nlu", is_flag=True,
@@ -21,18 +20,27 @@ from roboai_cli.util.cli import print_info
               help="Force a model training even if the data has not changed. (default: False)")
 @click.option("--debug", "-vv", "debug", is_flag=True, default=False,
               help="Print lots of debugging statements. Sets logging level")
-def command(languages: tuple, path: str, dev_config: str, nlu: bool, core: bool, augmentation: int, force: bool, debug: bool):
+@click.option("--training-data-path", default=None, type=click.Path(), help="Directory where training data is stored.")
+def command(languages: tuple,
+            dev_config: str,
+            nlu: bool, core: bool,
+            augmentation: int,
+            force: bool,
+            debug: bool,
+            training_data_path: str):
     """
     Wrapper of rasa train for multi-language bots.
 
     Args:
         languages: language code of the bots to be trained
-        path: path where the bot is stored
         dev_config (str): Name of the config file to be used. If this is not passed, default config.yml is used.
         nlu (bool): flag indicating whether only NLU should be trained
         core (bool): flag indicating whether only core should be trained
         augmentation (int): augmentation option
+        force (bool): flag indicating whether training should be forced
+        debug (bool): flag indicating whether debug mode is enabled
     """
+    path = abspath(".")
 
     languages_paths = get_all_languages(path=path, languages=languages)
 

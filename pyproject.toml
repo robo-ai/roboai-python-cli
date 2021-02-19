@@ -56,3 +56,6 @@ robo_ai = "^0.1.1"
 roboai = "roboai_cli:run"
 
 
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.8.4"
