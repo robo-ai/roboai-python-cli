@@ -1,5 +1,9 @@
+import json
 from os import listdir, system
-from os.path import abspath, join, exists, isdir
+from os.path import abspath, join, exists, isdir, basename
+import tempfile
+import shutil
+import yaml
 
 import click
 import pandas as pd
@@ -51,11 +55,11 @@ def command(utility: tuple, option: tuple, languages: tuple, input_path: str, ou
             exit(0)
     elif utility == "export":
         if option == "all":
-            export_all(bot_dir, output_path, multi_language_bot)
+            export_all(bot_dir, output_path)
         if option == "nlu":
-            export_nlu(bot_dir, output_path, multi_language_bot)
+            export_nlu(bot_dir, output_path)
         elif option == "domain":
-            export_domain(bot_dir, output_path, multi_language_bot)
+            export_domain(bot_dir, output_path)
         else:
             print("Please select a valid element to export. It can be either 'nlu', 'domain' or 'all' to export both.")
     elif utility == "import":
@@ -81,19 +85,69 @@ def split_nlu(bot_dir: list, multi_language_bot: bool):
 
 
 def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
-    pass
+
+    tmp_dir = tempfile.mkdtemp()
+    tmp_file = "nlu.json"
+
+    system(f"rasa data convert nlu --data {join(input_path, 'data', 'nlu.md')} \
+           -f json --out {join(tmp_dir, tmp_file)}")
+
+    with open(join(tmp_dir, tmp_file), "r", encoding="utf-8") as f:
+        nlu_json = json.load(f)
+
+    shutil.rmtree(tmp_dir)
+
+    nlu_df = pd.DataFrame(nlu_json["rasa_nlu_data"]["common_examples"])[["intent", "text"]]
+
+    return nlu_df
 
 
 def convert_domain_to_df(input_path: str) -> pd.DataFrame:
-    pass
+    with open(join(input_path, "domain.yml")) as f:
+        domain = yaml.load(f, Loader=yaml.FullLoader)
+
+    responses = domain.get("responses", None)
+    if not responses:
+        print("No responses were found in the domain file.")
+        exit(0)
+
+    response_df = pd.DataFrame()
+    i = 0
+    for response_key, response_value in responses.items():
+        for option in response_value:
+            for answer in option["custom"]["answers"]:
+                response_df.loc[i, "response_name"] = response_key
+                if answer["type"] == "html":
+                    response_df.loc[i, "html"] = answer["text"]
+                elif answer["type"] == "text":
+                    response_df.loc[i, "text"] = answer["text"]
+                elif answer["type"] == "ssml":
+                    response_df.loc[i, "ssml"] = answer["ssml"]
+                elif answer["type"] == "hints":
+                    response_df.loc[i, "hints"] = str(answer["options"])
+                elif answer["type"] == "multichoice":
+                    response_df.loc[i, "multichoice"] = str(answer["options"])
+                elif answer["type"] == "command":
+                    response_df.loc[i, "command"] = answer["name"] + "\n" + str(answer["params"])
+                elif answer["type"] == "links":
+                    response_df.loc[i, "links"] = str(answer["links"])
+            i += 1
+
+    return response_df
 
 
 def export_nlu(bot_dir: list, output_path: str):
-    pass
+    for language in bot_dir:
+        nlu_df = convert_nlu_to_df(language)
+        lang = basename(language) if basename(language) != "bot" else "bot"
+        nlu_df.to_excel(join(output_path, "nlu-" + lang + ".xlsx"), index=False, sheet_name="NLU")
 
 
-def export_domain(input_path: str, output_path: str):
-    pass
+def export_domain(bot_dir: list, output_path: str):
+    for language in bot_dir:
+        domain_df = convert_domain_to_df(language)
+        lang = basename(language) if basename(language) != "bot" else "bot"
+        domain_df.to_excel(join(output_path, "domain-" + lang + ".xlsx"), index=False, sheet_name="Domain")
 
 
 def export_all(output_path: str):
