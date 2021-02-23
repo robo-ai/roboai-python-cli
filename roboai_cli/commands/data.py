@@ -94,14 +94,14 @@ def split_nlu(bot_dir: list, multi_language_bot: bool):
 
 def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
     """
-    Convert nlu file from markdown to a pandas dataframe.
+    Convert nlu file from markdown to a pandas DataFrame.
     Intents and respective examples are kept. Regex features, lookup tables and entity synonyms are discarded.
 
     Args:
         input_path (str): input path to read the nlu file from
 
     Returns:
-        pd.DataFrame: pandas dataframe containing the nlu content
+        pd.DataFrame: pandas DataFrame containing the nlu content
     """
     tmp_dir = tempfile.mkdtemp()
     tmp_file = "nlu.json"
@@ -121,14 +121,14 @@ def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
 
 def convert_domain_to_df(input_path: str) -> pd.DataFrame:
     """
-    Convert domain file to a pandas dataframe.
+    Convert domain file to a pandas DataFrame.
     Responses are kept, all other information like slots, list of intents, etc are discarded.
 
     Args:
         input_path (str): input path to read the domain file from
 
     Returns:
-        pd.DataFrame: pandas dataframe containing the domain responses
+        pd.DataFrame: pandas DataFrame containing the domain responses
     """
     with open(join(input_path, "domain.yml")) as f:
         domain = yaml.load(f, Loader=yaml.FullLoader)
@@ -163,7 +163,7 @@ def convert_domain_to_df(input_path: str) -> pd.DataFrame:
 
 def export_nlu(bot_dir: list, output_path: str):
     """
-    Export nlu dataframe to a given output path.
+    Export nlu DataFrame to a given output path.
 
     Args:
         bot_dir (list): list of paths respective to each bot
@@ -177,7 +177,7 @@ def export_nlu(bot_dir: list, output_path: str):
 
 def export_domain(bot_dir: list, output_path: str):
     """
-    Export domain dataframe to a given output path.
+    Export domain DataFrame to a given output path.
 
     Args:
         bot_dir (list): list of paths respective to each bot
@@ -214,10 +214,7 @@ def import_nlu(input_path: str, output_path: str):
         input_path (str): path where to read nlu file from
         output_path (str): path to store converted nlu
     """
-    try:
-        nlu_df = pd.read_excel(input_path, sheet_name="NLU")
-    except Exception:
-        print("It was not possible to read the file you provided. Make sure the file exists and it contains an NLU tab.")
+    nlu_df = _read_nlu_df(input_path)
 
     nlu_dict = convert_nlu_df_to_dict(nlu_df)
 
@@ -237,10 +234,7 @@ def import_domain(input_path: str, output_path: str):
         input_path (str): path where to read the responses file from
         output_path (str): path to store converted responses
     """
-    try:
-        response_df = pd.read_excel(input_path, sheet_name="Domain")
-    except Exception:
-        print("It was not possible to read the file you provided. Make sure the file exists and it contains a Domain tab.")
+    response_df = _read_response_df(input_path)
 
     response_dict = convert_response_df_to_dict(response_df)
 
@@ -248,16 +242,77 @@ def import_domain(input_path: str, output_path: str):
         yaml.dump(response_dict, stream=outfile, allow_unicode=True)
 
 
-def import_all():
-    pass
+def import_all(input_path: str, output_path: str):
+    """
+    Import both nlu and responses
+
+    Args:
+        input_path (str): path where to read nlu and responses from
+        output_path (str): path to where converted nlu and responses should be stored
+    """
+    response_df = _read_response_df(input_path)
+
+    response_dict = convert_response_df_to_dict(response_df)
+
+    with open(join(output_path, "responses_converted.yml"), "w", encoding="utf-8") as outfile:
+        yaml.dump(response_dict, stream=outfile, allow_unicode=True)
+
+    nlu_df = _read_nlu_df(input_path)
+
+    nlu_dict = convert_nlu_df_to_dict(nlu_df)
+
+    for intent, examples in nlu_dict.items():
+        with open(join(output_path, "nlu_converted.md"), "+a") as f:
+            f.write(f"## intent:{intent}\n")
+            for example in examples:
+                f.write(f"- {example}\n")
+            f.write("\n")
+
+
+def _read_response_df(input_path: str) -> pd.DataFrame:
+    """
+    Read excel containing the responses from the file system
+
+    Args:
+        input_path (str): path where the excel containing the responses is stored
+
+    Returns:
+        pd.DataFrame: DataFrame containing the responses
+    """
+    try:
+        response_df = pd.read_excel(input_path, sheet_name="Domain")
+    except Exception:
+        print("It was not possible to read the file you provided. Make sure the file exists and it contains a Domain tab.")
+        exit(0)
+
+    return response_df
+
+
+def _read_nlu_df(input_path: str) -> pd.DataFrame:
+    """
+    Read excel containing the nlu from the file system
+
+    Args:
+        input_path (str): path where the excel containing the nlu is stored
+
+    Returns:
+        pd.DataFrame: DataFrame containing the nlu
+    """
+    try:
+        nlu_df = pd.read_excel(input_path, sheet_name="NLU")
+    except Exception:
+        print("It was not possible to read the file you provided. Make sure the file exists and it contains an NLU tab.")
+        exit(0)
+
+    return nlu_df
 
 
 def convert_response_df_to_dict(response_df: pd.DataFrame) -> dict:
     """
-    Convert responses dataframe to dict
+    Convert responses DataFrame to dict
 
     Args:
-        response_df (pd.DataFrame): dataframe containing the responses
+        response_df (pd.DataFrame): DataFrame containing the responses
 
     Returns:
         dict: dictionary containing the reponses
@@ -293,10 +348,10 @@ def convert_response_df_to_dict(response_df: pd.DataFrame) -> dict:
 
 def convert_nlu_df_to_dict(nlu_df: pd.DataFrame) -> dict:
     """
-    Convert nlu dataframe to dict
+    Convert nlu DataFrame to dict
 
     Args:
-        nlu_df (pd.DataFrame): dataframe containing the nlu
+        nlu_df (pd.DataFrame): DataFrame containing the nlu
 
     Returns:
         dict: dictionary containing the nlu
