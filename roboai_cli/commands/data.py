@@ -59,19 +59,19 @@ def command(utility: tuple, option: tuple, languages: tuple, input_path: str, ou
             export_all(bot_dir, output_path)
         if option == "nlu":
             export_nlu(bot_dir, output_path)
-        elif option == "domain":
-            export_domain(bot_dir, output_path)
+        elif option == "responses":
+            export_responses(bot_dir, output_path)
         else:
-            print("Please select a valid element to export. It can be either 'nlu', 'domain' or 'all' to export both.")
+            print("Please select a valid element to export. It can be either 'nlu', 'responses' or 'all' to export both.")
     elif utility == "import":
         if option == "all":
-            import_all(output_path, bot_dir, multi_language_bot)
+            import_all(output_path, bot_dir)
         elif option == "nlu":
-            import_nlu(output_path, bot_dir, multi_language_bot)
-        elif option == "domain":
-            import_domain(output_path, bot_dir, multi_language_bot)
+            import_nlu(output_path, bot_dir)
+        elif option == "responses":
+            import_responses(output_path, bot_dir)
         else:
-            print("Please select a valid element to import. It can be either 'nlu', 'domain' or 'all' to import both.")
+            print("Please select a valid element to import. It can be either 'nlu', 'responses' or 'all' to import both.")
     else:
         print("Please select a valid utility option.")
         exit(0)
@@ -175,7 +175,7 @@ def export_nlu(bot_dir: list, output_path: str):
         nlu_df.to_excel(join(output_path, "nlu-" + lang + ".xlsx"), index=False, sheet_name="NLU")
 
 
-def export_domain(bot_dir: list, output_path: str):
+def export_responses(bot_dir: list, output_path: str):
     """
     Export domain DataFrame to a given output path.
 
@@ -226,7 +226,7 @@ def import_nlu(input_path: str, output_path: str):
             f.write("\n")
 
 
-def import_domain(input_path: str, output_path: str):
+def import_responses(input_path: str, output_path: str):
     """
     Import responses back to yaml
 
