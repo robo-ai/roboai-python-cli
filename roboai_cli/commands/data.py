@@ -77,6 +77,13 @@ def command(utility: tuple, option: tuple, languages: tuple, input_path: str, ou
 
 
 def split_nlu(bot_dir: list, multi_language_bot: bool):
+    """
+    Run rasa command to split the nlu file
+
+    Args:
+        bot_dir (list): list of paths respective to each bot
+        multi_language_bot (bool): flag indicating whether the bot is multi language or not
+    """
     for language in bot_dir:
         if multi_language_bot:
             system(f"rasa data split nlu -u {join(language, 'data')} --out {join(language, 'train_test_split')}")
@@ -85,7 +92,16 @@ def split_nlu(bot_dir: list, multi_language_bot: bool):
 
 
 def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
+    """
+    Convert nlu file from markdown to a pandas dataframe.
+    Intents and respective examples are kept. Regex features, lookup tables and entity synonyms are discarded.
 
+    Args:
+        input_path (str): input path to read the nlu file from
+
+    Returns:
+        pd.DataFrame: pandas dataframe containing the nlu content
+    """
     tmp_dir = tempfile.mkdtemp()
     tmp_file = "nlu.json"
 
@@ -103,6 +119,16 @@ def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
 
 
 def convert_domain_to_df(input_path: str) -> pd.DataFrame:
+    """
+    Convert domain file to a pandas dataframe.
+    Responses are kept, all other information like slots, list of intents, etc are discarded.
+
+    Args:
+        input_path (str): input path to read the domain file from
+
+    Returns:
+        pd.DataFrame: pandas dataframe containing the domain responses
+    """
     with open(join(input_path, "domain.yml")) as f:
         domain = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -137,6 +163,13 @@ def convert_domain_to_df(input_path: str) -> pd.DataFrame:
 
 
 def export_nlu(bot_dir: list, output_path: str):
+    """
+    Export nlu dataframe to a given output path.
+
+    Args:
+        bot_dir (list): list of paths respective to each bot
+        output_path (str): output path where the nlu should be stored
+    """
     for language in bot_dir:
         nlu_df = convert_nlu_to_df(language)
         lang = basename(language) if basename(language) != "bot" else "bot"
@@ -144,14 +177,34 @@ def export_nlu(bot_dir: list, output_path: str):
 
 
 def export_domain(bot_dir: list, output_path: str):
+    """
+    Export domain dataframe to a given output path.
+
+    Args:
+        bot_dir (list): list of paths respective to each bot
+        output_path (str): output path where the domain should be stored
+    """
     for language in bot_dir:
         domain_df = convert_domain_to_df(language)
         lang = basename(language) if basename(language) != "bot" else "bot"
         domain_df.to_excel(join(output_path, "domain-" + lang + ".xlsx"), index=False, sheet_name="Domain")
 
 
-def export_all(output_path: str):
-    pass
+def export_all(bot_dir: list, output_path: str):
+    """
+    Export both nlu and domain to one single output file.
+
+    Args:
+        bot_dir (list): list of paths respective to each bot
+        output_path (str): output path where both the nlu and domain should be stored
+    """
+    for language in bot_dir:
+        lang = basename(language) if basename(language) != "bot" else "bot"
+        with pd.ExcelWriter(join(output_path, lang + "-content.xlsx"), engine="xlsxwriter") as xlsx_writer:
+            domain_df = convert_domain_to_df(language)
+            domain_df.to_excel(excel_writer=xlsx_writer, index=False, sheet_name="Domain")
+            nlu_df = convert_nlu_to_df(language)
+            nlu_df.to_excel(excel_writer=xlsx_writer, index=False, sheet_name="NLU")
 
 
 def import_nlu(input_path: str) -> pd.DataFrame:
