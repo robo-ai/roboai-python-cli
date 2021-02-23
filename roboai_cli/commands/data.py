@@ -4,6 +4,7 @@ from os.path import abspath, join, exists, isdir, basename
 import tempfile
 import shutil
 import yaml
+import ast
 
 import click
 import pandas as pd
@@ -153,10 +154,8 @@ def convert_domain_to_df(input_path: str) -> pd.DataFrame:
                     response_df.loc[i, "hints"] = str(answer["options"])
                 elif answer["type"] == "multichoice":
                     response_df.loc[i, "multichoice"] = str(answer["options"])
-                elif answer["type"] == "command":
-                    response_df.loc[i, "command"] = answer["name"] + "\n" + str(answer["params"])
-                elif answer["type"] == "links":
-                    response_df.loc[i, "links"] = str(answer["links"])
+                else:
+                    response_df.loc[i, answer["type"]] = str(answer)
             i += 1
 
     return response_df
@@ -207,24 +206,108 @@ def export_all(bot_dir: list, output_path: str):
             nlu_df.to_excel(excel_writer=xlsx_writer, index=False, sheet_name="NLU")
 
 
-def import_nlu(input_path: str) -> pd.DataFrame:
-    pass
+def import_nlu(input_path: str, output_path: str):
+    """
+    Import nlu file back to markdown
+
+    Args:
+        input_path (str): path where to read nlu file from
+        output_path (str): path to store converted nlu
+    """
+    try:
+        nlu_df = pd.read_excel(input_path, sheet_name="NLU")
+    except Exception:
+        print("It was not possible to read the file you provided. Make sure the file exists and it contains an NLU tab.")
+
+    nlu_dict = convert_nlu_df_to_dict(nlu_df)
+
+    for intent, examples in nlu_dict.items():
+        with open(join(output_path, "nlu_converted.md"), "+a") as f:
+            f.write(f"## intent:{intent}\n")
+            for example in examples:
+                f.write(f"- {example}\n")
+            f.write("\n")
 
 
-def import_domain(input_path: str) -> pd.DataFrame:
-    pass
+def import_domain(input_path: str, output_path: str):
+    """
+    Import responses back to yaml
+
+    Args:
+        input_path (str): path where to read the responses file from
+        output_path (str): path to store converted responses
+    """
+    try:
+        response_df = pd.read_excel(input_path, sheet_name="Domain")
+    except Exception:
+        print("It was not possible to read the file you provided. Make sure the file exists and it contains a Domain tab.")
+
+    response_dict = convert_response_df_to_dict(response_df)
+
+    with open(join(output_path, "responses_converted.yml"), "w", encoding="utf-8") as outfile:
+        yaml.dump(response_dict, stream=outfile, allow_unicode=True)
 
 
 def import_all():
     pass
 
 
-def convert_domain_df_to_yaml(domain_df: pd.DataFrame) -> dict:
-    pass
+def convert_response_df_to_dict(response_df: pd.DataFrame) -> dict:
+    """
+    Convert responses dataframe to dict
+
+    Args:
+        response_df (pd.DataFrame): dataframe containing the responses
+
+    Returns:
+        dict: dictionary containing the reponses
+    """
+    column_names = response_df.columns.tolist()[1:]
+    domain_dict = {k: [] for k in response_df["response_name"].unique().tolist()}
+    for i, row in response_df.iterrows():
+        current_response = row["response_name"]
+        print(current_response)
+        custom_dict = {"custom": {"answers": []}}
+
+        for col in column_names:
+            if pd.notna(row[col]):
+                if col == "html":
+                    custom_dict["custom"]["answers"].append({"type": "html", "text": row["html"]})
+                elif col == "text":
+                    custom_dict["custom"]["answers"].append({"type": "text", "text": row["text"]})
+                elif col == "ssml":
+                    custom_dict["custom"]["answers"].append({"type": "ssml", "ssml": row["ssml"]})
+                elif col == "hints":
+                    custom_dict["custom"]["answers"].append({"type": "hints",
+                                                            "options": ast.literal_eval(row["hints"])})
+                elif col == "multichoice":
+                    custom_dict["custom"]["answers"].append({"type": "multichoice",
+                                                            "options": ast.literal_eval(row["multichoice"])})
+                else:
+                    custom_dict["custom"]["answers"].append(ast.literal_eval(row[col]))
+
+        domain_dict[row["response_name"]].append(custom_dict)
+
+    return domain_dict
 
 
-def convert_nlu_df_to_md(nlu_df: pd.DataFrame) -> list:  # TODO not sure it's a list!
-    pass
+def convert_nlu_df_to_dict(nlu_df: pd.DataFrame) -> dict:
+    """
+    Convert nlu dataframe to dict
+
+    Args:
+        nlu_df (pd.DataFrame): dataframe containing the nlu
+
+    Returns:
+        dict: dictionary containing the nlu
+    """
+    intents_dict = {}
+    unique_intents = nlu_df["intent"].unique().tolist()
+    for intent in unique_intents:
+        examples = nlu_df[nlu_df["intent"] == intent]["text"].tolist()
+        intents_dict[intent] = examples
+
+    return intents_dict
 
 
 def get_all_languages(path: str, languages: tuple) -> list:
