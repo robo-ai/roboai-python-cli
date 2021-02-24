@@ -16,8 +16,8 @@ from roboai_cli.util.cli import print_info
 @click.argument("utility", nargs=1)
 @click.argument("option", nargs=1)
 @click.argument("languages", nargs=-1)
-@click.option("--input-path", default=".", type=click.Path(), help="Optional input path")
-@click.option("--output-path", default=".", type=click.Path(), help="Optional output path")
+@click.option("--input-path", default=None, type=click.Path(), help="Optional input path")
+@click.option("--output-path", default=None, type=click.Path(), help="Optional output path")
 def command(utility: tuple, option: tuple, languages: tuple, input_path: str, output_path: str):
     """
     Utility command to split, export and import data.
@@ -29,23 +29,22 @@ def command(utility: tuple, option: tuple, languages: tuple, input_path: str, ou
         input_path (str): optional input path where files are stored.
         output_path (str): optional output path where files are to be stored.
     """
-
-    if option == "export":
-        path = input_path
-    elif option == "import":
-        path = output_path
-    else:
-        path = "."  # TODO not sure ...
+    if (utility == "export" or utility == "import") and (input_path is None or output_path is None):
+        print("To use the import and export utilities you need to provide an input and output path.\n"
+              "For the export utility, make sure the input path refers to the bot root directory.")
+        exit(0)
+    elif utility == "split" and (input_path is None or output_path is None):
+        input_path = "."
 
     if len(languages) == 0:
-        if exists(join(abspath(path), "languages")):
-            bot_dir = get_all_languages(path=abspath(path), languages=languages)
+        if exists(join(abspath(input_path), "languages")):
+            bot_dir = get_all_languages(path=abspath(input_path), languages=languages)
             multi_language_bot = True
         else:
             bot_dir = [abspath(".")]
             multi_language_bot = False
     else:
-        bot_dir = get_all_languages(path=abspath(path), languages=languages)
+        bot_dir = get_all_languages(path=abspath(input_path), languages=languages)
         multi_language_bot = True
 
     if utility == "split":
@@ -57,21 +56,25 @@ def command(utility: tuple, option: tuple, languages: tuple, input_path: str, ou
     elif utility == "export":
         if option == "all":
             export_all(bot_dir, output_path)
-        if option == "nlu":
+        elif option == "nlu":
             export_nlu(bot_dir, output_path)
         elif option == "responses":
             export_responses(bot_dir, output_path)
         else:
             print("Please select a valid element to export. It can be either 'nlu', 'responses' or 'all' to export both.")
+            exit(0)
     elif utility == "import":
         if option == "all":
-            import_all(output_path, bot_dir)
+            import_all(input_path, output_path)
         elif option == "nlu":
-            import_nlu(output_path, bot_dir)
+            import_nlu(input_path, output_path)
         elif option == "responses":
-            import_responses(output_path, bot_dir)
+            import_responses(input_path, output_path)
         else:
             print("Please select a valid element to import. It can be either 'nlu', 'responses' or 'all' to import both.")
+            exit(0)
+    elif utility == "analysis":
+        pass
     else:
         print("Please select a valid utility option.")
         exit(0)
@@ -106,8 +109,12 @@ def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
     tmp_dir = tempfile.mkdtemp()
     tmp_file = "nlu.json"
 
-    system(f"rasa data convert nlu --data {join(input_path, 'data', 'nlu.md')} \
-           -f json --out {join(tmp_dir, tmp_file)}")
+    try:
+        system(f"rasa data convert nlu --data {join(input_path, 'data', 'nlu.md')} \
+               -f json --out {join(tmp_dir, tmp_file)}")
+    except Exception:
+        print("It was not possible to find an NLU file. Make sure the path you provided refers to a bot root directory.")
+        exit(0)
 
     with open(join(tmp_dir, tmp_file), "r", encoding="utf-8") as f:
         nlu_json = json.load(f)
@@ -119,7 +126,7 @@ def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
     return nlu_df
 
 
-def convert_domain_to_df(input_path: str) -> pd.DataFrame:
+def convert_responses_to_df(input_path: str) -> pd.DataFrame:
     """
     Convert domain file to a pandas DataFrame.
     Responses are kept, all other information like slots, list of intents, etc are discarded.
@@ -130,8 +137,12 @@ def convert_domain_to_df(input_path: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: pandas DataFrame containing the domain responses
     """
-    with open(join(input_path, "domain.yml")) as f:
-        domain = yaml.load(f, Loader=yaml.FullLoader)
+    try:
+        with open(join(input_path, "domain.yml")) as f:
+            domain = yaml.load(f, Loader=yaml.FullLoader)
+    except Exception:
+        print("It was not possible to find a domain file. Make sure the path you provided refers to the bot root directory.")
+        exit(0)
 
     responses = domain.get("responses", None)
     if not responses:
@@ -172,7 +183,7 @@ def export_nlu(bot_dir: list, output_path: str):
     for language in bot_dir:
         nlu_df = convert_nlu_to_df(language)
         lang = basename(language) if basename(language) != "bot" else "bot"
-        nlu_df.to_excel(join(output_path, "nlu-" + lang + ".xlsx"), index=False, sheet_name="NLU")
+        export_component_to_excel(nlu_df, output_path, "nlu-" + lang + ".xlsx", "NLU")
 
 
 def export_responses(bot_dir: list, output_path: str):
@@ -184,9 +195,29 @@ def export_responses(bot_dir: list, output_path: str):
         output_path (str): output path where the domain should be stored
     """
     for language in bot_dir:
-        domain_df = convert_domain_to_df(language)
+        domain_df = convert_responses_to_df(language)
         lang = basename(language) if basename(language) != "bot" else "bot"
-        domain_df.to_excel(join(output_path, "domain-" + lang + ".xlsx"), index=False, sheet_name="Domain")
+        export_component_to_excel(domain_df, output_path, "responses-" + lang + ".xlsx", "Responses")
+
+
+def export_component_to_excel(component_df: pd.DataFrame, output_path: str, filename: str, component: str):
+    """
+    Export component (NLU/responses) to excel.
+
+    Args:
+        component_df (pd.DataFrame): dataframe containing the component's content
+        output_path (str): path where the excel should be saved to
+        filename (str): file name
+        component (str): component that is being exported
+    """
+    with pd.ExcelWriter(
+        join(output_path, filename), engine="xlsxwriter"
+    ) as xlsx_writer:
+        component_df.to_excel(excel_writer=xlsx_writer, sheet_name=component, index=False)
+        worksheet = xlsx_writer.sheets[component]
+        for i, col in enumerate(component_df.columns):
+            column_len = max(component_df[col].astype(str).str.len().max(), len(col) + 2)
+            worksheet.set_column(i, i, column_len)
 
 
 def export_all(bot_dir: list, output_path: str):
@@ -200,10 +231,18 @@ def export_all(bot_dir: list, output_path: str):
     for language in bot_dir:
         lang = basename(language) if basename(language) != "bot" else "bot"
         with pd.ExcelWriter(join(output_path, lang + "-content.xlsx"), engine="xlsxwriter") as xlsx_writer:
-            domain_df = convert_domain_to_df(language)
-            domain_df.to_excel(excel_writer=xlsx_writer, index=False, sheet_name="Domain")
+            domain_df = convert_responses_to_df(language)
+            domain_df.to_excel(excel_writer=xlsx_writer, index=False, sheet_name="Responses")
+            worksheet = xlsx_writer.sheets["Responses"]
+            for i, col in enumerate(domain_df.columns):
+                column_len = max(domain_df[col].astype(str).str.len().max(), len(col) + 2)
+                worksheet.set_column(i, i, column_len)
             nlu_df = convert_nlu_to_df(language)
             nlu_df.to_excel(excel_writer=xlsx_writer, index=False, sheet_name="NLU")
+            worksheet = xlsx_writer.sheets["NLU"]
+            for i, col in enumerate(nlu_df.columns):
+                column_len = max(nlu_df[col].astype(str).str.len().max(), len(col) + 2)
+                worksheet.set_column(i, i, column_len)
 
 
 def import_nlu(input_path: str, output_path: str):
@@ -280,9 +319,9 @@ def _read_response_df(input_path: str) -> pd.DataFrame:
         pd.DataFrame: DataFrame containing the responses
     """
     try:
-        response_df = pd.read_excel(input_path, sheet_name="Domain")
+        response_df = pd.read_excel(input_path, sheet_name="Responses", engine="openpyxl")
     except Exception:
-        print("It was not possible to read the file you provided. Make sure the file exists and it contains a Domain tab.")
+        print("It was not possible to read the file you provided. Make sure the file exists and it contains a Responses tab.")
         exit(0)
 
     return response_df
@@ -299,7 +338,7 @@ def _read_nlu_df(input_path: str) -> pd.DataFrame:
         pd.DataFrame: DataFrame containing the nlu
     """
     try:
-        nlu_df = pd.read_excel(input_path, sheet_name="NLU")
+        nlu_df = pd.read_excel(input_path, sheet_name="NLU", engine="openpyxl")
     except Exception:
         print("It was not possible to read the file you provided. Make sure the file exists and it contains an NLU tab.")
         exit(0)
@@ -320,8 +359,6 @@ def convert_response_df_to_dict(response_df: pd.DataFrame) -> dict:
     column_names = response_df.columns.tolist()[1:]
     domain_dict = {k: [] for k in response_df["response_name"].unique().tolist()}
     for i, row in response_df.iterrows():
-        current_response = row["response_name"]
-        print(current_response)
         custom_dict = {"custom": {"answers": []}}
 
         for col in column_names:
