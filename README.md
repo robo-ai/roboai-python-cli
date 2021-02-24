@@ -65,6 +65,7 @@ Options:
 Commands:
   clean        Clean the last package
   connect      Connect a local bot to a ROBO.AI server bot instance.
+  data         Utility command to split, export and import data.
   deploy       Deploy the current bot into the ROBO.AI platform.
   diff         Check for structural differences between languages for the...
   environment  Define the ROBO.AI platform API endpoint to use.
@@ -205,6 +206,11 @@ roboai diff [language-codes] [--path <path>]
 It will check for structural differences between the domain.yml and stories.md files for the same multi-language bot. 
 If no language codes are passed, then it'll pair all the languages found and check for differences between them.  
 
+
+##### Splitting the nlu #####
+In case you want to split your nlu data, you can use the data command for that.  
+Simply run ```roboai data split nlu [language-code]``` and a new folder called train_test_split will be generated within the bot directory.  
+When training and testing the bot you can then pass these files as arguments.  
 
 ##### Training a bot #####
 
@@ -391,6 +397,23 @@ roboai logs [language-code]
 It'll show you the latest 1000 lines from that rasa bot logs.  
 **Note:** if no language-code is provided, it's assumed that you're working with the default Rasa structure.
 
+### Using roboai-cli to export and import data ###
+
+##### Export data #####
+If you require to export your bot's data you may use the data command for that end.  
+You can run  
+```
+roboai data export [nlu/responses/all] --input-path <bot-root-dir> --output-path <path-to-where-you-want-to-save-the-file>
+```
+If you opt to export only the nlu or the responses, an excel file will be generated with this content. If you wish to export both, use the 'all' option and an excel file with both the nlu and responses will be generated.
+
+##### Import data #####
+To import the data back from excel to markdown/yaml, the data command is what you're looking for.  
+You can run  
+```
+roboai data import [nlu/responses/all] --input-path <path-where-your-file-is-saved> --output-path <path-to-where-you-want-to-save-the-file>
+```
+This will generate markdown and yaml files containing the nlu and responses content, respectively.   
 
 ## Code Style
 
