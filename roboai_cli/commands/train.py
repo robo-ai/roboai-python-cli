@@ -21,14 +21,14 @@ from roboai_cli.util.helpers import check_installed_packages
               help="Force a model training even if the data has not changed. (default: False)")
 @click.option("--debug", "-vv", "debug", is_flag=True, default=False,
               help="Print lots of debugging statements. Sets logging level")
-@click.option("--training-data-path", default=None, type=click.Path(), help="Directory where training data is stored.")
+@click.option("--use-split-data", is_flag=True, default=False, help="Use split data stored in 'train_test_split' directory.")
 def command(languages: tuple,
             dev_config: str,
             nlu: bool, core: bool,
             augmentation: int,
             force: bool,
             debug: bool,
-            training_data_path: str):
+            use_split_data: bool):
     """
     Wrapper of rasa train for multi-language bots.
 
@@ -40,7 +40,7 @@ def command(languages: tuple,
         augmentation (int): augmentation option
         force (bool): flag indicating whether training should be forced
         debug (bool): flag indicating whether debug mode is enabled
-        training_data_path (str): optional path where training data is stored
+        use_split_data (bool): flag indicating whether split data should be used
     """
     path = abspath(".")
 
@@ -48,11 +48,55 @@ def command(languages: tuple,
         languages_paths = get_all_languages(path=path, languages=languages)
 
         if nlu:
-            train_nlu(path, languages_paths, dev_config, force, debug)
+            train_nlu(path, languages_paths, dev_config, force, debug, use_split_data)
         elif core:
             train_core(path, languages_paths, augmentation, dev_config, force, debug)
         else:
-            train(path, languages_paths, augmentation, dev_config, force, debug)
+            train(path, languages_paths, augmentation, dev_config, force, debug, use_split_data)
+
+
+def train(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool, use_split_data: bool):
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    stories_path = join(path, "languages", "stories.md")
+    for language_path in languages_paths:
+        lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
+        if use_split_data:
+            os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path, 'domain.yml')} \
+                      --data {join(language_path, 'train_test_split', 'training_data.md')} {stories_path} \
+                      --augmentation {augmentation} {'--force' if force else ''} \
+                      {'--debug' if debug else ''} --out {join(language_path, 'models')} \
+                      --fixed-model-name model-{lang}-{timestamp}")
+        else:
+            os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path, 'domain.yml')} \
+                      --data {join(language_path, 'data')} {stories_path} \
+                      --augmentation {augmentation} {'--force' if force else ''} \
+                      {'--debug' if debug else ''} --out {join(language_path, 'models')} \
+                      --fixed-model-name model-{lang}-{timestamp}")
+
+
+def train_nlu(path: str, languages_paths: list, dev_config: str, force: bool, debug: bool, use_split_data: bool):
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    for language_path in languages_paths:
+        lang = os.path.basename(language_path)
+        if use_split_data:
+            os.system(f"rasa train nlu --nlu {join(language_path, 'data')} --config {join(language_path, dev_config)} \
+                      {'--debug' if debug else ''} --out {join(language_path, 'models')} \
+                      --fixed-model-name nlu-model-{lang}-{timestamp}")
+        else:
+            os.system(f"rasa train nlu --nlu {join(language_path, 'train_test_split', 'training_data.md')} \
+                      --config {join(language_path, dev_config)} \
+                      {'--debug' if debug else ''} --out {join(language_path, 'models')} \
+                      --fixed-model-name nlu-model-{lang}-{timestamp}")
+
+
+def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool):
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    stories_path = join(path, 'languages', 'stories.md')
+    for language_path in languages_paths:
+        lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
+        os.system(f"rasa train core --domain {join(language_path, 'domain.yml')} --stories {stories_path} \
+                  --augmentation {augmentation} --config {join(language_path, dev_config)} {'--force' if force else ''} \
+                  {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name core-model-{lang}-{timestamp}")
 
 
 def get_all_languages(path: str, languages: tuple):
@@ -64,34 +108,6 @@ def get_all_languages(path: str, languages: tuple):
         languages_paths = [join(path, "languages", folder) for folder in os.listdir(join(path, "languages"))
                            if os.path.isdir(os.path.join(path, "languages", folder)) and folder in languages]
     return languages_paths
-
-
-def train(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool):
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    stories_path = join(path, "languages", "stories.md")
-    for language_path in languages_paths:
-        lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path, 'domain.yml')} \
-        --data {join(language_path, 'data')} {stories_path} --augmentation {augmentation} {'--force' if force else ''} \
-        {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name model-{lang}-{timestamp}")
-
-
-def train_nlu(path: str, languages_paths: list, dev_config: str, force: bool, debug: bool):
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    for language_path in languages_paths:
-        lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train nlu --nlu {join(language_path, 'data')} --config {join(language_path, dev_config)} \
-                  {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name nlu-model-{lang}-{timestamp}")
-
-
-def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool):
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    stories_path = join(path, 'languages', 'stories.md')
-    for language_path in languages_paths:
-        lang = os.path.basename(language_path)  # os.path.split(os.path.dirname(language_path))
-        os.system(f"rasa train core --domain {join(language_path, 'domain.yml')} --stories {stories_path} \
-                  --augmentation {augmentation} --config {join(language_path, dev_config)} {'--force' if force else ''} \
-                  {'--debug' if debug else ''} --out {join(language_path, 'models')} --fixed-model-name core-model-{lang}-{timestamp}")
 
 
 if __name__ == "__main__":
