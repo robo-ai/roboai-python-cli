@@ -56,7 +56,7 @@ Bot Management Tool             robo-ai.com
 
 Usage: roboai [OPTIONS] COMMAND [ARGS]...
 
-  roboai 0.1.0
+  roboai 1.1.1
 
 Options:
   --version  Show the version and exit.
@@ -217,12 +217,18 @@ When training and testing the bot you can then pass these files as arguments.
 You're now in a position to train the bot. To do so you only need to run the **train** command just as you would do in Rasa. 
 
 ```
-roboai train [language-codes] [--path <path> --nlu --core --augmentation <value> --dev-config <path to config file> --force]
+roboai train [language-codes] [--nlu --core --augmentation <value> --dev-config <path to config file> --force --debug --training-data-path <path-to-training-data-file>]
 ```
 
-It will train the bot and store the model in the language sub-directory. If no language codes are passed, 
-all bots will be trained.  
-The **augmentation** and **force** options do not work in the case of NLU training.
+In case you want to pass a specific training data file you can use the train command in the following way:  
+```
+roboai train en --training-data-path train_test_split/training_data.md
+```
+
+
+It will train the bot and store the model in the language sub-directory. If no language codes are passed, all bots will be trained.  
+
+Note: The **augmentation** and **force** options do not work in the case of NLU training.
 
 ##### Interacting with a bot #####
 
@@ -245,12 +251,16 @@ You need to specify what language (bot) you want to interact with - you can only
 Testing a bot is also probably in your pipeline. And this is possible with the **test** command.
 
 ```
-roboai test [language-code]
+roboai test [language-code] [--cross-validation --folds <nr-of-folds> --tet-data-path <path-to-testing-data-file>]
+```
+
+In case you want to pass a specific testing data file you can use the test command in the following way:  
+```
+roboai test --training-data-path train_test_split/test_data.md
 ```
 
 It'll test the bot with the conversation_tests.md file you have stored in your tests folder.  
-The results will be stored in the language sub-directory. Besides Rasa's default results, roboai-cli also produces 
-an excel file with a confusion list of mistmatched intents.
+The results will be stored in the language sub-directory. Besides Rasa's default results, roboai-cli also produces an excel file with a confusion list of mistmatched intents.
 
 ##### Interactive learning #####
 
