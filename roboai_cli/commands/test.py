@@ -19,7 +19,7 @@ from roboai_cli.util.helpers import clean_intents, user_proceed
 @click.argument("languages", nargs=-1,)
 @click.option("--cross-validation", is_flag=True, default=False, help="Evaluates model in cross-validation mode.")
 @click.option("--folds", "-f", "folds", type=int, default=3, help="Number of folds to be applied in cross-validation mode.")
-@click.option("--test-data-path", default=None, type=click.Path(), help="Directory where test data is stored.")
+@click.option("--test-data-path", default=None, type=click.Path(), help="Path to where test data is stored.")
 def command(languages: tuple, cross_validation: bool, folds: int, test_data_path: str):
     """
     Test a Rasa bot.
