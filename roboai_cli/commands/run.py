@@ -1,5 +1,9 @@
-import click
 import os
+from os.path import abspath
+
+import click
+
+from roboai_cli.util.helpers import check_installed_packages
 
 
 @click.command(name="run", help="Start the action server.")
@@ -16,7 +20,9 @@ def command(debug: bool, actions: str):
         debug (bool): optional flag on whether to start the action server on debug
         actions (str): argument refering to the action server
     """
-    start_actions(debug, actions)
+    path = abspath(".")
+    if check_installed_packages(path):
+        start_actions(debug, actions)
 
 
 def start_actions(debug: bool, actions: str):

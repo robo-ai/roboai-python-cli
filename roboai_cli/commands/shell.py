@@ -3,6 +3,8 @@ import os
 from os.path import join, abspath
 import glob
 
+from roboai_cli.util.helpers import check_installed_packages
+
 
 @click.command(name="shell", help="Start a shell to interact with the required bot.")
 @click.argument("language", nargs=1,)
@@ -19,7 +21,8 @@ def command(language: str, debug: bool, response_timeout: int):
         debug (bool): launch shell in debug mode
         response_timeout (int): maximum time a response can take to process (sec.) (default: 3600)
     """
-    start_shell(language, debug, response_timeout)
+    if check_installed_packages(language):
+        start_shell(language, debug, response_timeout)
 
 
 def start_shell(language: str, debug: bool, response_timeout: int):

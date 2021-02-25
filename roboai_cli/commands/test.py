@@ -12,7 +12,7 @@ import pandas as pd
 
 from roboai_cli.util.cli import print_error, print_info
 from roboai_cli.util.input_output import load_md, load_yaml
-from roboai_cli.util.helpers import clean_intents
+from roboai_cli.util.helpers import clean_intents, user_proceed
 
 
 @click.command(name="test", help="Test Rasa models for the required bots.")
@@ -73,7 +73,7 @@ def test(languages_path: list, multi_language_bot: bool, cross_validation: bool,
                 generate_conversation_md_from_stories(
                     language, multi_language_bot
                 )
-                if proceed_with_test(
+                if user_proceed(
                     "Test stories have been generated. Continue testing?\n"
                 ):
                     test_bot(language, cross_validation, folds, test_data_path, timestamp)
@@ -82,7 +82,7 @@ def test(languages_path: list, multi_language_bot: bool, cross_validation: bool,
         # If tests folder doesn't exist, create it and generate a test stories file
         else:
             generate_conversation_md_from_stories(language, multi_language_bot)
-            if proceed_with_test(
+            if user_proceed(
                 "Test stories have been generated. Continue testing?\n"
             ):
                 test_bot(language, cross_validation, folds, test_data_path, timestamp)
@@ -128,14 +128,10 @@ def check_covered_intents(language_path: str) -> bool:
                 "The following intents are not covered in your test stories:"
             )
             print(*intents, sep="\n")
-            should_test = proceed_with_test("Continue testing?\n")
+            should_test = user_proceed("Continue testing?\n")
         else:
             should_test = True
         return should_test
-
-
-def proceed_with_test(message: str):
-    return click.confirm(message)
 
 
 def get_intent_example(intent: str, nlu) -> str:

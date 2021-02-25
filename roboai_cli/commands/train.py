@@ -4,6 +4,7 @@ from os.path import join, abspath
 from datetime import datetime
 
 from roboai_cli.util.cli import print_info
+from roboai_cli.util.helpers import check_installed_packages
 
 
 @click.command(name="train", help="Train Rasa models for the required bots.")
@@ -39,31 +40,24 @@ def command(languages: tuple,
         augmentation (int): augmentation option
         force (bool): flag indicating whether training should be forced
         debug (bool): flag indicating whether debug mode is enabled
+        training_data_path (str): optional path where training data is stored
     """
     path = abspath(".")
 
-    languages_paths = get_all_languages(path=path, languages=languages)
+    if check_installed_packages(path):
+        languages_paths = get_all_languages(path=path, languages=languages)
 
-    if nlu:
-        train_nlu(path, languages_paths, dev_config, force, debug)
-    elif core:
-        train_core(path, languages_paths, augmentation, dev_config, force, debug)
-    else:
-        train(path, languages_paths, augmentation, dev_config, force, debug)
-
-    # print_success("All training tasks completed")
-
-
-def _inform_language() -> None:
-    """
-    Inform the user no languages were passed when executing the train command.
-    """
-    print_info("No language was provided. Will train all available languages inside provided bot folder.")
+        if nlu:
+            train_nlu(path, languages_paths, dev_config, force, debug)
+        elif core:
+            train_core(path, languages_paths, augmentation, dev_config, force, debug)
+        else:
+            train(path, languages_paths, augmentation, dev_config, force, debug)
 
 
 def get_all_languages(path: str, languages: tuple):
     if len(languages) == 0:
-        _inform_language()
+        print_info("No language was provided. Will train all available languages inside provided bot folder.")
         languages_paths = [join(path, "languages", folder) for folder in os.listdir(join(path, "languages"))
                            if os.path.isdir(os.path.join(path, "languages", folder))]
     else:
