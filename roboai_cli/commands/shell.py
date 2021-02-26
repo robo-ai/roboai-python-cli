@@ -23,7 +23,8 @@ def command(language: str, nlu: bool, debug: bool, response_timeout: int):
         debug (bool): launch shell in debug mode
         response_timeout (int): maximum time a response can take to process (sec.) (default: 3600)
     """
-    if check_installed_packages(language):
+    path = abspath(".")
+    if check_installed_packages(path):
         start_shell(language, nlu, debug, response_timeout)
 
 

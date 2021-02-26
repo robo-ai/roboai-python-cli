@@ -84,4 +84,4 @@ def check_installed_packages(path: str) -> bool:
         print("Couldn't find the following packages: \n")
         print(*missing_packages, sep="\n")
         print("This might be because it's a package installed from a git repo and it doesn't match the requirements.")
-        return user_proceed("Continue training?\n")
+        return user_proceed("Do you want to proceed?\n")
