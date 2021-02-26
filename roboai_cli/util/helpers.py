@@ -70,7 +70,7 @@ def check_installed_packages(path: str) -> bool:
             bot_requirements = f.readlines()
         print_info("Checking if packages in requirements.txt are installed.")
     except Exception:
-        return False
+        return True
 
     bot_requirements = [r.split("==")[0] for r in bot_requirements]
 

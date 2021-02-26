@@ -241,7 +241,7 @@ roboai run actions [--debug]
 After doing so, you can execute the shell command. 
 
 ```
-roboai shell [language-code] [--debug]
+roboai shell [language-code] [--nlu] [--debug] 
 ```
 
 You need to specify what language (bot) you want to interact with - you can only interact with one bot at the time.
