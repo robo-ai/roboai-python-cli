@@ -9,7 +9,7 @@ Features:
 * [#38](https://github.com/robo-ai/roboai-python-cli/issues/38): Add option to split nlu (data command).
 * [#30](https://github.com/robo-ai/roboai-python-cli/issues/30): Add option to extract nlu and responses to excel (data command).
 * [#37](https://github.com/robo-ai/roboai-python-cli/issues/37): Check if packages are installed before training or launching shell/action server.
-* [#40](https://github.com/robo-ai/roboai-python-cli/issues/30): Add option to launch nlu shell in the shell command.
+* [#40](https://github.com/robo-ai/roboai-python-cli/issues/40): Add option to launch nlu shell in the shell command.
 
 ## [1.0.1] - 2021-02-04
 
