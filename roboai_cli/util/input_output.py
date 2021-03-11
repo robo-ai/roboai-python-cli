@@ -1,6 +1,10 @@
 import yaml
+import os
+from os.path import join
 
 import pandas as pd
+
+from roboai_cli.commands.data import convert_nlu_to_df
 
 
 def load_yaml(path: str) -> dict:
@@ -28,10 +32,11 @@ def save_yaml(path: str, yaml_dict: dict) -> None:
 def load_md(path: str) -> list:
     """
     Loads an existing file into a list.
+    Args:
+        path (str): input path where file is stored
 
-    :param path: path where the file is stored
-
-    :return: list with the lines from the file
+    Returns:
+        list: list with the lines from the file
     """
     with open(path, "r", encoding="UTF-8") as mdfile:
         return mdfile.readlines()
@@ -59,10 +64,31 @@ def write_requirements(path: str, req_list: list):
             f.write(req)
 
 
-def read_nlu(path: str) -> pd.DataFrame:
-
+def _is_nlu(file_path: str) -> bool:
     """
-    Path should be general and not only one file because there might be more than one nlu file
-    """
+    Check if file is nlu
 
-    pass
+    Args:
+        file_path (str): path to file
+
+    Returns:
+        bool: returns True if file is nlu, False otherwise
+    """
+    nlu = load_md(file_path)
+    return any([line for line in nlu if "intent:" in line])
+
+
+def read_nlu(input_dir: str) -> pd.DataFrame:
+    """
+    Args:
+        input_dir (str): directory where nlu files are stored
+    Returns:
+        pd.DataFrame: dataframe containing nlu data
+    """
+    nlu_df = pd.DataFrame()
+    for filename in os.listdir(join(input_dir, "data")):
+        if filename.endswith(".md"):
+            if _is_nlu(join(input_dir, "data", filename)):
+                nlu_df = nlu_df.append(convert_nlu_to_df(input_dir, filename), ignore_index=True)
+
+    return nlu_df

@@ -95,13 +95,13 @@ def split_nlu(bot_dir: list, multi_language_bot: bool):
             system(f"rasa data split nlu -u {join(language, 'data')}")
 
 
-def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
+def convert_nlu_to_df(input_dir: str, file_path: str = None) -> pd.DataFrame:
     """
     Convert nlu file from markdown to a pandas DataFrame.
     Intents and respective examples are kept. Regex features, lookup tables and entity synonyms are discarded.
 
     Args:
-        input_path (str): input path to read the nlu file from
+        input_dir (str): input directory to read the nlu file from
 
     Returns:
         pd.DataFrame: pandas DataFrame containing the nlu content
@@ -110,8 +110,12 @@ def convert_nlu_to_df(input_path: str) -> pd.DataFrame:
     tmp_file = "nlu.json"
 
     try:
-        system(f"rasa data convert nlu --data {join(input_path, 'data', 'nlu.md')} \
-               -f json --out {join(tmp_dir, tmp_file)}")
+        if file_path:
+            system(f"rasa data convert nlu --data {join(input_dir, 'data', file_path)} \
+                   -f json --out {join(tmp_dir, tmp_file)}")
+        else:
+            system(f"rasa data convert nlu --data {join(input_dir, 'data', 'nlu.md')} \
+                   -f json --out {join(tmp_dir, tmp_file)}")
     except Exception:
         print("It was not possible to find an NLU file. Make sure the path you provided refers to a bot root directory.")
         exit(0)

@@ -7,9 +7,11 @@ from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
 import glob
 import ntpath
+import json
 
 import click
 import polling
+import pandas as pd
 
 from roboai_cli.config.bot_manifest import BotManifest
 from roboai_cli.config.tool_settings import ToolSettings
@@ -341,20 +343,35 @@ def get_bot_ignore_content(bot_ignore_dir: str):
         return ["%s" % s for s in bot_ignore if not s.startswith("!")], ["%s" % s.replace("!", "").strip() for s in bot_ignore if s.startswith("!")]
 
 
+def build_metadata_dict(nlu_df: pd.DataFrame) -> dict:
+    intents_list = []
+    examples_list = []
+    intent_names = nlu_df["intent"].unique()
+    for intent in intent_names:
+        subset_df = nlu_df[nlu_df["intent"] == intent]
+        for i, row in subset_df.iterrows():
+            examples_list.append({"id": intent, "text": row["text"]})
+        intents_list.append({"id": intent, "examples": examples_list})
+    intents_dict = {"intents": intents_list}
+    nlu_dict = {"nlu": intents_dict}
+    return nlu_dict
+
+
 def create_bot_metadata(bot_language_dir: str) -> str:
 
     os.makedirs(BUILD_DIR, exist_ok=True)
-    metadata_file_path = get_default_package_path()
+    metadata_file_path = get_default_metadata_path()
 
-    nlu_df = read_nlu(join(bot_language_dir, "data"))
+    nlu_df = read_nlu(join(bot_language_dir))
+    metadata_dict = build_metadata_dict(nlu_df)
 
-    with click.progressbar(nlu_df.iterrows(), label="Creating bot metadata") as bar:
-        for i, row in bar:
-            pass
-            # build metadata dict
-            sleep(0.05)
+    # with click.progressbar(nlu_df.iterrows(), label="Creating bot metadata") as bar:
+    #     for i, row in bar:
+    #         metadata_dict = build_metadata_dict(nlu_df)
+    #         sleep(0.05)
 
-        # save metadata dict as json
+    with open(metadata_file_path, "w", encoding="utf-8") as f:
+        json.dump(metadata_dict, f)
     return metadata_file_path
 
 
