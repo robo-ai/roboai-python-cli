@@ -12,15 +12,17 @@ import pandas as pd
 
 from roboai_cli.util.cli import print_error, print_info
 from roboai_cli.util.input_output import load_md, load_yaml
-from roboai_cli.util.helpers import clean_intents
+from roboai_cli.util.helpers import clean_intents, user_proceed
 
 
 @click.command(name="test", help="Test Rasa models for the required bots.")
 @click.argument("languages", nargs=-1,)
 @click.option("--cross-validation", is_flag=True, default=False, help="Evaluates model in cross-validation mode.")
 @click.option("--folds", "-f", "folds", type=int, default=3, help="Number of folds to be applied in cross-validation mode.")
-def command(languages: tuple, cross_validation: bool, folds: int):
-    """Tests a Rasa bot.
+@click.option("--test-data-path", default=None, type=click.Path(), help="Path to where test data is stored.")
+def command(languages: tuple, cross_validation: bool, folds: int, test_data_path: str):
+    """
+    Test a Rasa bot.
 
     Args:
         languages (tuple): languages (bots) to be tested. If no language is passed
@@ -29,6 +31,7 @@ def command(languages: tuple, cross_validation: bool, folds: int):
                            be tested.
         cross_validation (bool): Evaluates model in cross-validation mode.
         folds (int): Number of folds to be applied in cross-validation mode.
+        test_data_path (str): Path to testing data in case you have split it before.
     """
     if len(languages) == 0:
         if exists(join(abspath("."), "languages")):
@@ -42,10 +45,10 @@ def command(languages: tuple, cross_validation: bool, folds: int):
     else:
         multi_language_bot = True
         bot_dir = get_all_languages(path=abspath("."), languages=languages)
-    test(bot_dir, multi_language_bot, cross_validation, folds)
+    test(bot_dir, multi_language_bot, cross_validation, folds, test_data_path)
 
 
-def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, folds: int) -> None:
+def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, folds: int, test_data_path: str) -> None:
     timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
     for language in languages_path:
         makedirs(join(language, "results", timestamp), exist_ok=True)
@@ -62,7 +65,7 @@ def test(languages_path: list, multi_language_bot: bool, cross_validation: bool,
                 # If there are intents left to be tested, the user is prompted
                 # with an option to continue testing
                 if check_covered_intents(language):
-                    test_bot(language, cross_validation, folds, timestamp)
+                    test_bot(language, cross_validation, folds, test_data_path, timestamp)
                 else:
                     continue
             # If tests folder is empty, generate a test stories file
@@ -70,35 +73,37 @@ def test(languages_path: list, multi_language_bot: bool, cross_validation: bool,
                 generate_conversation_md_from_stories(
                     language, multi_language_bot
                 )
-                if proceed_with_test(
+                if user_proceed(
                     "Test stories have been generated. Continue testing?\n"
                 ):
-                    test_bot(language, cross_validation, folds, timestamp)
+                    test_bot(language, cross_validation, folds, test_data_path, timestamp)
                 else:
                     continue
         # If tests folder doesn't exist, create it and generate a test stories file
         else:
             generate_conversation_md_from_stories(language, multi_language_bot)
-            if proceed_with_test(
+            if user_proceed(
                 "Test stories have been generated. Continue testing?\n"
             ):
-                test_bot(language, cross_validation, folds, timestamp)
+                test_bot(language, cross_validation, folds, test_data_path, timestamp)
             else:
                 continue
         format_results(language, timestamp)
         print_info(f"Finished testing {lang} bot")
 
 
-def test_bot(language: str, cross_validation: bool, folds: int, timestamp: str):
+def test_bot(language: str, cross_validation: bool, folds: int, test_data_path: str, timestamp: str):
     if cross_validation:
         os.system(
-            f"rasa test --model {join(language, 'models')} --nlu {join(language, 'data')} \
+            f"rasa test --model {join(language, 'models')} \
+                --nlu {join(language, 'data') if not test_data_path else join(language, test_data_path)} \
                 --cross-validation -f {folds} --config {join(language, 'config.yml')} \
                 --stories {join(language, 'tests')} --out {join(language, 'results', timestamp)}"
         )
     else:
         os.system(
-            f"rasa test --model {join(language, 'models')} --nlu {join(language, 'data')} \
+            f"rasa test --model {join(language, 'models')} \
+                --nlu {join(language, 'data') if not test_data_path else join(language, test_data_path)} \
                 --stories {join(language, 'tests')} --out {join(language, 'results', timestamp)}"
         )
 
@@ -123,14 +128,10 @@ def check_covered_intents(language_path: str) -> bool:
                 "The following intents are not covered in your test stories:"
             )
             print(*intents, sep="\n")
-            should_test = proceed_with_test("Continue testing?\n")
+            should_test = user_proceed("Continue testing?\n")
         else:
             should_test = True
         return should_test
-
-
-def proceed_with_test(message: str):
-    return click.confirm(message)
 
 
 def get_intent_example(intent: str, nlu) -> str:

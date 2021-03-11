@@ -1,6 +1,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/) starting with version 1.0.0.
 
+## [1.1.1] - 2021-02-26
+
+Features:
+* [#39](https://github.com/robo-ai/roboai-python-cli/issues/39): Add option to pass training data in the train command.
+* [#35](https://github.com/robo-ai/roboai-python-cli/issues/35): Add option to pass testing data in the test command.
+* [#38](https://github.com/robo-ai/roboai-python-cli/issues/38): Add option to split nlu (data command).
+* [#30](https://github.com/robo-ai/roboai-python-cli/issues/30): Add option to extract nlu and responses to excel (data command).
+* [#37](https://github.com/robo-ai/roboai-python-cli/issues/37): Check if packages are installed before training or launching shell/action server.
+* [#40](https://github.com/robo-ai/roboai-python-cli/issues/40): Add option to launch nlu shell in the shell command.
+
 ## [1.0.1] - 2021-02-04
 
 Bugfixes:
