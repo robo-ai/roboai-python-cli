@@ -1,30 +1,28 @@
-import os
-from os.path import join
-import zipfile
-from fnmatch import fnmatch
-from time import sleep
-from shutil import copyfile, rmtree
-from distutils.dir_util import copy_tree
 import glob
-import ntpath
 import json
+import ntpath
+import os
+import zipfile
+from distutils.dir_util import copy_tree
+from fnmatch import fnmatch
+from os.path import join
+from shutil import copyfile, rmtree
+from time import sleep
 
 import click
-import polling
 import pandas as pd
-
-from roboai_cli.config.bot_manifest import BotManifest
-from roboai_cli.config.tool_settings import ToolSettings
-from roboai_cli.config.environment_settings import Environment
-from roboai_cli.util.cli import loading_indicator, print_warning
-from roboai_cli.util.input_output import read_nlu
+import polling
 from robo_ai.exception.invalid_credentials_error import InvalidCredentialsError
 from robo_ai.exception.invalid_token_error import InvalidTokenError
 from robo_ai.exception.not_found_error import NotFoundError
 from robo_ai.model.assistant_runtime.assistant_runtime_status import AssistantRuntimeStatus
 from robo_ai.model.config import Config
 from robo_ai.robo_ai import RoboAi
-
+from roboai_cli.config.bot_manifest import BotManifest
+from roboai_cli.config.environment_settings import Environment
+from roboai_cli.config.tool_settings import ToolSettings
+from roboai_cli.util.cli import loading_indicator, print_warning
+from roboai_cli.util.input_output import read_nlu
 
 SUPPORTED_BOT_TYPE = "RASA"
 
@@ -65,8 +63,9 @@ def validate_robo_session():
     settings = ToolSettings()
     current_environment = settings.get_current_environment()
     if not current_environment:
-        raise click.UsageError("No environment is currently activated.\nRun 'roboai environment activate <env-name>' to activate"
-                               "an environment.")
+        raise click.UsageError(
+            "No environment is currently activated.\nRun 'roboai environment activate <env-name>' to activate"
+            "an environment.")
     api_key = current_environment.api_key
     robo_client = get_robo_client(environment=current_environment)
 
@@ -319,11 +318,14 @@ def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
     all_artifacts = []
     for root, dirs, files in os.walk(TEMP_DIR, topdown=True):
         dirs[:] = [directory for directory in dirs
-                   if not any(fnmatch(directory, exclusion) for exclusion in exclusions) or any(fnmatch(directory, exception) for exception in exceptions)]
+                   if not any(fnmatch(directory, exclusion) for exclusion in exclusions) or any(
+                fnmatch(directory, exception) for exception in exceptions)]
         actual_files = [os.path.join(root, file) for file in files
-                        if not any(fnmatch(file, exclusion) for exclusion in exclusions) or any(fnmatch(file, exception) for exception in exceptions)]
+                        if not any(fnmatch(file, exclusion) for exclusion in exclusions) or any(
+                fnmatch(file, exception) for exception in exceptions)]
         actual_dirs = [os.path.join(root, directory) for directory in dirs
-                       if not any(fnmatch(directory, exclusion) for exclusion in exclusions) or any(fnmatch(directory, exception) for exception in exceptions)]
+                       if not any(fnmatch(directory, exclusion) for exclusion in exclusions) or any(
+                fnmatch(directory, exception) for exception in exceptions)]
         all_artifacts.extend(actual_files)
         all_artifacts.extend(actual_dirs)
 
@@ -340,17 +342,20 @@ def create_package(bot_language_dir: str, bot_root_dir: str, model: str) -> str:
 def get_bot_ignore_content(bot_ignore_dir: str):
     with open(join(bot_ignore_dir, ".botignore"), "r") as f:
         bot_ignore = f.read().splitlines()
-        return ["%s" % s for s in bot_ignore if not s.startswith("!")], ["%s" % s.replace("!", "").strip() for s in bot_ignore if s.startswith("!")]
+        return ["%s" % s for s in bot_ignore if not s.startswith("!")], ["%s" % s.replace("!", "").strip() for s in
+                                                                         bot_ignore if s.startswith("!")]
 
 
 def build_metadata_dict(nlu_df: pd.DataFrame) -> dict:
     intents_list = []
-    examples_list = []
     intent_names = nlu_df["intent"].unique()
+    i = 0
     for intent in intent_names:
         subset_df = nlu_df[nlu_df["intent"] == intent]
+        examples_list = []
         for i, row in subset_df.iterrows():
-            examples_list.append({"id": intent, "text": row["text"]})
+            examples_list.append({"id": str(i), "text": row["text"]})
+            i += 1
         intents_list.append({"id": intent, "examples": examples_list})
     intents_dict = {"intents": intents_list}
     nlu_dict = {"nlu": intents_dict}
@@ -358,17 +363,11 @@ def build_metadata_dict(nlu_df: pd.DataFrame) -> dict:
 
 
 def create_bot_metadata(bot_language_dir: str) -> str:
-
     os.makedirs(BUILD_DIR, exist_ok=True)
     metadata_file_path = get_default_metadata_path()
 
     nlu_df = read_nlu(join(bot_language_dir))
     metadata_dict = build_metadata_dict(nlu_df)
-
-    # with click.progressbar(nlu_df.iterrows(), label="Creating bot metadata") as bar:
-    #     for i, row in bar:
-    #         metadata_dict = build_metadata_dict(nlu_df)
-    #         sleep(0.05)
 
     with open(metadata_file_path, "w", encoding="utf-8") as f:
         json.dump(metadata_dict, f)

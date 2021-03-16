@@ -33,7 +33,7 @@ from roboai_cli.util.robo import (
     "--package-file",
     type=str,
     default=None,
-    help="Path to the package file to be deployed, " "setting this option will skip the packaging process.",
+    help="Path to the package file to be deployed, setting this option will skip the packaging process.",
 )
 @click.option("--bot-uuid", type=str, default=None, help="Overrides the bot UUID from the current bot manifest file.")
 @click.option(
