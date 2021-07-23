@@ -18,9 +18,10 @@ from roboai_cli.util.helpers import clean_intents, user_proceed
 @click.command(name="test", help="Test Rasa models for the required bots.")
 @click.argument("languages", nargs=-1,)
 @click.option("--cross-validation", is_flag=True, default=False, help="Evaluates model in cross-validation mode.")
+@click.option("--functional-testing", is_flag=True, default=False, help="Evaluates functionality of the bot using NLU passthrough (/intent notation).")
 @click.option("--folds", "-f", "folds", type=int, default=3, help="Number of folds to be applied in cross-validation mode.")
 @click.option("--test-data-path", default=None, type=click.Path(), help="Path to where test data is stored.")
-def command(languages: tuple, cross_validation: bool, folds: int, test_data_path: str):
+def command(languages: tuple, cross_validation: bool, functional_testing: bool, folds: int, test_data_path: str):
     """
     Test a Rasa bot.
 
@@ -45,15 +46,15 @@ def command(languages: tuple, cross_validation: bool, folds: int, test_data_path
     else:
         multi_language_bot = True
         bot_dir = get_all_languages(path=abspath("."), languages=languages)
-    test(bot_dir, multi_language_bot, cross_validation, folds, test_data_path)
+    test(bot_dir, multi_language_bot, cross_validation, functional_testing, folds, test_data_path)
 
 
-def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, folds: int, test_data_path: str) -> None:
+def test(languages_path: list, multi_language_bot: bool, cross_validation: bool, functional_testing: bool, folds: int, test_data_path: str) -> None:
     timestamp = datetime.now().strftime("%d%m%Y-%H%M%S")
     for language in languages_path:
         makedirs(join(language, "results", timestamp), exist_ok=True)
         lang = basename(language) if basename(language) != "bot" else "the"
-        print_info(f"Starting test process for {lang} bot")
+        print_info(f"Starting test process for {lang} bot.")
         # Check if tests folder exists
         if exists(join(language, "tests")):
             # Check if tests folder contains any file
@@ -65,46 +66,70 @@ def test(languages_path: list, multi_language_bot: bool, cross_validation: bool,
                 # If there are intents left to be tested, the user is prompted
                 # with an option to continue testing
                 if check_covered_intents(language):
-                    test_bot(language, cross_validation, folds, test_data_path, timestamp)
+                    test_bot(language, cross_validation, functional_testing, folds, test_data_path, timestamp)
                 else:
                     continue
             # If tests folder is empty, generate a test stories file
             else:
-                generate_conversation_md_from_stories(
-                    language, multi_language_bot
+                if functional_testing:
+                    generate_test_md_from_stories(
+                        False, language, multi_language_bot
+                    )
+                generate_test_md_from_stories(
+                    True, language, multi_language_bot
                 )
                 if user_proceed(
                     "Test stories have been generated. Continue testing?\n"
                 ):
-                    test_bot(language, cross_validation, folds, test_data_path, timestamp)
+                    test_bot(language, cross_validation, functional_testing, folds, test_data_path, timestamp)
                 else:
                     continue
         # If tests folder doesn't exist, create it and generate a test stories file
         else:
-            generate_conversation_md_from_stories(language, multi_language_bot)
+            if functional_testing:
+                generate_test_md_from_stories(
+                    False, language, multi_language_bot
+                )
+            generate_test_md_from_stories(
+                True, language, multi_language_bot
+            )
             if user_proceed(
                 "Test stories have been generated. Continue testing?\n"
             ):
-                test_bot(language, cross_validation, folds, test_data_path, timestamp)
+                test_bot(language, cross_validation, functional_testing, folds, test_data_path, timestamp)
             else:
                 continue
         format_results(language, timestamp)
         print_info(f"Finished testing {lang} bot")
 
 
-def test_bot(language: str, cross_validation: bool, folds: int, test_data_path: str, timestamp: str):
+def test_bot(language: str, cross_validation: bool, functional_testing: bool, folds: int, test_data_path: str, timestamp: str):
+    print_info(f"Testing Core with conversational_tests.md")
+    os.system(
+        f"rasa test core --model {join(language, 'models')} \
+            --e2e \
+            --stories {join(language, 'tests/conversational_tests.md')} --out {join(language, 'results', timestamp, 'conversational')}"
+    )
+    if functional_testing:
+        print_info(f"Testing Core with functional_tests.md")
+        os.system(
+            f"rasa test core --model {join(language, 'models')} \
+                --e2e \
+                --stories {join(language, 'tests/functional_tests.md')} --out {join(language, 'results', timestamp, 'functional')}"
+        )
+    print_info(f"Testing NLU")
     if cross_validation:
         os.system(
-            f"rasa test --model {join(language, 'models')} \
+            f"rasa test nlu --model {join(language, 'models')} \
                 --nlu {join(language, 'data') if not test_data_path else join(language, test_data_path)} \
                 --cross-validation -f {folds} --config {join(language, 'config.yml')} \
-                --stories {join(language, 'tests')} --out {join(language, 'results', timestamp)}"
+                --out {join(language, 'results', timestamp)}"
         )
     else:
         os.system(
-            f"rasa test --model {join(language, 'models')} \
+            f"rasa test nlu --model {join(language, 'models')} \
                 --nlu {join(language, 'data') if not test_data_path else join(language, test_data_path)} \
-                --stories {join(language, 'tests')} --out {join(language, 'results', timestamp)}"
+                --out {join(language, 'results', timestamp)}"
         )
 
 
@@ -170,14 +195,15 @@ def get_intent_example(intent: str, nlu) -> str:
     else:
         return ""
 
-
-def generate_conversation_md_from_stories(
-    path_to_language: str, multi_language_bot: bool
+# x if not test_data_path else join(language, test_data_path)
+def generate_test_md_from_stories(
+    conversational: bool, path_to_language: str, multi_language_bot: bool
 ):
     """Generates test stories based on the stories.md file.
     Complex stories are generated because they're copied from the original stories.md file
 
     Args:
+        conversational (bool): flag indicating whether the test should be conversational or functional
         path_to_language (str): path_to_language (str): path to language folder.
             If it's a single-language bot this will be the bot root's folder.
         multi_language_bot (bool): flag indicating whether the bot is single or multi language
@@ -195,13 +221,14 @@ def generate_conversation_md_from_stories(
                 all_stories.append(stories)
     all_stories = [item for sublist in all_stories for item in sublist]
     all_nlu = []
-    for filename in listdir(join(path_to_language, "data")):
-        if isfile(join(path_to_language, "data", filename)):
-            if "stories" not in filename:
-                nlu = load_md(join(path_to_language, "data", filename))
-                all_nlu.append(nlu)
-    all_nlu = [item for sublist in all_nlu for item in sublist]
-    output_path = join(path_to_language, "tests", "conversation_tests.md")
+    if conversational:
+        for filename in listdir(join(path_to_language, "data")):
+            if isfile(join(path_to_language, "data", filename)):
+                if "stories" not in filename:
+                    nlu = load_md(join(path_to_language, "data", filename))
+                    all_nlu.append(nlu)
+        all_nlu = [item for sublist in all_nlu for item in sublist]
+    output_path = join(path_to_language, "tests", "conversational_tests.md" if conversational else "functional_tests.md")
     if not exists(join(path_to_language, "tests")):
         mkdir(join(path_to_language, "tests"))
     with open(output_path, "w", encoding="utf-8") as out_f:
@@ -217,12 +244,12 @@ def generate_conversation_md_from_stories(
                 if " or " in line.lower():
                     first_intent = intent.split()[0]
                     out_f.write(
-                        f"* {first_intent}: {get_intent_example(first_intent, all_nlu)}\n"
+                        f"* {first_intent}: {get_intent_example(first_intent, all_nlu) if conversational else '/' + first_intent}\n"
                     )
                 elif "form:" in line.lower():
                     intent_in_form = intent.split()[1]
                     out_f.write(
-                        f"* form: {intent_in_form}: {get_intent_example(intent_in_form, all_nlu)}\n"
+                        f"* form: {intent_in_form}: {get_intent_example(intent_in_form, all_nlu) if conversational else '/' + intent_in_form}\n"
                     )
                 else:
                     intent = (
@@ -233,46 +260,10 @@ def generate_conversation_md_from_stories(
                         .strip()
                     )
                     out_f.write(
-                        f"* {intent}: {get_intent_example(intent, all_nlu)}\n"
+                        f"* {intent}: {get_intent_example(intent, all_nlu) if conversational else '/' + intent}\n"
                     )
             else:
                 out_f.write(line)
-
-
-def generate_conversation_md_from_domain(path_to_language: str):
-    """Generates test stories based on the intents available in the domain.
-    Complex stories are not generated.
-
-    Args:
-        path_to_language (str): path to language folder.
-        If it's a single-language bot this will be the bot root's folder.
-    """
-    domain = load_yaml(join(path_to_language, "domain.yml"))
-    intents_list = domain.get("intents", None)
-    all_nlu = []
-    for filename in listdir(join(path_to_language, "data")):
-        if isfile(join(path_to_language, "data", filename)):
-            if "stories" not in filename:
-                nlu = load_md(join(path_to_language, "data", filename))
-                all_nlu.append(nlu)
-
-    all_nlu = [item for sublist in all_nlu for item in sublist]
-    if not intents_list:
-        print_error("No intents were found.")
-        exit(0)
-    elif intents_list:
-        output_path = join(path_to_language, "tests", "conversation_tests.md")
-        if not exists(join(path_to_language, "tests")):
-            mkdir(join(path_to_language, "tests"))
-        with open(output_path, "w", encoding="utf-8") as out_f:
-            for intent in intents_list:
-                out_f.write(f"## {intent}\n")
-                out_f.write(
-                    f"* {intent}: {get_intent_example(intent, all_nlu)}\n"
-                )
-                out_f.write(f"  - utter_{intent}\n")
-                out_f.write("\n")
-
 
 def format_results(language_path: str, timestamp: str):
     """

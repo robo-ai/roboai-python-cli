@@ -1,6 +1,11 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/) starting with version 1.0.0.
 
+## [1.1.2] - 2021-07-06
+
+Features:
+* [#46](https://github.com/robo-ai/roboai-python-cli/issues/46): Add functionality testing using NLU passthrough (/intent notation) to the test command.
+
 ## [1.1.1] - 2021-02-26
 
 Features:
