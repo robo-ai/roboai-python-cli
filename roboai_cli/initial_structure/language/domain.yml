@@ -1,4 +1,9 @@
+version: "2.0"
+
 intents:
+  - start
+  - start_dialogue
+  - start-dialogue
   - greet
   - goodbye
   - affirm
@@ -7,29 +12,82 @@ intents:
   - mood_unhappy
   - bot_challenge
 
-slots:
-  example_slot:
-    type: unfeaturized
-
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
+    - custom:
+        answers:
+          - type: ssml   
+            ssml: <speak>Hi! How can I help you?</speak>       
+          - type: html
+            text: Hi!<br>How can I help you?
+    - custom:
+        answers:
+          - type: ssml   
+            ssml: <speak>Hello! How can I be of assistance?</speak>       
+          - type: html
+            text: Hello!<br>How can I be of assistance?
+    - custom:
+        answers:
+          - type: ssml   
+            ssml: <speak>Hey! What can I do for you?</speak>       
+          - type: html
+            text: Hey!<br>What can I do for you?
+
 
   utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>Here is something to cheer you up:</speak>
+      - type: html
+        text: "Here is something to cheer you up:"
+      - type: image
+        url: https://i.imgur.com/nGF1K8f.jpg
+        thumbnailURL: nGF1K8f.jpg
 
   utter_did_that_help:
-  - text: "Did that help you?"
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>Did that help you?</speak>
+      - type: html
+        text: Did that help you?
 
   utter_happy:
-  - text: "Great, carry on!"
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>I'm glad I made you laugh!</speak>
+      - type: html
+        text: I'm glad I made you laugh!
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>It's a pleasure to see you laugh!</speak>
+      - type: html
+        text: It's a pleasure to see you laugh!
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>It's good to know I cheered you up!</speak>
+      - type: html
+        text: It's good to know I cheered you up!
 
   utter_goodbye:
-  - text: "Bye"
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>Bye</speak>
+      - type: html
+        text: Bye
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  - custom:
+      answers:
+      - type: ssml
+        ssml: <speak>I am a bot, powered by Rasa.</speak>
+      - type: html
+        text: I am a bot, powered by Rasa.
 
 session_config:
   session_expiration_time: 60

@@ -57,7 +57,7 @@ def command(languages: tuple,
 
 def train(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool, training_data_path: str):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    stories_path = join(path, "languages", "stories.md")
+    stories_path = join(path, "languages", "stories.yml")
     for language_path in languages_paths:
         lang = os.path.basename(language_path)
         os.system(f"rasa train --config {join(language_path, dev_config)} --domain {join(language_path, 'domain.yml')} \
@@ -79,7 +79,7 @@ def train_nlu(path: str, languages_paths: list, dev_config: str, force: bool, de
 
 def train_core(path: str, languages_paths: list, augmentation: int, dev_config: str, force: bool, debug: bool):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    stories_path = join(path, 'languages', 'stories.md')
+    stories_path = join(path, 'languages', 'stories.yml')
     for language_path in languages_paths:
         lang = os.path.basename(language_path)
         os.system(f"rasa train core --domain {join(language_path, 'domain.yml')} --stories {stories_path} \

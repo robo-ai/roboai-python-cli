@@ -13,14 +13,14 @@ from roboai_cli.commands import (
     package,
     clean,
     logs,
-    diff,
+    # diff,
     train,
     run,
     shell,
-    test,
-    interactive,
-    stories,
-    data
+    # test,
+    # interactive,
+    # stories,
+    # data
 )
 from pyfiglet import Figlet
 
@@ -48,14 +48,14 @@ cli.add_command(environment.command)
 cli.add_command(package.command)
 cli.add_command(clean.command)
 cli.add_command(logs.command)
-cli.add_command(diff.command)
+# cli.add_command(diff.command)
 cli.add_command(train.command)
 cli.add_command(run.command)
 cli.add_command(shell.command)
-cli.add_command(stories.command)
-cli.add_command(test.command)
-cli.add_command(interactive.command)
-cli.add_command(data.command)
+# cli.add_command(stories.command)
+# cli.add_command(test.command)
+# cli.add_command(interactive.command)
+# cli.add_command(data.command)
 
 try:
     import colorama
