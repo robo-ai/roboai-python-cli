@@ -6,10 +6,9 @@ from datetime import datetime
 from roboai_cli.util.cli import print_info
 from roboai_cli.util.helpers import check_installed_packages
 
-from rasa.train import train as rasa_train
-from rasa.train  import train_nlu as rasa_train_nlu
-from rasa.train  import train_core as rasa_train_core
-
+from rasa import train as rasa_train
+from rasa.model_training  import train_nlu as rasa_train_nlu
+from rasa.model_training  import train_core as rasa_train_core
 
 @click.command(name="train", help="Train Rasa models for the required bots.")
 @click.argument("languages", nargs=-1,)
