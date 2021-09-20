@@ -29,18 +29,34 @@ def command(language: str, nlu: bool, debug: bool, response_timeout: int):
 
 
 def start_shell(language: str, nlu: bool, debug: bool, response_timeout: int):
+    from rasa.cli.utils import get_validated_path
+    from rasa.cli.shell import shell, shell_nlu
+    import uuid
+    conversation_id = uuid.uuid4().hex
 
-    list_of_models = glob.glob(join(abspath("."), "languages", language, "models", "*.tar.gz"))
-    latest_file = max(list_of_models, key=os.path.getctime)
+
+    # list_of_models = glob.glob(join(abspath("."), "languages", language, "models", "*.tar.gz"))
+    # latest_file = max(list_of_models, key=os.path.getctime)
+    model = get_validated_path(None, "model", join(abspath("."), "languages", language, "models"))
+
 
     endpoints_path = join(abspath("."), "endpoints.yml")
 
     if nlu:
-        os.system(f"rasa shell nlu --model {latest_file} {'--debug' if debug else ''}")
+        import rasa.nlu.run
+        rasa.nlu.run.run_cmdline(model)
+        # os.system(f"rasa shell nlu --model {latest_file} {'--debug' if debug else ''}")
     else:
-        os.system(f"rasa shell --model {latest_file} \
-                  --response-timeout {response_timeout} \
-                  {'--debug' if debug else ''} --endpoints {endpoints_path}")
+        import rasa.api
+        rasa.api.run(
+            model,
+            endpoints_path,
+            "cmdline",
+            None
+        )
+        # os.system(f"rasa shell --model {latest_file} \
+        #           --response-timeout {response_timeout} \
+        #           {'--debug' if debug else ''} --endpoints {endpoints_path}")
 
 
 if __name__ == "__main__":
