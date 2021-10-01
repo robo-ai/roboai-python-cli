@@ -56,7 +56,7 @@ Bot Management Tool             robo-ai.com
 
 Usage: roboai [OPTIONS] COMMAND [ARGS]...
 
-  roboai 1.1.1
+  roboai 2.0.0
 
 Options:
   --version  Show the version and exit.
