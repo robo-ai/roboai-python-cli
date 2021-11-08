@@ -1,15 +1,8 @@
-import json
 import pandas as pd
-# pd.set_option('display.max_rows', 2000) 
 import numpy as np
-from sklearn.model_selection import train_test_split
-import math
-from os import listdir
-from os.path import isfile, join
-from unidecode import unidecode
 
-from os.path import abspath, join, exists
-from roboai_cli.util.cli import loading_indicator, print_info, print_message, print_error, print_success
+from os.path import  exists
+from roboai_cli.util.cli import print_info, print_message, print_error, print_success
 
 class Report:
 
