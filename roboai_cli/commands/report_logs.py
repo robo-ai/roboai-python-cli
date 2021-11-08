@@ -15,18 +15,22 @@ import roboai_cli.util.report_helper
 @click.option('--file-format',
               type=str,
               default="roboai_csv",
-              help='The format of the conversation Log')
+              help='The format of the conversation Log (Default: roboai_csv)')
 @click.option('--nlu-threshold',
               type=float,
               default=0.5,
-              help='Minimum threshold for NLU confidence')
+              help='Minimum threshold for NLU confidence (Default: 0.5)')
 @click.option('--ambiguity-threshold',
               type=float,
               default=0.1,
-              help='Threshold for minimum difference between confidences of the top two predictions')
+              help='Threshold for minimum difference between confidences of the top two predictions (Default: 0.1)')
+@click.option('--output-name',
+              type=str,
+              default="LogsReport.xlsx",
+              help='Name of the output xlsx (Default: LogsReport.xlsx)')
 
 
-def command(file: tuple, file_format: str, nlu_threshold: float, ambiguity_threshold: float):
+def command(file: tuple, file_format: str, nlu_threshold: float, ambiguity_threshold: float, output_name: str):
     """
     Create a Report from the conversational log file
 
@@ -45,5 +49,5 @@ def command(file: tuple, file_format: str, nlu_threshold: float, ambiguity_thres
         print_message('Please select one conversation log at a time.')
         exit(0)
 
-    report_tool = roboai_cli.util.report_helper.Report(file_dir, file_format, nlu_threshold, ambiguity_threshold)
+    report_tool = roboai_cli.util.report_helper.Report(file_dir, file_format, nlu_threshold, ambiguity_threshold, output_name)
     report_tool.run()

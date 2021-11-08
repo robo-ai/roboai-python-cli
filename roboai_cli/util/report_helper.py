@@ -20,7 +20,8 @@ class Report:
         file: tuple,
         file_format: str, 
         nlu_threshold: float, 
-        ambiguity_threshold: float
+        ambiguity_threshold: float, 
+        output_name: str
     ) -> None:
         """Initializes the Report object.
         """
@@ -39,6 +40,7 @@ class Report:
             self.__file_format = file_format
             self.__nlu_threshold = nlu_threshold
             self.__ambiguity_threshold = ambiguity_threshold
+            self.__output_name = output_name
 
             possible_file_formats[file_format]()
 
@@ -224,7 +226,7 @@ class Report:
         len_pd_info, _  = self.__pd_info.shape
         len_freq_intent, _ = self.__freq_intent.shape
 
-        with pd.ExcelWriter(f"LogsReport.xlsx", engine="xlsxwriter") as xlsx_writer:
+        with pd.ExcelWriter(self.__output_name, engine="xlsxwriter") as xlsx_writer:
             
             workbook = xlsx_writer.book
             
@@ -257,7 +259,7 @@ class Report:
             new_worksheet_1.set_column(5, 5, 200)
             
             self.__pd_not_confident.to_excel(xlsx_writer, sheet_name="Low Confidence", startrow=0, startcol = 0, index=False, header=True)
-            new_worksheet_2.add_table(0, 0, self.__number_not_confident, 8, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "Intent 3"}, {'header': "Confidence 3"}, {'header': "User Message"}, {'header': "Entities"}]})
+            new_worksheet_2.add_table(0, 0, (self.__number_not_confident if self.__number_not_confident > 0 else 1), 8, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "Intent 3"}, {'header': "Confidence 3"}, {'header': "User Message"}, {'header': "Entities"}]})
             new_worksheet_2.set_column(0, 0, 35, None, {'hidden': 1})
             new_worksheet_2.set_column(1, 1, 25, None, {'hidden': 1})
             for i in [2,4,6,9]:
@@ -267,7 +269,7 @@ class Report:
             new_worksheet_2.set_column(8, 8, 90)
                 
             self.__pd_ambiguous.to_excel(xlsx_writer, sheet_name="Ambiguous", startrow=0, startcol=0, index=False, header=True)
-            new_worksheet_3.add_table(0, 0, self.__number_ambiguous, 7, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "User Message"}, {'header': "Ambiguity"}]})
+            new_worksheet_3.add_table(0, 0, (self.__number_ambiguous if self.__number_ambiguous > 0 else 1), 7, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "User Message"}, {'header': "Ambiguity"}]})
             new_worksheet_3.set_column(0, 0, 35, None, {'hidden': 1})
             new_worksheet_3.set_column(1, 1, 25, None, {'hidden': 1})
             for i in [2,4]:
