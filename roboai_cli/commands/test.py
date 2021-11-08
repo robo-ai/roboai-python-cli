@@ -280,6 +280,7 @@ def format_results(language_path: str, timestamp: str):
         confusion_list = confusion_table_df(language_path, timestamp)
         misclassified_intents = misclassified_intents_df(language_path, timestamp)
         statistics_table = stats_table(language_path, timestamp)
+        inf_table, inf_accuracy = info_table(language_path, timestamp)
 
         with pd.ExcelWriter(
             join(language_path, "results", timestamp, "intent_details.xlsx"),
@@ -316,7 +317,19 @@ def format_results(language_path: str, timestamp: str):
                     len(col) + 2,
                 )
                 worksheet.set_column(i, i, column_len)
-    except Exception:
+
+            inf_table.to_excel(
+                excel_writer=xlsx_writer, sheet_name="Model Stats", index=False
+            )
+            worksheet = xlsx_writer.sheets["Model Stats"]
+            for i, col in enumerate(inf_table.columns):
+                column_len = max(
+                    inf_table[col].astype(str).str.len().max(),
+                    len(col) + 2,
+                )
+                worksheet.set_column(i, i, column_len)
+            inf_accuracy.to_excel(xlsx_writer, sheet_name="Model Stats", startrow=5, startcol=0, index=False)
+    except Exception as e:
         print_error("One or more files necessary for the intent_details.xlsx file was not output by Rasa and thus this file cannot be generated.\n")
 
 
@@ -343,13 +356,33 @@ def misclassified_intents_df(language_path: str, timestamp: str) -> pd.DataFrame
     )
 
 
+def info_table(language_path: str, timestamp: str) -> pd.DataFrame:
+    with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
+        intent_report = json.load(f)
+
+    info_list = [
+        ["precision", round(intent_report["macro avg"]["precision"], 3),round(intent_report["weighted avg"]["precision"], 3)],
+        ["recall", round(intent_report["macro avg"]["recall"], 3),round(intent_report["weighted avg"]["recall"], 3)],
+        ["f1-score", round(intent_report["macro avg"]["f1-score"], 3),round(intent_report["weighted avg"]["f1-score"], 3)],
+    ]
+
+    inf_table = pd.DataFrame(
+        info_list, columns=["measure", "macro avg", "weighted avg"]
+    )
+
+    acc_table = pd.DataFrame.from_dict([{
+            "accuracy": round(intent_report["accuracy"], 3)
+        }])
+    return inf_table, acc_table
+
+
 def stats_table(language_path: str, timestamp: str) -> pd.DataFrame:
     with open(join(language_path, "results", timestamp, "intent_report.json"), "r") as f:
         intent_report = json.load(f)
 
     stats_list = []
     for key_, value_ in intent_report.items():
-        if key_ not in ["accuracy", "micro_avg", "macro_avg", "weighted_avg"]:
+        if key_ not in ["accuracy", "micro avg", "macro avg", "weighted avg"]:
             stats_list.append([key_, round(value_["precision"], 3), round(value_["recall"], 3), round(value_["f1-score"], 3)])
 
     stats_table = pd.DataFrame(
