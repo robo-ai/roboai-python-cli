@@ -26,8 +26,8 @@ import roboai_cli.util.report_helper
               help='Threshold for minimum difference between confidences of the top two predictions (Default: 0.1)')
 @click.option('--output-name',
               type=str,
-              default="LogsReport.xlsx",
-              help='Name of the output xlsx (Default: LogsReport.xlsx)')
+              default="LogsReport",
+              help='Name of the output xlsx (Default: LogsReport)')
 
 
 def command(file: tuple, file_format: str, nlu_threshold: float, ambiguity_threshold: float, output_name: str):

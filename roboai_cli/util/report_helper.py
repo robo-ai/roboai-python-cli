@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import datetime
 
 from os.path import  exists
 from roboai_cli.util.cli import print_info, print_message, print_error, print_success
@@ -20,11 +21,12 @@ class Report:
         """
 
         if not exists(file):
-            print_message('Conversation file not found')
+            print_message(f'Conversation file not found. {file}')
             exit(0)
 
         possible_file_formats = { 
-            "roboai_csv" : self.__importer_roboai_csv_bug_2_1, 
+            "roboai_csv" : self.__importer_roboai_csv, 
+            "roboai_csv_bug" : self.__importer_roboai_csv_bug_2_1, 
             "roboai_xlsx" : self.__todo,
         }
         if file_format in possible_file_formats:
@@ -45,9 +47,13 @@ class Report:
 
     def run(self):
         self.__conversational_kpi()
-        self.__conversational_kpi_output()
+        self.__conversational_timeframes()
+        self.__conversational_output()
+        self.__conversational_separation()
         print_success("The end")
 
+    def read(self):
+        return self.__pd_data_og.copy()
 
 
     def __todo(_):
@@ -73,6 +79,21 @@ class Report:
             "intent_confidence3":"confidence_3",
             }, inplace=True)
         self.__pd_data_og = pd_data.copy()
+
+    def __importer_roboai_csv(self):
+        pd_data = pd.read_csv(self.__file)
+        pd_data = pd_data[["dialogue_uuid", "timestamp", "message", "intent_identifier1", "intent_confidence1", "intent_identifier2", "intent_confidence2", "intent_identifier3", "intent_confidence3",	"answers", "entities"]]
+        pd_data.rename(columns={
+            "dialogue_uuid":"conversation_id",
+            "intent_identifier1":"intent_1",
+            "intent_confidence1":"confidence_1",
+            "intent_identifier2":"intent_2",
+            "intent_confidence2":"confidence_2",
+            "intent_identifier3":"intent_3",
+            "intent_confidence3":"confidence_3",
+            }, inplace=True)
+        self.__pd_data_og = pd_data.copy()
+
 
     def __conversational_kpi(self):
         self.__pd_data = self.__pd_data_og.copy()
@@ -215,28 +236,59 @@ class Report:
             # ["Number of duplicates in unanswered questions", number_count_duplicates]
         ])
 
-    def __conversational_kpi_output(self):
+
+    def __conversational_timeframes(self):
+        pd_date = self.__pd_data_og.copy()
+        pd_date = pd.DataFrame(pd_date["timestamp"], columns=["timestamp"])
+        pd_date["round_1hour"] = [roundTime(datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'), 3600).time() for x in pd_date["timestamp"]]
+        pd_date["round_1day"] = [roundTime(datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'), 86400).date() for x in pd_date["timestamp"]]
+
+        pd_value_counts = pd.DataFrame(pd_date["round_1hour"].value_counts()).reset_index().sort_values(by="index")
+        pd_value_counts["%"] = round(pd_value_counts["round_1hour"] / sum(pd_value_counts["round_1hour"]),3)*100
+        self.__pd_hour_timeframes = pd_value_counts.rename(columns={
+            "index":"Hour",
+            "round_1hour":"Frequency"
+            }, inplace=False)
+
+        pd_value_counts = pd.DataFrame(pd_date["round_1day"].value_counts()).reset_index().sort_values(by="index")
+        pd_value_counts["%"] = round(pd_value_counts["round_1day"] / sum(pd_value_counts["round_1day"]),3)*100
+        self.__pd_day_timeframes = pd_value_counts.rename(columns={
+            "index":"Day",
+            "round_1hour":"Frequency"
+            }, inplace=False)
+
+
+    def __conversational_output(self):
         len_pd_info, _  = self.__pd_info.shape
         len_freq_intent, _ = self.__freq_intent.shape
 
-        with pd.ExcelWriter(self.__output_name, engine="xlsxwriter") as xlsx_writer:
+        with pd.ExcelWriter(self.__output_name + "_kpi.xlsx", engine="xlsxwriter") as xlsx_writer:
             
             workbook = xlsx_writer.book
             
             new_worksheet_1 = workbook.add_worksheet("Info")
-            new_worksheet_2 = workbook.add_worksheet("Low Confidence")
-            new_worksheet_3 = workbook.add_worksheet("Ambiguous")
-            # new_worksheet_4 = workbook.add_worksheet("Duplicate entries")
-            new_worksheet_5 = workbook.add_worksheet("Correctly Predicted")
-            new_worksheet_6 = workbook.add_worksheet("Emails, Not Alpha and OO-Scale")
-            
             xlsx_writer.sheets["Info"] = new_worksheet_1
+
+            new_worksheet_2 = workbook.add_worksheet("Low Confidence")
             xlsx_writer.sheets["Low Confidence"] = new_worksheet_2
+
+            new_worksheet_3 = workbook.add_worksheet("Ambiguous")
             xlsx_writer.sheets["Ambiguous"] = new_worksheet_3
+
+            # new_worksheet_4 = workbook.add_worksheet("Duplicate entries")
             # xlsx_writer.sheets["Duplicate entries"] = new_worksheet_4
+
+            new_worksheet_5 = workbook.add_worksheet("Correctly Predicted")
             xlsx_writer.sheets["Correctly Predicted"] = new_worksheet_5
+
+            new_worksheet_6 = workbook.add_worksheet("Emails, Not Alpha and OO-Scale")
             xlsx_writer.sheets["Emails, Not Alpha and OO-Scale"] = new_worksheet_6
-            
+
+            new_worksheet_7 = workbook.add_worksheet("TimeFrames")
+            xlsx_writer.sheets["TimeFrames"] = new_worksheet_7
+
+
+
             new_worksheet_1.set_column(0, 0, 55)
             new_worksheet_1.set_column(1, 1, 24)
             
@@ -252,15 +304,17 @@ class Report:
             new_worksheet_1.set_column(5, 5, 200)
             
             self.__pd_not_confident.to_excel(xlsx_writer, sheet_name="Low Confidence", startrow=0, startcol = 0, index=False, header=True)
-            new_worksheet_2.add_table(0, 0, (self.__number_not_confident if self.__number_not_confident > 0 else 1), 8, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "Intent 3"}, {'header': "Confidence 3"}, {'header': "User Message"}, {'header': "Entities"}]})
+            new_worksheet_2.add_table(0, 0, (self.__number_not_confident if self.__number_not_confident > 0 else 1), 9, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "Intent 3"}, {'header': "Confidence 3"}, {'header': "User Message"}, {'header': "Entities"}]})
             new_worksheet_2.set_column(0, 0, 35, None, {'hidden': 1})
+            new_worksheet_2.set_column(7, 7, 35, None, {'hidden': 1})
             new_worksheet_2.set_column(1, 1, 25, None, {'hidden': 1})
-            for i in [2,4,6,9]:
+            new_worksheet_2.set_column(6, 6, 25, None, {'hidden': 1})
+            for i in [2,4,9]:
                 new_worksheet_2.set_column(i, i, 25)
-            for i in [3,5,7]:
+            for i in [3,5]:
                 new_worksheet_2.set_column(i, i, 10)
             new_worksheet_2.set_column(8, 8, 90)
-                
+            
             self.__pd_ambiguous.to_excel(xlsx_writer, sheet_name="Ambiguous", startrow=0, startcol=0, index=False, header=True)
             new_worksheet_3.add_table(0, 0, (self.__number_ambiguous if self.__number_ambiguous > 0 else 1), 7, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "User Message"}, {'header': "Ambiguity"}]})
             new_worksheet_3.set_column(0, 0, 35, None, {'hidden': 1})
@@ -305,3 +359,56 @@ class Report:
                 new_worksheet_6.set_column(i, i, 25, None, {'hidden': 1})
             for i in [2,7,10,11,12,13,14]:
                 new_worksheet_6.set_column(i, i, 35)
+            
+            self.__pd_hour_timeframes.to_excel(xlsx_writer, sheet_name="TimeFrames", startrow=0, startcol=0, index=False, header=True)
+            size_pd_hour_timeframes,_ = self.__pd_hour_timeframes.shape
+            self.__pd_day_timeframes.to_excel(xlsx_writer, sheet_name="TimeFrames", startrow=0, startcol=4, index=False, header=True)
+            size___pd_day_timeframes,_ = self.__pd_day_timeframes.shape
+            new_worksheet_7.add_table(0, 0, (size_pd_hour_timeframes if size_pd_hour_timeframes > 0 else 1), 2, {'columns': [{'header': "Hour"}, {'header': "Frequency"}, {'header': "%"}]})
+            new_worksheet_7.add_table(0, 4, (size___pd_day_timeframes if size___pd_day_timeframes > 0 else 1), 6, {'columns': [{'header': "Day"}, {'header': "Frequency"}, {'header': "%"}]})
+            for i in [0,1,2,4,5,6]:
+                new_worksheet_7.set_column(i, i, 15)
+
+
+    def __conversational_separation(self):
+        self.__pd_data = self.__pd_data_og.copy()[['conversation_id', 'timestamp', 'message', 'answers', 'intent_1', 'confidence_1', 'intent_2', 'confidence_2', 'intent_3', 'confidence_3', 'entities']]
+        self.__pd_data = self.__pd_data.groupby('conversation_id')
+        self.__pd_data = [(x,len(self.__pd_data.get_group(x)),self.__pd_data.get_group(x)) for x in self.__pd_data.groups] #list of DataFrames
+        self.__pd_data.sort(key=lambda x:x[1], reverse=True)
+        test= self.__pd_data[0][2]
+        with pd.ExcelWriter(self.__output_name + "_separation.xlsx", engine="xlsxwriter") as xlsx_writer:
+            workbook = xlsx_writer.book
+            for conversation in self.__pd_data[:100]:
+                title = f"{conversation[0][:3]}...{conversation[0][-3:]}"
+                new_worksheet_x = workbook.add_worksheet(title)
+                xlsx_writer.sheets[title] = new_worksheet_x
+                conversation[2].reindex(index=conversation[2].index[::-1]).to_excel(xlsx_writer, sheet_name=title, startrow=0, startcol=0, index=False, header=True)
+                len_x, _ = conversation[2].shape
+                new_worksheet_x.add_table(0, 0, len_x, 10, {'columns': [{'header': "ConversationId"}, {'header': "TimeStamp"},  {'header': "User Message"}, {'header': "Bot Message"}, {'header': "Intent 1"}, {'header': "Confidence 1"}, {'header': "Intent 2"}, {'header': "Confidence 2"}, {'header': "Intent 3"}, {'header': "Confidence 3"}, {'header': "Entities"}]})
+                new_worksheet_x.set_column(0, 0, 35, None, {'hidden': 1}) #'conversation_id'
+                new_worksheet_x.set_column(1, 1, 25, None, {'hidden': 1}) #'timestamp'
+                new_worksheet_x.set_column(2, 2, 90) #'message'
+                new_worksheet_x.set_column(3, 3, 90) #'answers'
+                new_worksheet_x.set_column(4, 4, 25) #'intent_1'
+                new_worksheet_x.set_column(5, 5, 10) #'confidence_1'
+                new_worksheet_x.set_column(10, 10, 25) #'entities' 10
+                for i in [6,8]: #'intent_2' 6,  'intent_3' 8,  'entities' 10
+                    new_worksheet_x.set_column(i, i, 25, None, {'hidden': 1})
+                for i in [7,9]: #'confidence_2' 7,'confidence_3' 9,
+                    new_worksheet_x.set_column(i, i, 10, None, {'hidden': 1})
+        
+        
+
+
+# _______Utils_______
+
+def roundTime(dt=None, roundTo=60):
+    """Round a datetime object to any time lapse in seconds
+    dt : datetime.datetime object, default now.
+    roundTo : Closest number of seconds to round to, default 1 minute.
+    Author: Thierry Husson 2012 - Use it as you want but don't blame me.
+    """
+    if dt == None : dt = datetime.datetime.now()
+    seconds = (dt.replace(tzinfo=None) - dt.min).seconds
+    rounding = (seconds+roundTo/2) // roundTo * roundTo
+    return dt + datetime.timedelta(0,rounding-seconds,-dt.microsecond)
