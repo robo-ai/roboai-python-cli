@@ -1,4 +1,6 @@
-import yaml
+import sys
+import ruamel.yaml
+import json
 from input_output import load_yaml, save_yaml
 
 
@@ -82,21 +84,37 @@ def create_dict_tests(template: dict, tests: list):
     dict_aux.update({'description': template.get('description')})
     dict_aux.update({'tests': tests})
 
-    dump_yaml('true_file.yml', dict_aux)
+    class NonAliasingRTRepresenter(ruamel.yaml.representer.RoundTripRepresenter):
+        def ignore_aliases(self, data):
+            return True
+
+
+    yaml = ruamel.yaml.YAML()
+    yaml.Representer = NonAliasingRTRepresenter
+    yaml.indent(mapping=2, sequence=4, offset=2)
+
+    
+
+
+    with open('true_file.yml', "w", encoding="UTF-8") as ymlfile:
+        yaml.dump(dict_aux, sys.stdout)
+    with open(f'true_file.json', 'w', encoding='utf8') as outfile:
+        json.dump(dict_aux, outfile, indent=2, ensure_ascii=False)
+    # dump_yaml('true_file.yml', dict_aux)
     #print(dict_aux)
 
 
-def dump_yaml(path: str, yaml_dict: dict) -> None:
-    """
-    Saves a dictionary into a .yml file.
-    :param path: path where the file should be saved.
-    :param yaml_dict: dictionary to be saved.
-    """
-    with open(path, "w", encoding="UTF-8") as ymlfile:
+# def dump_yaml(path: str, yaml_dict: dict) -> None:
+#     """
+#     Saves a dictionary into a .yml file.
+#     :param path: path where the file should be saved.
+#     :param yaml_dict: dictionary to be saved.
+#     """
+#     with open(path, "w", encoding="UTF-8") as ymlfile:
 
-        print(yaml_dict)
-        yaml.dump(yaml_dict)
-        ymlfile.write("\n")
+#         print(yaml_dict)
+#         yaml.dump(yaml_dict)
+#         ymlfile.write("\n")
 
 
 if __name__ == "__main__":
