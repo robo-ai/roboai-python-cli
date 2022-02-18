@@ -1,26 +1,49 @@
 import yaml
+import os.path
 
 from input_output import load_yaml
 
 
-def start_parsing():
+def start_parsing(template_path: str):
 
     """
-    Load yaml files from their current path
+    Load yaml files from their current path and create final path
     """
+
+    index_yaml = template_path.find('.yml')
+    true_file_path = template_path[:index_yaml] + '_true_file' + template_path[index_yaml:]
+    true_file_path = true_file_path.replace("tests_templates", "tests_true_files")
+    path_exists(true_file_path)
 
     domain_file = load_yaml('domain.yml')
-    template_file = load_yaml('template_form_iptv_support copy.yml')
-    add_chatbot_reply(domain_file, template_file)
+    template_file = load_yaml(template_path)
+    add_chatbot_reply(domain_file, template_file, true_file_path)
 
 
-def add_chatbot_reply(domain: dict, template: dict):
+def path_exists(true_file_path: str):
+    """
+    Verifies if the path exists and if not creates a new path
+    Args:
+        true_file_path: true file path
+    """
+
+    dir_path_index = true_file_path.rfind('/')
+    dir_true_file_path = true_file_path[:dir_path_index]
+    exists = os.path.exists(dir_true_file_path)
+
+    if not exists:
+
+        os.makedirs(dir_true_file_path)
+
+
+def add_chatbot_reply(domain: dict, template: dict, true_file_path: str):
 
     """
     Merge domain and template dictionaries creating a list (list_story_steps) containing story and steps
     Args:
         domain: domain dictionary
         template: template dictionary
+        true_file_path: true file path
 
     """
 
@@ -45,16 +68,17 @@ def add_chatbot_reply(domain: dict, template: dict):
 
                 list_story_steps.append({'steps': list_steps})
 
-    flatten_list(template, list_story_steps)
+    flatten_list(template, list_story_steps, true_file_path)
 
 
-def flatten_list(template: dict, list_story_steps: list):
+def flatten_list(template: dict, list_story_steps: list, true_file_path: str):
     """
     Flattens the list putting story and steps in the same dictionary
 
     Args:
         template: template dictionary
         list_story_steps: list containing story and steps
+        true_file_path: true file path
 
     """
     list_aux = []
@@ -66,23 +90,24 @@ def flatten_list(template: dict, list_story_steps: list):
         dict_aux.update(list_story_steps[i+1])
         list_aux.append(dict_aux)
 
-    add_header(template, list_aux)
+    add_header(template, list_aux, true_file_path)
 
 
-def add_header(template: dict, tests: list):
+def add_header(template: dict, tests: list, true_file_path: str):
 
     """
     Merge title, description and tests
     Args:
         template: template dictionary
         tests: list containing story and steps
+        true_file_path: true file path
 
     """
     dict_aux = {}
     dict_aux.update({'title': template.get('title')})
     dict_aux.update({'description': template.get('description')})
     dict_aux.update({'tests': tests})
-    yaml_dump('true_file.yml', dict_aux)
+    yaml_dump(true_file_path, dict_aux)
 
 
 def yaml_dump(path: str, dict_data: dict):
@@ -104,6 +129,8 @@ def yaml_dump(path: str, dict_data: dict):
 
 
 if __name__ == "__main__":
-    start_parsing()
+    start_parsing('../roboai_tests/tests_templates/template_form_iptv_support.yml')
+
+    #To test : '../roboai_tests/tests_templates/template_form_iptv_support.yml'
 
 

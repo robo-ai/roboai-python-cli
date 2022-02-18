@@ -1,0 +1,2755 @@
+title: IPTV Support Testing
+description: form_iptv_support, 2 slots (iptv_support, follow_up_settop_netcom_yes)
+tests:
+- story: IPTV problem in Waipu TV (without entity)
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem in Waipu TV (with [Waipu](waiputv) entity)
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem in NetCom provided set-top box, individual programmes
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem in NetCom provided set-top box, no TV reception
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem follow by Cancel
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem in NetCom provided set-top box follow by Cancel
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem follow by Out of Context
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+- story: IPTV problem in NetCom provided set-top box follow by Cancel
+  steps:
+  - user: Probleme mit TV Empfang
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein Waipu hat Probleme
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: nein
+  - chatbot:
+      utter_follow_up_settop_netcom_no:
+      - custom:
+          answers:
+          - type: html
+            text: 'Bitte beachten sie, dass wir bei waipu.tv keinen Support bieten
+              können. Wenden Sie sich direkt an den Support von <a href=''https://hilfe.waipu.de/''
+              target=''_blank''>waipu.tv</a> per E-Mail an: <a href=''mailto:support@waipu.tv''>
+              support@waipu.tv</a>'
+  - chatbot:
+      utter_ask_evaluation:
+      - custom:
+          answers:
+          - type: html
+            text: Sind Sie mit der Auskunft zufrieden?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Es fehlen mir einzelne Programme
+  - chatbot:
+      utter_follow_up_channel_not_available:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte führen Sie an der Settop-Box einen Sendersuchlauf durch. Sollte
+              der Sendersuchlauf keine Verbesserung gebracht haben, nehme ich gerne
+              eine Störungsmeldung auf. Um Ihre Störung bearbeiten zu können, benötigen
+              wir weitere Angaben von Ihnen.<br> Klicken Sie einfach unten auf den
+              Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Ich habe überhaupt kein Empfang
+  - chatbot:
+      utter_follow_up_no_connection:
+      - custom:
+          answers:
+          - type: html
+            text: Bitte starten Sie die Settup-Box neu. Nehmen Sie dazu die Box für
+              ca. 10 Sekunden vom Stromnetz. Sollte der Neustart keine Verbesserung
+              gebracht haben, nehme ich gerne eine Störungsmeldung auf. Um Ihre Störung
+              bearbeiten zu können, benötigen wir weitere Angaben von Ihnen.<br> Klicken
+              Sie einfach unten auf den Knopf, um uns zu kontaktieren.
+          - type: multichoice
+            options:
+            - label: Zur Kontaktaufnahme
+              value: Zur Kontaktaufnahme
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: abbrechen
+  - chatbot:
+      utter_further_questions:
+      - custom:
+          answers:
+          - type: html
+            text: Was kann ich sonst noch für Sie tun?
+      - custom:
+          answers:
+          - type: html
+            text: Wie kann ich Ihnen noch helfen?
+      - custom:
+          answers:
+          - type: html
+            text: Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben.
+              🙂
+      - custom:
+          answers:
+          - type: html
+            text: Sollten Sie noch weitere Fragen haben, stehe ich gerne zur Verfügung.
+              <br>Fragen Sie mich einfach.
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+  - user: Mein TV geht nicht
+  - chatbot:
+      utter_ask_iptv_support:
+      - custom:
+          answers:
+          - type: html
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+              Setttop-Box?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein
+            - label: Abbrechen
+              value: Abbrechen
+  - user: ja
+  - chatbot:
+      utter_ask_follow_up_settop_netcom_yes:
+      - custom:
+          answers:
+          - type: html
+            text: Können Sie einzelne Programme nicht empfangen oder haben Sie gar
+              kein TV-Empfang?
+          - type: multichoice
+            options:
+            - label: einzelne Sender
+              value: einzelne Sender
+            - label: kein TV-Empfang
+              value: kein TV-Empfang
+            - label: Abbrechen
+              value: Abbrechen
+  - user: Kannst du mir das Datum geben?
+  - chatbot:
+      utter_ask_form_double_check:
+      - custom:
+          answers:
+          - type: html
+            text: Möchten Sie das Thema wechseln?
+          - type: multichoice
+            options:
+            - label: Ja
+              value: Ja
+            - label: Nein
+              value: Nein

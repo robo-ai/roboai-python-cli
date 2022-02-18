@@ -1,0 +1,87 @@
+# _______________________________________________________________
+
+# - stories titles should be unique
+# - tests titles + test stories titles should be unique
+# - to delete a test needs to be deleted in the template + testtest
+#  _______________________________________________________________
+
+
+title: "IPTV Support Testing"
+description: "form_iptv_support, 2 slots (iptv_support, follow_up_settop_netcom_yes)"
+
+tests:
+- story: "IPTV problem in Waipu TV (without entity)"
+  steps:
+  - user: "Probleme mit TV Empfang"
+  - utter: utter_ask_iptv_support
+  - user: "nein"
+  - utter: utter_follow_up_settop_netcom_no
+  - utter: utter_ask_evaluation
+  # action_listen
+
+- story: "IPTV problem in Waipu TV (with [Waipu](waiputv) entity)"
+  steps:
+  - user: "Mein Waipu hat Probleme"
+  - utter: utter_ask_iptv_support
+  - user: "nein"
+  - utter: utter_follow_up_settop_netcom_no
+  - utter: utter_ask_evaluation
+  # action_listen
+
+- story: "IPTV problem in NetCom provided set-top box, individual programmes"
+  steps:
+  - user: "Mein TV geht nicht"
+  - utter: utter_ask_iptv_support
+  - user: "ja"
+  - utter: utter_ask_follow_up_settop_netcom_yes
+  - user: "Es fehlen mir einzelne Programme"
+  - utter: utter_follow_up_channel_not_available 
+  # action_listen
+
+- story: "IPTV problem in NetCom provided set-top box, no TV reception"
+  steps:
+  - user: "Mein TV geht nicht"
+  - utter: utter_ask_iptv_support
+  - user: "ja"
+  - utter: utter_ask_follow_up_settop_netcom_yes
+  - user: "Ich habe überhaupt kein Empfang"
+  - utter: utter_follow_up_no_connection
+  # action_listen
+
+- story: "IPTV problem follow by Cancel"
+  steps:
+  - user: "Mein TV geht nicht"
+  - utter: utter_ask_iptv_support
+  - user: "abbrechen"
+  - utter: utter_further_questions
+  # action_listen
+
+- story: "IPTV problem in NetCom provided set-top box follow by Cancel"
+  steps:
+  - user: "Mein TV geht nicht"
+  - utter: utter_ask_iptv_support
+  - user: "ja"
+  - utter: utter_ask_follow_up_settop_netcom_yes
+  - user: "abbrechen"
+  - utter: utter_further_questions
+  # action_listen
+
+- story: "IPTV problem follow by Out of Context"
+  steps:
+  - user: "Mein TV geht nicht"
+  - utter: utter_ask_iptv_support
+  - user: "Kannst du mir das Datum geben?"
+  - utter: utter_ask_form_double_check
+  # action_listen
+
+- story: "IPTV problem in NetCom provided set-top box follow by Cancel"
+  steps:
+  - user: "Mein TV geht nicht"
+  - utter: utter_ask_iptv_support
+  - user: "ja"
+  - utter: utter_ask_follow_up_settop_netcom_yes
+  - user: "Kannst du mir das Datum geben?"
+  - utter: utter_ask_form_double_check
+  # action_listen
+
+
