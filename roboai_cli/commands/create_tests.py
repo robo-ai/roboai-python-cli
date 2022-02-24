@@ -5,6 +5,7 @@ from roboai_cli.util.automate import automate
 from os.path import abspath, join, exists
 from roboai_cli.util.cli import print_info
 
+TEST_FOLDER_NAME = "roboai_tests"
 
 @click.command(name="create_tests", help="Create tests in the desired format")
 @click.argument("languages", nargs=-1)
@@ -15,14 +16,15 @@ def command(languages: tuple, domain_path: str, template_path: str):
     if domain_path is None and template_path is None:
         if exists(join(abspath("."), "languages")):
             list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
-            template_dir = join(abspath("."), "tests")
 
-            while len(list_domain_dir):
-                automate(list_domain_dir.pop(), [template_dir])
+            while list_domain_dir:
+                lang_domain_dir = list_domain_dir.pop()
+                template_dir = join(lang_domain_dir, TEST_FOLDER_NAME)
+                automate(lang_domain_dir, [template_dir])
 
         else:
             domain_dir = abspath(".")
-            template_dir = join(abspath("."), "tests")
+            template_dir = join(abspath("."), TEST_FOLDER_NAME)
             automate(domain_dir, [template_dir])
 
     elif domain_path is not None and template_path is not None:
