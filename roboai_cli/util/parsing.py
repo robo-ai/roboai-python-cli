@@ -1,10 +1,10 @@
 import yaml
 import os.path
 
-from input_output import load_yaml
+from roboai_cli.util.input_output import load_yaml
 
 
-def start_parsing(template_path: str):
+def start_parsing(domain_path: str, template_path: str):
 
     """
     Load yaml files from their current path and create final path
@@ -15,7 +15,7 @@ def start_parsing(template_path: str):
     true_file_path = true_file_path.replace("tests_templates", "tests_true_files")
     path_exists(true_file_path)
 
-    domain_file = load_yaml('domain.yml')
+    domain_file = load_yaml(domain_path + '/domain.yml')
     template_file = load_yaml(template_path)
     add_chatbot_reply(domain_file, template_file, true_file_path)
 
