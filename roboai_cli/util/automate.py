@@ -10,7 +10,7 @@ DOMAIN_FILE_NAME = "domain.yml"
 
 def automate(domain_path: str, paths: List[str]):
 
-    with loading_indicator("Creating true files..."):
+    with loading_indicator("Creating true files...\n"):
 
         domain_file_path = join(domain_path, DOMAIN_FILE_NAME)
         while len(paths):
