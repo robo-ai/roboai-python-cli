@@ -36,7 +36,7 @@ def command(languages: tuple, domain_path: str, template_path: str):
                     automate(domain_dir, [template_dir])
                 else:
                     paths_not_exist(domain_dir, template_dir)
-
+        _inform_language()
         print_success("Tests created successfully")
 
     elif domain_path is not None and template_path is not None:
@@ -58,7 +58,6 @@ def command(languages: tuple, domain_path: str, template_path: str):
 
 def get_all_languages(path: str, languages: tuple) -> list:
     if len(languages) == 0:
-        _inform_language()
         languages_paths = [
             join(path, "languages", folder)
             for folder in os.listdir(join(path, "languages"))
@@ -78,7 +77,7 @@ def _inform_language() -> None:
     Auxiliary method to inform the user no languages were passed when executing the test command.
     """
     print_info(
-        "No language was provided but a multi-language bot was detected. "
+        "No language was provided but a bot was detected."
         "Will test all available languages inside provided bot folder.\n"
     )
 
