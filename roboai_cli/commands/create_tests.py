@@ -5,7 +5,8 @@ from roboai_cli.util.automate import automate, paths_exist, paths_not_exist
 from os.path import abspath, join, exists
 from roboai_cli.util.cli import print_error, print_info, print_success, loading_indicator
 
-TEST_FOLDER_NAME = "roboai_tests"
+from roboai_cli.util.parsing import TEMPLATES_FOLDER_NAME
+TEST_FOLDER_NAME = os.path.join("roboai_tests", TEMPLATES_FOLDER_NAME)
 
 
 @click.command(name="create_tests", help="Create tests in the desired format")
