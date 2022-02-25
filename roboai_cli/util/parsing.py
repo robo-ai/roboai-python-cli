@@ -1,7 +1,12 @@
+from os.path import exists
+
 import yaml
 import os.path
 
-from input_output import load_yaml
+from roboai_cli.util.input_output import load_yaml
+
+TEMPLATES_FOLDER_NAME = "tests_templates"
+TRUE_FILES_FOLDER_NAME = "tests_true_files"
 
 
 def start_parsing(domain_path: str, template_path: str):
@@ -10,12 +15,17 @@ def start_parsing(domain_path: str, template_path: str):
     Load yaml files from their current path and create final path
     """
 
-    index_yaml = template_path.find('.yml')
-    true_file_path = template_path[:index_yaml] + '_true_file' + template_path[index_yaml:]
-    true_file_path = true_file_path.replace("tests_templates", "tests_true_files")
+    add_to_true_file_filename = '_true_file'
+    true_file_path = ''
+
+    if add_to_true_file_filename not in template_path:
+        index_yaml = template_path.find('.yml')
+        true_file_path = template_path[:index_yaml] + '_true_file' + template_path[index_yaml:]
+
+    true_file_path = true_file_path.replace(TEMPLATES_FOLDER_NAME, TRUE_FILES_FOLDER_NAME)
     path_exists(true_file_path)
 
-    domain_file = load_yaml(domain_path + '/domain.yml')
+    domain_file = load_yaml(domain_path)
     template_file = load_yaml(template_path)
     add_chatbot_reply(domain_file, template_file, true_file_path)
 
@@ -29,9 +39,8 @@ def path_exists(true_file_path: str):
 
     dir_path_index = true_file_path.rfind('/')
     dir_true_file_path = true_file_path[:dir_path_index]
-    exists = os.path.exists(dir_true_file_path)
 
-    if not exists:
+    if not exists(dir_true_file_path):
 
         os.makedirs(dir_true_file_path)
 
