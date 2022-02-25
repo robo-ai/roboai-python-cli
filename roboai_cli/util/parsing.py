@@ -1,7 +1,7 @@
 import yaml
 import os.path
 
-from roboai_cli.util.input_output import load_yaml
+from input_output import load_yaml
 
 
 def start_parsing(domain_path: str, template_path: str):
@@ -67,6 +67,7 @@ def add_chatbot_reply(domain: dict, template: dict, true_file_path: str):
                         list_steps.append({'chatbot': {dict_values.get('utter'): domain['responses'].get(dict_values.get('utter'))}})
 
                 list_story_steps.append({'steps': list_steps})
+                list_steps = []
 
     flatten_list(template, list_story_steps, true_file_path)
 
@@ -129,7 +130,7 @@ def yaml_dump(path: str, dict_data: dict):
 
 
 if __name__ == "__main__":
-    start_parsing('../roboai_tests/tests_templates/template_form_iptv_support.yml')
+    start_parsing('/home/caramelo/Documents/Estagio/roboai-python-cli/roboai-python-cli/roboai_cli/util', '../roboai_tests/tests_templates/template_form_iptv_support.yml')
 
     #To test : '../roboai_tests/tests_templates/template_form_iptv_support.yml'
 
