@@ -25,8 +25,6 @@ def automate(domain_path: str, paths: List[str]):
                 if file_exits(domain_file_path, path):
                     start_parsing(domain_file_path, path)
 
-    print_success("Creating true files process completed")
-
 
 def file_exits(domain: str, template: str):
 
