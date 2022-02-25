@@ -1,9 +1,9 @@
 import os
 
 import click
-from roboai_cli.util.automate import automate
+from roboai_cli.util.automate import automate, paths_exist, paths_not_exist
 from os.path import abspath, join, exists
-from roboai_cli.util.cli import print_error, print_info, print_success
+from roboai_cli.util.cli import print_error, print_info, print_success, loading_indicator
 
 TEST_FOLDER_NAME = "roboai_tests"
 
@@ -15,29 +15,37 @@ TEST_FOLDER_NAME = "roboai_tests"
 def command(languages: tuple, domain_path: str, template_path: str):
 
     if domain_path is None and template_path is None:
-        if exists(join(abspath("."), "languages")):
-            list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
+        with loading_indicator("Creating true files..."):
+            if exists(join(abspath("."), "languages")):
+                list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
 
-            while list_domain_dir:
-                lang_domain_dir = list_domain_dir.pop()
-                template_dir = join(lang_domain_dir, TEST_FOLDER_NAME)
+                while list_domain_dir:
+                    lang_domain_dir = list_domain_dir.pop()
+                    template_dir = join(lang_domain_dir, TEST_FOLDER_NAME)
 
-                if paths_exist(lang_domain_dir, template_dir):
-                    automate(lang_domain_dir, [template_dir])
+                    if paths_exist(lang_domain_dir, template_dir):
+                        automate(lang_domain_dir, [template_dir])
+                    else:
+                        paths_not_exist(lang_domain_dir, template_dir)
 
-        else:
-            domain_dir = abspath(".")
-            template_dir = join(abspath("."), TEST_FOLDER_NAME)
+            else:
+                domain_dir = abspath(".")
+                template_dir = join(abspath("."), TEST_FOLDER_NAME)
 
-            if paths_exist(domain_dir, template_dir):
-                automate(domain_dir, [template_dir])
+                if paths_exist(domain_dir, template_dir):
+                    automate(domain_dir, [template_dir])
+                else:
+                    paths_not_exist(domain_dir, template_dir)
 
         print_success("Tests created successfully")
 
     elif domain_path is not None and template_path is not None:
+        with loading_indicator("Creating true files..."):
 
-        if paths_exist(domain_path, template_path):
-            automate(domain_path, [template_path])
+            if paths_exist(domain_path, template_path):
+                automate(domain_path, [template_path])
+            else:
+                paths_not_exist(domain_path, template_path)
 
         print_success("Tests created successfully")
 
@@ -73,17 +81,6 @@ def _inform_language() -> None:
         "No language was provided but a multi-language bot was detected. "
         "Will test all available languages inside provided bot folder.\n"
     )
-
-
-def paths_exist(domain: str, templates: str):
-
-    if not exists(domain):
-        print_error(f"Domain path not found: {domain}")
-
-    if not exists(templates):
-        print_error(f"Templates path not found: {templates}")
-
-    return exists(domain) and exists(templates)
 
 
 if __name__ == "__main__":
