@@ -32,14 +32,14 @@ def command(languages: tuple, domain_path: str, template_path: str):
             if paths_exist(domain_dir, template_dir):
                 automate(domain_dir, [template_dir])
 
-        print_success("Creating true files process completed")
+        print_success("Tests created successfully")
 
     elif domain_path is not None and template_path is not None:
 
         if paths_exist(domain_path, template_path):
             automate(domain_path, [template_path])
 
-        print_success("Creating true files process completed")
+        print_success("Tests created successfully")
 
     elif domain_path is None:
         print_error("Domain path not inserted")

@@ -24,16 +24,18 @@ def automate(domain_path: str, paths: List[str]):
 
                 if file_exits(domain_file_path, path):
                     start_parsing(domain_file_path, path)
+                else:
+                    if not exists(domain_file_path):
+                        print_error(f"Domain file not found: {domain_file_path}")
+
+                    if not exists(path):
+                        print_error(f"Template file not found: {path}")
+
+                    print_error('Unable to create all tests')
+                    quit()
 
 
 def file_exits(domain: str, template: str):
-
-    if not exists(domain):
-        print_error(f"Domain file not found: {domain}")
-
-    if not exists(template):
-        print_error(f"Template file not found: {template}")
-
     return exists(domain) and exists(template)
 
 
