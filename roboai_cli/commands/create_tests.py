@@ -3,7 +3,7 @@ import os
 import click
 from roboai_cli.util.automate import automate
 from os.path import abspath, join, exists
-from roboai_cli.util.cli import print_error, print_info
+from roboai_cli.util.cli import print_error, print_info, print_success
 
 TEST_FOLDER_NAME = "roboai_tests"
 
@@ -32,10 +32,14 @@ def command(languages: tuple, domain_path: str, template_path: str):
             if paths_exist(domain_dir, template_dir):
                 automate(domain_dir, [template_dir])
 
+        print_success("Creating true files process completed")
+
     elif domain_path is not None and template_path is not None:
 
         if paths_exist(domain_path, template_path):
             automate(domain_path, [template_path])
+
+        print_success("Creating true files process completed")
 
     elif domain_path is None:
         print_error("Domain path not inserted")
