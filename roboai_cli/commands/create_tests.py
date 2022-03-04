@@ -24,7 +24,7 @@ def command(languages: tuple, domain_path: str, template_path: str):
                     lang_domain_dir = list_domain_dir.pop()
                     template_dir = join(lang_domain_dir, TEST_FOLDER_NAME)
 
-                    if paths_exist(lang_domain_dir, template_dir):
+                    if paths_exist(lang_domain_dir, template_dir) and not len([template_dir]):
                         automate(lang_domain_dir, [template_dir])
                     else:
                         paths_not_exist(lang_domain_dir, template_dir)
