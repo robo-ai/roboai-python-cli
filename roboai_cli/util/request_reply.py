@@ -13,6 +13,7 @@ META_DATA_PATH = "/status"
 META_DATA_METHOD = "get"
 TRACKER_PATH = "/conversations/{}/tracker?include_events=ALL"
 TRACKER_METHOD = "get"
+TRUE_FILES_FOLDER_NAME = "tests_true_files"
 
 
 class Tests:
@@ -118,21 +119,6 @@ def generate_id_story():
 
 
 if __name__ == "__main__":
-    """
-    sender = generate_id_story()
-    conversation = Message(
-        endpoint="http://rasa-training.development.robo-ai.com:5006",
-        path="/webhooks/rest/webhook",
-        method="post",
-        headers={},
-        body={
-            "sender": sender,
-            "message": "/start-dialogue"
-        }
-    )
-
-    print(conversation.request_message())
-    """
     tests = Tests(
         true_files_path="../roboai_tests/tests_true_files/",
         endpoint=ENDPOINT,
