@@ -22,7 +22,8 @@ from roboai_cli.commands import (
     stories,
     data,
     report_logs,
-    create_tests
+    create_tests,
+    check_tests
 )
 from pyfiglet import Figlet
 
@@ -60,6 +61,7 @@ cli.add_command(interactive.command)
 cli.add_command(data.command)
 cli.add_command(report_logs.command)
 cli.add_command(create_tests.command)
+cli.add_command(check_tests.command)
 
 try:
     import colorama

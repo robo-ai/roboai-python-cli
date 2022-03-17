@@ -29,7 +29,10 @@ class Tests:
 
     def run_tests(self):
         print(self.__message.request_message(META_DATA_PATH, META_DATA_METHOD, body={}))
+        self.__successful = 0
+        self.__failed = 0
         self.get_all_true_files(self.__true_files_list)
+        print(f"Tests run: {self.__successful} Successful and {self.__failed} Failed")
 
     def get_all_true_files(self, paths):
         while len(paths):
@@ -48,6 +51,7 @@ class Tests:
         for dict_story_steps in list_stories_steps:
             id_story = generate_id_story()
             list_chatbot_reply = []
+            print("\n\n")
             print(dict_story_steps['story'])
             print(id_story)
 
@@ -69,8 +73,10 @@ class Tests:
                                 raise Exception('Chatbot did not reply (the list is empty)')
 
                             list_chatbot_reply = self.evaluate(list_chatbot_reply, dict_steps_value)
+                    self.__successful = self.__successful + 1
 
             except Exception as e:
+                self.__failed = self.__failed + 1
                 print(e)
                 print(self.__message.request_message(TRACKER_PATH.format(id_story), TRACKER_METHOD, body={}))
                 pass
