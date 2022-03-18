@@ -9,7 +9,11 @@ DOMAIN_FILE_NAME = "domain.yml"
 
 
 def automate(domain_path: str, paths: List[str]):
-    domain_file_path = join(domain_path, DOMAIN_FILE_NAME)
+    if domain_path.endswith(DOMAIN_FILE_NAME):
+        domain_file_path = domain_path
+    else:
+        domain_file_path = join(domain_path, DOMAIN_FILE_NAME)
+
     while len(paths):
 
         path = paths.pop()
@@ -18,30 +22,39 @@ def automate(domain_path: str, paths: List[str]):
             paths = paths + [os.path.join(path, name) for name in os.listdir(path)]
 
         elif path.endswith(".yml"):
-
-            if paths_exist(domain_file_path, path):
-                start_parsing(domain_file_path, path)
-            else:
-                paths_not_exist(domain_file_path, path)
+            start_parsing(domain_file_path, path)
 
 
-def paths_exist(domain: str, template: str):
-    return exists(domain) and exists(template)
+def paths_exist(domain: str, templates: list):
 
-
-def paths_not_exist(domain: str, template: str):
-    if not exists(domain) and not exists(template):
+    if not exists(domain):
         print_error(f"\nDomain path not found: {domain}")
-        print_error(f"Template path not found: {template}")
+        print_error('Unable to create all tests')
+        quit()
 
-    elif not exists(domain):
+    for template in templates:
+        if not exists(template):
+            print_error(f"\nTemplate path not found: {template}")
+            print_error('Unable to create all tests')
+            quit()
+
+    return True
+
+
+"""
+def paths_not_exist(domain: str, templates: list):
+    
+    if not exists(domain):
         print_error(f"\nDomain path not found: {domain}")
 
-    elif not exists(template):
-        print_error(f"\nTemplate path not found: {template}")
+    for template in templates
+        
+        
+    print_error(f"\nTemplate path not found: {template}")
 
     print_error('Unable to create all tests')
     quit()
+"""
 
 
 if __name__ == "__main__":

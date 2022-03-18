@@ -139,7 +139,7 @@ def yaml_dump(path: str, dict_data: dict):
 
 
 if __name__ == "__main__":
-    start_parsing('/home/caramelo/Documents/Estagio/roboai-python-cli/roboai-python-cli/roboai_cli/util', '../roboai_tests/tests_templates/template_form_iptv_support.yml')
+    start_parsing('../roboai-python-cli/roboai_cli/util', '../roboai_tests/tests_templates/template_form_iptv_support.yml')
 
     #To test : '../roboai_tests/tests_templates/template_form_iptv_support.yml'
 
