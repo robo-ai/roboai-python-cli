@@ -102,7 +102,7 @@ class Tests:
                             list_chatbot_reply = self.evaluate(list_chatbot_reply, dict_steps_value)
                             self.__successful_input += 1
 
-                    self.__successful += 1
+                self.__successful += 1
 
             except Exception as e:
                 self.__failed_input += 1
