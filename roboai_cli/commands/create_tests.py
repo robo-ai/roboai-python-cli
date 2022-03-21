@@ -15,8 +15,7 @@ TEST_FOLDER_NAME = os.path.join("roboai_tests", TEMPLATES_FOLDER_NAME)
 @click.option("--templates-path", "-t", multiple=True, default=None, type=str, help="Specifies the templates path")
 @click.option("--template", default=None, type=list, help="Specifies the template name")
 def command(languages: tuple, domain_path: str, templates_path: tuple, template: str):
-
-    if domain_path is None and templates_path is None:
+    if not domain_path and not templates_path:
         with loading_indicator("Creating true files..."):
             if exists(join(abspath("."), "languages")):
                 list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
@@ -37,7 +36,7 @@ def command(languages: tuple, domain_path: str, templates_path: tuple, template:
 
         print_success("Tests created successfully")
 
-    elif domain_path is not None and templates_path is not None:
+    elif domain_path and templates_path:
         with loading_indicator("Creating true files..."):
 
             template_path = list(templates_path)
