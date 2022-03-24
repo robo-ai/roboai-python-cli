@@ -12,46 +12,84 @@ TEST_FOLDER_NAME = os.path.join("roboai_tests", TEMPLATES_FOLDER_NAME)
 @click.command(name="create_tests", help="Create tests in the desired format")
 @click.argument("languages", nargs=-1)
 @click.option("--domain-path", default=None, type=str, help="Specifies the domain path")
-@click.option("--templates-path", "-t", multiple=True, default=None, type=str, help="Specifies the templates path")
-@click.option("--template", default=None, type=list, help="Specifies the template name")
-def command(languages: tuple, domain_path: str, templates_path: tuple, template: str):
-    if not domain_path and not templates_path:
-        if exists(join(abspath("."), "languages")):
-            list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
+@click.option("--template-path", "-tp", multiple=True, default=None, type=str, help="Specifies the templates path")
+@click.option("--template", "-t", multiple=True, default=None, type=str, help="Specifies the template name")
+def command(languages: tuple, domain_path: str, template_path: tuple, template: tuple):
 
-            while list_domain_dir:
-                lang_domain_dir = list_domain_dir.pop()
-                template_dir = [join(lang_domain_dir, TEST_FOLDER_NAME)]
+    if not template:
 
-                if paths_exist(lang_domain_dir, template_dir): # and not len([template_dir])
+        if not domain_path and not template_path:
+            if exists(join(abspath("."), "languages")):
+                list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
+
+                while list_domain_dir:
+                    lang_domain_dir = list_domain_dir.pop()
+                    template_dir = [join(lang_domain_dir, TEST_FOLDER_NAME)]
+
+                    if paths_exist(lang_domain_dir, template_dir): # and not len([template_dir])
+                        with loading_indicator("Creating true files..."):
+                            automate(lang_domain_dir, template_dir)
+
+            else:
+                domain_dir = abspath(".")
+                template_dir = [join(abspath("."), TEST_FOLDER_NAME)]
+
+                if paths_exist(domain_dir, template_dir):
                     with loading_indicator("Creating true files..."):
-                        automate(lang_domain_dir, template_dir)
+                        automate(domain_dir, template_dir)
+
+            print_success("Tests created successfully")
+
+        elif domain_path and template_path:
+            with loading_indicator("Creating true files..."):
+
+                template_path = list(template_path)
+
+                if paths_exist(domain_path, template_path):
+                    automate(domain_path, template_path)
+
+            print_success("Tests created successfully")
+
+        elif domain_path is None:
+            print_error("Domain path not inserted")
 
         else:
-            domain_dir = abspath(".")
-            template_dir = [join(abspath("."), TEST_FOLDER_NAME)]
-
-            if paths_exist(domain_dir, template_dir):
-                with loading_indicator("Creating true files..."):
-                    automate(domain_dir, template_dir)
-
-        print_success("Tests created successfully")
-
-    elif domain_path and templates_path:
-        with loading_indicator("Creating true files..."):
-
-            template_path = list(templates_path)
-
-            if paths_exist(domain_path, template_path):
-                automate(domain_path, template_path)
-
-        print_success("Tests created successfully")
-
-    elif domain_path is None:
-        print_error("Domain path not inserted")
+            print_error("Templates path not inserted")
 
     else:
-        print_error("Templates path not inserted")
+        if not domain_path and not template_path:
+            with loading_indicator("Creating true files..."):
+                if exists(join(abspath("."), "languages")):
+                    list_domain_dir = get_all_languages(path=abspath("."), languages=languages)
+
+                    while list_domain_dir:
+                        lang_domain_dir = list_domain_dir.pop()
+                        template = list(template)
+                        template_full_path = []
+
+                        for path in template:
+                            template_full_path.append(join(lang_domain_dir, TEST_FOLDER_NAME, path))
+
+                        if paths_exist(lang_domain_dir, template_full_path):
+                            automate(lang_domain_dir, template_full_path)
+                else:
+                    domain_dir = abspath(".")
+                    template = list(template)
+                    template_full_path = []
+
+                    for path in template:
+                        template_full_path.append(join(domain_dir, TEST_FOLDER_NAME, path))
+
+                    if paths_exist(domain_dir, template_full_path):
+                        automate(domain_dir, template_full_path)
+
+                print_success("Tests created successfully")
+
+        elif domain_path:
+            print_error("Template command does not need domain specification")
+
+        elif template_path:
+            print_error("Template command does not need template_path specification")
 
 
 def get_all_languages(path: str, languages: tuple) -> list:
