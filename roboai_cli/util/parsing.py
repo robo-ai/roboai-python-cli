@@ -3,6 +3,8 @@ from os.path import exists
 import yaml
 import os.path
 
+from roboai_cli.util.cli import print_error
+
 from roboai_cli.util.input_output import load_yaml
 
 TEMPLATES_FOLDER_NAME = "tests_templates"
@@ -10,7 +12,6 @@ TRUE_FILES_FOLDER_NAME = "tests_true_files"
 
 
 def start_parsing(domain_path: str, template_path: str):
-
     """
     Load yaml files from their current path and create final path
     """
@@ -27,7 +28,7 @@ def start_parsing(domain_path: str, template_path: str):
 
     domain_file = load_yaml(domain_path)
     template_file = load_yaml(template_path)
-    add_chatbot_reply(domain_file, template_file, true_file_path)
+    add_chatbot_reply(domain_file, template_file, template_path, true_file_path)
 
 
 def path_exists(true_file_path: str):
@@ -41,44 +42,150 @@ def path_exists(true_file_path: str):
     dir_true_file_path = true_file_path[:dir_path_index]
 
     if not exists(dir_true_file_path):
-
         os.makedirs(dir_true_file_path)
 
 
-def add_chatbot_reply(domain: dict, template: dict, true_file_path: str):
-
+def add_chatbot_reply(domain: dict, template: dict, template_path: str, true_file_path: str):
     """
     Merge domain and template dictionaries creating a list (list_story_steps) containing story and steps
     Args:
+        template_path: template path
         domain: domain dictionary
         template: template dictionary
         true_file_path: true file path
 
     """
 
-    list_tests = template.get('tests')
-    list_story_steps = []
-    list_steps = []
+    if check_file(template, template_path, 'title') and check_file(template, template_path, 'description')\
+            and check_file(template, template_path, 'tests'):
 
-    for dic in list_tests:
-        for item_key, item_value in dic.items():
+        list_tests = template.get('tests')
+        list_story_steps = []
+        list_steps = []
+        error_detected = False
+        flag_first = True
+        story_name = None
+        last = None
 
-            if item_key == 'story':
-                list_story_steps.append({item_key: item_value})
+        for dic in list_tests:
+            if check_file(dic, template_path, 'story') and check_file(dic, template_path, 'steps')\
+                    and not error_detected:
 
-            elif item_key == 'steps':
-                for dict_values in item_value:
+                for item_key, item_value in dic.items():
 
-                    if 'user' in dict_values:
-                        list_steps.append(dict_values)
+                    if item_key == 'story' and not error_detected:
+                        list_story_steps.append({item_key: item_value})
+                        story_name = item_value
 
-                    elif 'utter' in dict_values:
-                        list_steps.append({'chatbot': {dict_values.get('utter'): domain['responses'].get(dict_values.get('utter'))}})
+                    elif item_key == 'steps' and not error_detected:
+                        for dict_values in item_value:
 
-                list_story_steps.append({'steps': list_steps})
-                list_steps = []
+                            if 'user' in dict_values:
+                                flag_first = False
 
-    flatten_list(template, list_story_steps, true_file_path)
+                                if check_steps(dict_values, template_path, story_name, 'user'):
+
+                                    if last is 'utter' or last is None:
+
+                                        list_steps.append(dict_values)
+
+                                    elif last is 'user':
+
+                                        index = template_path.find(TEMPLATES_FOLDER_NAME)
+                                        print_error(f"\nFile:{template_path[index:]}\n"
+                                                    f"There are two users in a row in story {story_name}\n")
+                                        error_detected = True
+
+                                last = 'user'
+
+                            elif 'utter' in dict_values:
+
+                                if check_steps(dict_values, template_path, story_name, 'utter'):
+                                    if not flag_first:
+                                        if utter_id_exists(domain['responses'], dict_values.get('utter')):
+
+                                            list_steps.append(
+                                                {'chatbot': {dict_values.get('utter'): domain['responses'].get(dict_values.get('utter'))}})
+                                        else:
+
+                                            index = template_path.find(TEMPLATES_FOLDER_NAME)
+                                            print_error(f"\nFile:{template_path[index:]}\n"
+                                                        f"utter_id ({dict_values.get('utter')}) does not exists. "
+                                                        f"Story {story_name}\n")
+                                            error_detected = True
+
+                                    if flag_first:
+
+                                        index = template_path.find(TEMPLATES_FOLDER_NAME)
+                                        print_error(f"\nFile:{template_path[index:]}\n"
+                                                    f"The first step of the story {story_name} is not user\n")
+                                        error_detected = True
+                                last = "utter"
+
+                        list_story_steps.append({'steps': list_steps})
+                        list_steps = []
+                        flag_first = True
+
+        if not error_detected:
+            flatten_list(template, list_story_steps, true_file_path)
+
+
+def check_file(dictionary: dict, template_path: str, component: str):
+    if component not in dictionary:
+        index = template_path.find(TEMPLATES_FOLDER_NAME)
+        print_error(f'\nFile:{template_path[index:]}\n'
+                    f'ERROR: {component} not detected\n')
+        return False
+    if dictionary.get(component) is None:
+        index = template_path.find(TEMPLATES_FOLDER_NAME)
+        print_error(f'\nFile:{template_path[index:]}\n'
+                    f'ERROR: {component} dictionary is empty\n')
+        return False
+
+    return True
+
+
+def check_steps(dictionary: dict, template_path: str, story_name: str, component):
+
+    index = template_path.find(TEMPLATES_FOLDER_NAME)
+
+    if dictionary.get(component) is None:
+        print_error(f'\nFile:{template_path[index:]}\n'
+                    f'{component} is empty in story {story_name}\n')
+        return False
+
+    if type(dictionary.get(component)) == str:
+
+        if component == "user":
+            file_index = template_path.rfind("/")
+
+            if dictionary.get(component).startswith("/") and template_path[file_index:] != "/defaults.yml":
+                print_error(f'\nFile:{template_path[index:]}\n'
+                            f'{component} starts with / in story {story_name}\n')
+                return False
+
+            elif dictionary.get(component).startswith("utter_"):
+                print_error(f'\nFile:{template_path[index:]}\n'
+                            f'{component} starts with utter_ in {story_name}\n')
+                return False
+
+        elif component == "utter":
+            if not dictionary.get(component).startswith("utter_"):
+                print_error(f'\nFile:{template_path[index:]}\n'
+                            f'{component} does not starts with utter_ in {story_name}\n')
+                return False
+    else:
+        print_error(f'\nFile:{template_path[index:]}\n'
+                    f'{component} type in {story_name} is not a string\n')
+        return False
+
+    return True
+
+
+def utter_id_exists(domain_dic: dict, utter_id: str):
+    if utter_id in domain_dic.keys():
+        return True
+    return False
 
 
 def flatten_list(template: dict, list_story_steps: list, true_file_path: str):
@@ -94,17 +201,15 @@ def flatten_list(template: dict, list_story_steps: list, true_file_path: str):
     list_aux = []
 
     for i in range(0, len(list_story_steps), 2):
-
         dict_aux = {}
         dict_aux.update(list_story_steps[i])
-        dict_aux.update(list_story_steps[i+1])
+        dict_aux.update(list_story_steps[i + 1])
         list_aux.append(dict_aux)
 
     add_header(template, list_aux, true_file_path)
 
 
 def add_header(template: dict, tests: list, true_file_path: str):
-
     """
     Merge title, description and tests
     Args:
@@ -121,7 +226,6 @@ def add_header(template: dict, tests: list, true_file_path: str):
 
 
 def yaml_dump(path: str, dict_data: dict):
-
     """
     Dumps yaml file
     Args:
@@ -139,8 +243,7 @@ def yaml_dump(path: str, dict_data: dict):
 
 
 if __name__ == "__main__":
-    start_parsing('../roboai-python-cli/roboai_cli/util', '../roboai_tests/tests_templates/template_form_iptv_support.yml')
+    start_parsing('../roboai-python-cli/roboai_cli/util',
+                  '../roboai_tests/tests_templates/template_form_iptv_support.yml')
 
-    #To test : '../roboai_tests/tests_templates/template_form_iptv_support.yml'
-
-
+    # To test : '../roboai_tests/tests_templates/template_form_iptv_support.yml'
