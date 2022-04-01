@@ -9,18 +9,19 @@ from roboai_cli.util.request_reply import TRUE_FILES_FOLDER_NAME
 from roboai_cli.util.request_reply import Tests
 from roboai_cli.util.request_reply import RESULTS_FOLDER_NAME
 
-
 TESTS_FOLDER_NAME = os.path.join("roboai_tests", TRUE_FILES_FOLDER_NAME)
 TESTS_RESULTS_FOLDER_NAME = os.path.join("roboai_tests", RESULTS_FOLDER_NAME)
 
 
 @click.command(name="check_tests", help="Test Chatbot based on True Files")
 @click.argument("languages", nargs=-1)
-@click.option("--endpoint", default="http://localhost:5005", type=str, help="Request URL (Default: http://localhost:5005)")
+@click.option("--endpoint", default="http://localhost:5005", type=str,
+              help="Request URL (Default: http://localhost:5005)")
 @click.option("--headers", default={}, type=dict, help="Request headers (Default: {})")
 @click.option("--true-files-path", default=None, type=str, help="Specifies the true files path")
-def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str):
-    if true_files_path is None:
+@click.option("--export-all/--export-only-failed", default=False, type=bool, help="Include the tests passed on the report")
+def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str, export_passed: bool):
+    if not true_files_path:
         # with loading_indicator("Checking tests..."):
         if exists(join(abspath("."), "languages")):
             list_true_files_dir = get_all_languages(path=abspath("."), languages=languages)
@@ -33,7 +34,7 @@ def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str
                     create_results_dir(results_dir)
 
                 true_files_dir = join(current_dir, TESTS_FOLDER_NAME)
-                check_path_and_run_tests(true_files_dir, endpoint, headers)
+                check_path_and_run_tests(true_files_dir, endpoint, headers, export_passed)
         else:
             current_dir = abspath(".")
             results_dir = join(current_dir, TESTS_RESULTS_FOLDER_NAME)
@@ -42,28 +43,29 @@ def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str
                 create_results_dir(results_dir)
 
             true_files_dir = join(current_dir, TESTS_FOLDER_NAME)
-            check_path_and_run_tests(true_files_dir, endpoint, headers)
+            check_path_and_run_tests(true_files_dir, endpoint, headers, export_passed)
         # end of loading
 
     else:
-        #with loading_indicator("Checking tests..."):
+        # with loading_indicator("Checking tests..."):
         dir_path_index = true_files_path.rfind('/')
         results_dir = join(true_files_path[:dir_path_index], RESULTS_FOLDER_NAME)
 
         if not exists(results_dir):
             create_results_dir(results_dir)
 
-        check_path_and_run_tests(true_files_path, endpoint, headers)
+        check_path_and_run_tests(true_files_path, endpoint, headers, export_passed)
 
     print_success("Tests ended successfully")
 
 
-def check_path_and_run_tests(path, endpoint, headers):
+def check_path_and_run_tests(path, endpoint, headers, passed):
     if exists(path):
         tests = Tests(
             true_files_path=path,
             endpoint=endpoint,
-            headers=headers
+            headers=headers,
+            passed=passed
         )
         tests.run_tests()
     else:
