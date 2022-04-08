@@ -20,7 +20,7 @@ TESTS_RESULTS_FOLDER_NAME = os.path.join("roboai_tests", RESULTS_FOLDER_NAME)
 @click.option("--headers", default={}, type=dict, help="Request headers (Default: {})")
 @click.option("--true-files-path", default=None, type=str, help="Specifies the true files path")
 @click.option("--export-all/--export-only-failed", default=False, type=bool, help="Include the tests passed on the report")
-def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str, export_passed: bool):
+def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str, export_all: bool):
     if not true_files_path:
         # with loading_indicator("Checking tests..."):
         if exists(join(abspath("."), "languages")):
@@ -34,7 +34,7 @@ def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str
                     create_results_dir(results_dir)
 
                 true_files_dir = join(current_dir, TESTS_FOLDER_NAME)
-                check_path_and_run_tests(true_files_dir, endpoint, headers, export_passed)
+                check_path_and_run_tests(true_files_dir, endpoint, headers, export_all)
         else:
             current_dir = abspath(".")
             results_dir = join(current_dir, TESTS_RESULTS_FOLDER_NAME)
@@ -43,7 +43,7 @@ def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str
                 create_results_dir(results_dir)
 
             true_files_dir = join(current_dir, TESTS_FOLDER_NAME)
-            check_path_and_run_tests(true_files_dir, endpoint, headers, export_passed)
+            check_path_and_run_tests(true_files_dir, endpoint, headers, export_all)
         # end of loading
 
     else:
@@ -54,7 +54,7 @@ def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str
         if not exists(results_dir):
             create_results_dir(results_dir)
 
-        check_path_and_run_tests(true_files_path, endpoint, headers, export_passed)
+        check_path_and_run_tests(true_files_path, endpoint, headers, export_all)
 
     print_success("Tests ended successfully")
 

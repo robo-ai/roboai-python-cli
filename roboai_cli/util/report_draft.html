@@ -253,17 +253,21 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <td>Rasa Version</td>
         <td>1.10.0</td></tr>
       <tr>
+        <td>Chatbot Version</td>
+        <td>Not available</td></tr>
+      <tr>
         <td>Model Name</td>
         <td>languages/de/models/model-de-20220331-140141.tar.gz</td></tr>
       <tr>
         <td>Trained At</td>
         <td>31/03/2022 14:01:41 (1648735315.13631)</td></tr>
       <tr>
-        <td><a href="./fingerprint.json">Model Fingerprint</a></td>
+        <td>Model Fingerprint</td>
+        <td><a href="./fingerprint.json">fingerprint.json</a></td>
       </tr>
     </table>
     <h2>Summary</h2>
-    <table id="summary">
+    <table class="summary">
         <tr>
           <td>Number of tests</td>
           <td>{{results['number_tests']}}</td>
@@ -277,24 +281,22 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         </tr>
     </table>
     <br>
-    <table id="summary">
+    <table class="summary">
         <tr>
             <td>Number of test inputs</td>
             <td>{{results['number_tests_inputs']}}</td></tr>
         <tr>
             <td>Successful</td>
-            <td>{{results['number_tests_inputs_sucessful']}}</td></tr>
+            <td>{{results['number_tests_inputs_successful']}}</td></tr>
         <tr>
             <td>Failed</td>
             <td>{{results['number_tests_inputs_failed']}}</td></tr>
     </table>
     <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p>
     <input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/>
-      <span class="passed">864 passed</span>, 
-    <input checked="true" class="filter" data-test-result="xfailed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/>
-      <span class="xfailed">1 expected failures</span>, 
+      <span class="passed">{{results['number_tests_successful']}} passed</span>,
     <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/>
-      <span class="failed">6 failed</span>, 
+      <span class="failed">{{results['number_tests_failed']}} failed</span>
 
   <h2>Results</h2>
     <table id="results-table">
@@ -307,46 +309,89 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr hidden="true" id="not-found-message">
           <th colspan="4">No results found. Try to check the filters</th></tr></thead>
 
-        <tbody class="xfailed results-table-row">
-        <tr>
-          <td class="col-result">Expected Failure</td>
-          <td class="col-name">Hints: Customer portal</td>
-          <td class="col-links"><a href="./hints_true_file.yml">hints_true_file.yml</a>  <a href="./fa60e926115341099e73b9184652b823l.json">Tracker</a></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="text">Testing Hints</div>
-            <div class="text">Customer portal</div>
-
-            <table id="results-table">
-              <tr>
+        <tbody class="failed results-table-row">
+            <tr>
                 <td>
-                <div>bla bla 1</div>
-                </td>
-                <td>
-                <div>bla bla 2</div>
-                </td>
-              </td>
-            </table>
+                  {% for element in data %}
+                    {% if element['status'] == 'Failed' %}
+                        <tr>
+                            <td class="col-result">Failed</td>
+                            <td class="col-name">{{element['story_name']}}</td>
+                            <td class="col-links"></td>
+                        </tr>
+                        <tr>
+                            <td class="extra" colspan="4">
+                                <table id="result-logs">
+                                    {% for dict_item in element['steps'] %}
+                                       {% for key, value in dict_item.items() %}
+                                            {% if key == 'user' %}
+                                                <tr><td class="user-cell">
+                                                  <div class="user-utter">{{value}}</div>
+                                                </td></tr>
+                                                <tr><td class="user-utter-description">
+                                                    <strong>You</strong>
+                                                </td>
+                                                <tr>
+                                                    <td><div class="space-log"></div></td>
+                                                </tr>
+                                            {% elif key == 'chatbot' %}
+                                                {% for utter_key, utter_value in value.items() %}
+                                                    <tr><td class="chatbot-cell">
+                                                        <div class="chatbot-utter">bla bla bla</div>
+                                                    </td></tr>
+                                                    <tr><td class="chatbot-utter-description">
+                                                      <strong>Bot</strong> {{utter_key}}
+                                                    </td></tr>
+                                                    <tr>
+                                                        <td><div class="space-log"></div></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% endif %}
+                                       {% endfor %}
+                                    {% endfor %}
+                                  </table>
+                            </td>
+                        </tr>
+                    {% endif %}
+                  {% endfor %}
 
-          </td>
-        </tr>
+                </td>
+            </tr>
         </tbody>
 
-        <tbody class="failed results-table-row">
-        <tr>
-          <td class="col-result">Failed</td>
-          <td class="col-name">roboai_content_lib/tests/cicd_tests.py::test_report_configs[de]</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log">bla bla 3</div></td></tr></tbody>
-
       <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">roboai_content_lib/tests/cicd_tests.py::test_unique_ids_intents[responses3]</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="empty log">No log output captured.</div></td></tr></tbody>
+       <tr>
+           <td>
+                  {% if passed %}
+                      {% for element in data %}
+                        {% if element['status'] == 'Passed' %}
+                            <tr>
+                              <td class="col-result">Passed</td>
+                              <td class="col-name">{{element['story_name']}}</td>
+                              <td class="col-links"></td>
+                            </tr>
+                            <tr>
+                                <td class="extra" colspan="4">
+                                </td>
+                            </tr>
+                        {% endif %}
+                      {% endfor %}
+                  {% else %}
+                      {% for element in data %}
+                        {% if element['status'] == 'Passed' %}
+                            <tr>
+                              <td class="col-result">Passed</td>
+                              <td class="col-name">{{element['story_name']}}</td>
+                              <td class="col-links"></td>
+                            </tr>
+                            <tr>
+                                <td class="extra" colspan="4">
+                                </td>
+                            </tr>
+                        {% endif %}
+                      {% endfor %}
+                  {% endif %}
+          </td>
+       </tr>
+      </tbody>
 </table></body></html>

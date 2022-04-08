@@ -1,8 +1,10 @@
 import json
 import os
 import uuid
+import pkg_resources
 import requests
 
+from distutils.dir_util import copy_tree
 from os.path import join, exists
 from datetime import datetime
 from roboai_cli.util.input_output import load_yaml
@@ -33,6 +35,7 @@ class Tests:
         self.__true_files_path = true_files_path
         self.__true_files_list = [true_files_path]
         self.__message = Message(endpoint=endpoint, headers=headers)
+        self.__report_folder_path = None
         self.__successful = 0
         self.__successful_input = 0
         self.__failed = 0
@@ -46,9 +49,10 @@ class Tests:
     def run_tests(self):
         meta_data_dict = self.__message.request_message(META_DATA_PATH, META_DATA_METHOD, body={})
         print(json.dumps(meta_data_dict, sort_keys=True, indent=4))
-        create_folder_report(self.__true_files_path, self.__time)
+        self.__report_folder_path = create_folder_report(self.__true_files_path, self.__time)
+        self.create_json_file(self.__report_folder_path, "fingerprint", meta_data_dict)
         self.get_all_true_files(self.__true_files_list)
-        self.create_html_file(self.__true_files_path, self.__time)
+        self.create_html_file(self.__report_folder_path)
         print_success("Tests ended successfully\n")
         print("Tests results:\n")
         print(f"Number of tests: {self.__successful + self.__failed}")
@@ -79,22 +83,28 @@ class Tests:
         true_file = load_yaml(path)
         yml_file = trimming_yml_file(path)
         list_stories_steps = true_file.get('tests')
+        true_file_title = true_file.get('title')
+        copy_assets(self.__report_folder_path)
 
         for dict_story_steps in list_stories_steps:
             id_story = generate_id_story()
             list_chatbot_reply = []
             story_name = dict_story_steps['story']
             story_running = f"{yml_file}: {story_name}"
+            steps_running = dict_story_steps['steps']
+            tracker_response = {}
+
             print(f"\nRunning {story_running}")
             print(f"With Conversation-UUID: {id_story}\n")
 
             if self.__passed:
-                self.create_json_file(path, id_story, self.__message.request_message(TRACKER_PATH.format(id_story),
-                                                                                     TRACKER_METHOD, body={}),
-                                      self.__time)
+                tracker_response = self.__message.request_message(TRACKER_PATH.format(id_story), TRACKER_METHOD,
+                                                                  body={})
+                json_folder = join(self.__report_folder_path, "trackers")
+                self.create_json_file(json_folder, id_story, tracker_response)
 
             try:
-                for dict_steps in dict_story_steps['steps']:
+                for dict_steps in steps_running:
                     for dict_steps_key, dict_steps_value in dict_steps.items():
 
                         if dict_steps_key == "user":
@@ -116,17 +126,40 @@ class Tests:
                             list_chatbot_reply = self.evaluate(list_chatbot_reply, dict_steps_value)
                             self.__successful_input += 1
 
+                data = {
+                    'story_name': true_file_title + ": " + story_name,
+                    'steps': steps_running,
+                    'status': 'Passed',
+                    'tracker': tracker_response
+                }
+
                 self.__successful += 1
+                self.__data.append(data)
 
             except Exception as e:
                 self.__failed_input += 1
                 self.__failed += 1
                 self.__tests_failed.append(story_running)
-                print(e)
+
+                tracker_response = self.__message.request_message(TRACKER_PATH.format(id_story), TRACKER_METHOD,
+                                                                  body={})
+
                 if not self.__passed:
-                    self.create_json_file(path, id_story, self.__message.request_message(TRACKER_PATH.format(id_story),
-                                                                                         TRACKER_METHOD, body={}),
-                                          self.__time)
+
+                    json_folder = join(self.__report_folder_path, "trackers")
+                    self.create_json_file(json_folder, id_story, tracker_response)
+
+                data = {
+                    'story_name': true_file_title + ": " + story_name,
+                    'steps': steps_running,
+                    'status': 'Failed',
+                    'tracker': tracker_response
+                }
+
+                self.__data.append(data)
+
+                print(e)
+
                 pass
 
     def evaluate(self, list_chatbot_reply, dict_steps_value):
@@ -142,18 +175,17 @@ class Tests:
                         "Chatbot utter:\n"
                         f"{json.dumps(chatbot_reply['custom'], sort_keys=True, indent=4)}")
 
-    def create_html_file(self, path: str, folder: str):
+    def create_html_file(self, report_folder_path: str):
         loader = FileSystemLoader('util')
         env = Environment(loader=loader)
         template = env.get_template('report_draft.html')
 
-        true_files_path_index = path.find(TRUE_FILES_FOLDER_NAME)
-        folder_dir = join(path[:true_files_path_index], RESULTS_FOLDER_NAME, folder)
-        file_dir = folder_dir + "/report.html"
+        file_dir = join(report_folder_path, "report.html")
 
         with open(file_dir, "w") as htmlfile:
             render = template.render({'results': self.get_results(),
-                                      'data': self.__data})
+                                      'data': self.__data,
+                                      'passed': self.__passed})
             htmlfile.write(render)
             htmlfile.close()
 
@@ -163,17 +195,18 @@ class Tests:
             'number_tests_successful': self.__successful,
             'number_tests_failed': self.__failed,
             'number_tests_inputs': self.__successful_input + self.__failed_input,
-            'number_tests_inputs_sucessful': self.__successful_input,
+            'number_tests_inputs_successful': self.__successful_input,
             'number_tests_inputs_failed': self.__failed_input
         }
 
         return results
 
+    def create_json_file(self, path: str, filename: str, content: dict):
 
-    def create_json_file(self, path: str, id_story: str, content: dict, folder: str):
-        true_files_path_index = path.find(TRUE_FILES_FOLDER_NAME)
-        folder_dir = join(path[:true_files_path_index], RESULTS_FOLDER_NAME, folder)
-        file_dir = join(folder_dir, id_story) + ".json"
+        if not exists(path):
+            os.makedirs(path)
+
+        file_dir = join(path, filename) + ".json"
         json_object = json.dumps(content, sort_keys=True, indent=4)
 
         with open(file_dir, "w") as jsonfile:
@@ -225,6 +258,16 @@ def create_folder_report(path: str, folder: str):
     if not exists(folder_dir):
         os.makedirs(folder_dir)
 
+    return folder_dir
+
+
+def copy_assets(path: str):
+
+    from_directory = assets_path()
+    to_directory = join(path, "assets")
+
+    copy_tree(from_directory, to_directory)
+
 
 def trimming_yml_file(path: str):
     yml_file_index = path.rfind('/')
@@ -233,11 +276,16 @@ def trimming_yml_file(path: str):
     return yml_file
 
 
+def assets_path() -> str:
+    return pkg_resources.resource_filename(__name__, "assets")
+
+
 if __name__ == "__main__":
     tests = Tests(
         true_files_path="../roboai_tests/tests_true_files/",
         endpoint=ENDPOINT,
-        headers={}
+        headers={},
+        passed=False
     )
 
     tests.run_tests()
