@@ -310,18 +310,239 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
           <th colspan="4">No results found. Try to check the filters</th></tr></thead>
 
         <tbody class="failed results-table-row">
-            <tr>
-                <td>
-                  {% for element in data %}
-                    {% if element['status'] == 'Failed' %}
-                        <tr>
-                            <td class="col-result">Failed</td>
-                            <td class="col-name">{{element['story_name']}}</td>
-                            <td class="col-links"></td>
-                        </tr>
-                        <tr>
-                            <td class="extra" colspan="4">
-                                <table id="result-logs">
+
+          {% for element in data %}
+            {% if element['status'] == 'Failed' %}
+                <tr>
+                    <td class="col-result">Failed</td>
+                    <td class="col-name">{{element['story_name']}}</td>
+                    <td class="col-links"><a href= "trackers/{{ element['story_id']}}.json">tracker.json</a></td>
+                </tr>
+                <tr>
+                    <td class="extra" colspan="4">
+                    <table class="side-by-side">
+                      <tr>
+                        <td>
+                        <table class="result-logs">
+                            {% for dict_item in element['steps'] %}
+                               {% for key, value in dict_item.items() %}
+                                    {% if key == 'user' %}
+                                        <tr><td class="user-cell">
+                                          <div class="user-utter">{{value}}</div>
+                                        </td></tr>
+                                        <tr><td class="user-utter-description">
+                                            <strong>You</strong>
+                                        </td>
+                                        <tr>
+                                            <td><div class="space-log"></div></td>
+                                        </tr>
+                                    {% elif key == 'chatbot' %}
+                                        {% for utter_key, utter_value in value.items() %}
+                                            {% for item in utter_value %}
+                                                {% set answers = item['custom']['answers'] %}
+                                                {% for answer in answers %}
+                                                    {% if answer['type'] == 'html' %}
+                                                        <tr><td class="chatbot-cell">
+                                                            <div class="chatbot-utter">{{answer['text']}}</div>
+                                                        </td></tr>
+                                                    {% elif answer['type'] == 'multichoice' %}
+                                                        <tr><td class="chatbot-cell">
+                                                        {% for option in answer['options'] %}
+                                                            <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            </a>
+                                                        {% endfor %}
+                                                        </td></tr>
+                                                    {% elif answer["type"] == "text": %}
+                                                        <tr><td class="chatbot-cell">
+                                                            <div class="chatbot-utter">{{answer['text']|safe}}</div>
+                                                        </td></tr>
+                                                    {% elif answer["type"] == "links": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    {% for link in answer['links']: %}
+                                                                        <a href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                    {%  endfor %}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {% elif answer["type"] == "video": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    <a class="chatbot-cell-a" href={{answer["url"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {% elif answer["type"] == "carousel": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    {% for link in answer["options"]: %}
+                                                                        <a class="chatbot-cell-a" href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                    {%  endfor %}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {%  elif answer["type"] == "image": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                            <p class = "chatbot-cell-p">
+                                                                <img src={{answer["url"]|safe}} width="100%" height="auto" alt={{answer["title"]|safe}}>
+                                                            </p>
+                                                            </td>
+                                                        </tr>
+
+                                                    {%  elif answer["type"] == "youtube": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    <a class="chatbot-cell-a"  href=https://youtu.be/{{answer["youtubeId"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                        <tr><td class="chatbot-utter-description">
+                                                            <strong>Bot</strong> {{utter_key}}
+                                                        </td></tr>
+                                            <tr>
+                                                <td><div class="space-log"></div></td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                               {% endfor %}
+                            {% endfor %}
+                        </table>
+                        </td>
+                          <td>
+                        <table class="result-logs">
+                            {% set events = element['tracker']['events'] %}
+                            {%for item in events%}
+                                {%if item['event'] == "action"%}
+                                    <tr><td class="extra-info-log">
+                                        <strong>{{item['event'] ~ ":" ~ item['name'] ~ "(" + item['policy'] ~ ", " ~ item['confidence'] ~ ")"}}</strong>
+                                    </td></tr>
+                                {%elif item['event'] == "form"%}
+                                    <tr><td class="extra-info-log">
+                                        <strong>{{item['event'] ~ ":" ~ item['name']}}</strong>
+                                    </td></tr>
+                                {%elif item['event'] == "slot"%}
+                                    <tr><td class="extra-info-log">
+                                        <strong>{{item['event'] ~ ":" ~ item['name'] ~ " value: " ~ item['value'] }}</strong>
+                                    </td></tr>
+                                {%elif item['event'] == "user"%}
+                                    <tr><td class="user-cell">
+                                      <div class="user-utter">{{item['text']}}</div>
+                                    </td></tr>
+                                    <tr><td class="user-utter-description">
+                                        <strong>You</strong> {{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}
+                                    </td></tr>
+                                {%elif item['event'] == "bot"%}
+                                    {% set bot_answers = item['data']['custom']['answers'] %}
+                                    {% for answer in bot_answers %}
+                                        {% if answer['type'] == 'html' %}
+                                                        <tr><td class="chatbot-cell">
+                                                            <div class="chatbot-utter">{{answer['text']}}</div>
+                                                        </td></tr>
+                                                    {% elif answer['type'] == 'multichoice' %}
+                                                        <tr><td class="chatbot-cell">
+                                                        {% for option in answer['options'] %}
+                                                            <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            </a>
+                                                        {% endfor %}
+                                                        </td></tr>
+                                                    {% elif answer["type"] == "text": %}
+                                                        <tr><td class="chatbot-cell">
+                                                            <div class="chatbot-utter">{{answer['text']|safe}}</div>
+                                                        </td></tr>
+                                                    {% elif answer["type"] == "links": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    {% for link in answer['links']: %}
+                                                                        <a href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                    {%  endfor %}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {% elif answer["type"] == "video": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    <a class="chatbot-cell-a" href={{answer["url"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {% elif answer["type"] == "carousel": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    {% for link in answer["options"]: %}
+                                                                        <a class="chatbot-cell-a" href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                    {%  endfor %}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {%  elif answer["type"] == "image": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                            <p class = "chatbot-cell-p">
+                                                                <img src={{answer["url"]|safe}} width="100%" height="auto" alt={{answer["title"]|safe}}>
+                                                            </p>
+                                                            </td>
+                                                        </tr>
+
+                                                    {%  elif answer["type"] == "youtube": %}
+                                                        <tr>
+                                                            <td class = "chatbot-cell">
+                                                                <p class = "chatbot-cell-p">
+                                                                    <a class="chatbot-cell-a"  href=https://youtu.be/{{answer["youtubeId"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    {% endif %}
+                                    {% endfor %}
+                                    <tr><td class="chatbot-utter-description">
+                                        <strong>Bot</strong>
+                                    </td></tr>
+                                    <tr>
+                                        <td><div class="space-log"></div></td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            <tr>
+                                <td><div class="space-log"/></td>
+                            </tr>
+                        </table>
+                        </td>
+                    </tr>
+                </table>
+                </td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+
+      <tbody class="passed results-table-row">
+
+          {% if passed %}
+              {% for element in data %}
+                {% if element['status'] == 'Passed' %}
+                    <tr>
+                      <td class="col-result">Passed</td>
+                      <td class="col-name">{{element['story_name']}}</td>
+                      <td class="col-links"><a href= "trackers/{{ element['story_id']}}.json">tracker.json</a></td>
+                    </tr>
+                    <tr>
+                        <td class="extra" colspan="4">
+                            <table class="side-by-side">
+                              <tr>
+                                <td>
+                                <table class="result-logs">
                                     {% for dict_item in element['steps'] %}
                                        {% for key, value in dict_item.items() %}
                                             {% if key == 'user' %}
@@ -336,62 +557,208 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                 </tr>
                                             {% elif key == 'chatbot' %}
                                                 {% for utter_key, utter_value in value.items() %}
-                                                    <tr><td class="chatbot-cell">
-                                                        <div class="chatbot-utter">bla bla bla</div>
-                                                    </td></tr>
-                                                    <tr><td class="chatbot-utter-description">
-                                                      <strong>Bot</strong> {{utter_key}}
-                                                    </td></tr>
+                                                    {% for item in utter_value %}
+                                                        {% set answers = item['custom']['answers'] %}
+                                                        {% for answer in answers %}
+                                                            {% if answer['type'] == 'html' %}
+                                                                <tr><td class="chatbot-cell">
+                                                                    <div class="chatbot-utter">{{answer['text']}}</div>
+                                                                </td></tr>
+                                                            {% elif answer['type'] == 'multichoice' %}
+                                                                <tr><td class="chatbot-cell">
+                                                                {% for option in answer['options'] %}
+                                                                    <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    </a>
+                                                                {% endfor %}
+                                                                </td></tr>
+                                                            {% elif answer["type"] == "text": %}
+                                                                <tr><td class="chatbot-cell">
+                                                                    <div class="chatbot-utter">{{answer['text']|safe}}</div>
+                                                                </td></tr>
+                                                            {% elif answer["type"] == "links": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            {% for link in answer['links']: %}
+                                                                                <a href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                            {%  endfor %}
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% elif answer["type"] == "video": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            <a class="chatbot-cell-a" href={{answer["url"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% elif answer["type"] == "carousel": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            {% for link in answer["options"]: %}
+                                                                                <a class="chatbot-cell-a" href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                            {%  endfor %}
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {%  elif answer["type"] == "image": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                    <p class = "chatbot-cell-p">
+                                                                        <img src={{answer["url"]|safe}} width="100%" height="auto" alt={{answer["title"]|safe}}>
+                                                                    </p>
+                                                                    </td>
+                                                                </tr>
+
+                                                            {%  elif answer["type"] == "youtube": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            <a class="chatbot-cell-a"  href=https://youtu.be/{{answer["youtubeId"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                                <tr><td class="chatbot-utter-description">
+                                                                    <strong>Bot</strong> {{utter_key}}
+                                                                </td></tr>
                                                     <tr>
                                                         <td><div class="space-log"></div></td>
                                                     </tr>
+                                                    {% endfor %}
                                                 {% endfor %}
                                             {% endif %}
                                        {% endfor %}
                                     {% endfor %}
-                                  </table>
-                            </td>
-                        </tr>
-                    {% endif %}
-                  {% endfor %}
+                                </table>
+                                </td>
+                                  <td>
+                                <table class="result-logs">
+                                    {% set events = element['tracker']['events'] %}
+                                    {%for item in events%}
+                                        {%if item['event'] == "action"%}
+                                            <tr><td class="extra-info-log">
+                                                <strong>{{item['event'] ~ ":" ~ item['name'] ~ "(" + item['policy'] ~ ", " ~ item['confidence'] ~ ")"}}</strong>
+                                            </td></tr>
+                                        {%elif item['event'] == "form"%}
+                                            <tr><td class="extra-info-log">
+                                                <strong>{{item['event'] ~ ":" ~ item['name']}}</strong>
+                                            </td></tr>
+                                        {%elif item['event'] == "slot"%}
+                                            <tr><td class="extra-info-log">
+                                                <strong>{{item['event'] ~ ":" ~ item['name'] ~ " value: " ~ item['value'] }}</strong>
+                                            </td></tr>
+                                        {%elif item['event'] == "user"%}
+                                            <tr><td class="user-cell">
+                                              <div class="user-utter">{{item['text']}}</div>
+                                            </td></tr>
+                                            <tr><td class="user-utter-description">
+                                                <strong>You</strong> {{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}
+                                            </td></tr>
+                                        {%elif item['event'] == "bot"%}
+                                            {% set bot_answers = item['data']['custom']['answers'] %}
+                                            {% for answer in bot_answers %}
+                                                {% if answer['type'] == 'html' %}
+                                                                <tr><td class="chatbot-cell">
+                                                                    <div class="chatbot-utter">{{answer['text']}}</div>
+                                                                </td></tr>
+                                                            {% elif answer['type'] == 'multichoice' %}
+                                                                <tr><td class="chatbot-cell">
+                                                                {% for option in answer['options'] %}
+                                                                    <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    </a>
+                                                                {% endfor %}
+                                                                </td></tr>
+                                                            {% elif answer["type"] == "text": %}
+                                                                <tr><td class="chatbot-cell">
+                                                                    <div class="chatbot-utter">{{answer['text']|safe}}</div>
+                                                                </td></tr>
+                                                            {% elif answer["type"] == "links": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            {% for link in answer['links']: %}
+                                                                                <a href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                            {%  endfor %}
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% elif answer["type"] == "video": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            <a class="chatbot-cell-a" href={{answer["url"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% elif answer["type"] == "carousel": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            {% for link in answer["options"]: %}
+                                                                                <a class="chatbot-cell-a" href={{link["url"]|safe}}>{{link["title"]|safe}}</a>
+                                                                            {%  endfor %}
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {%  elif answer["type"] == "image": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                    <p class = "chatbot-cell-p">
+                                                                        <img src={{answer["url"]|safe}} width="100%" height="auto" alt={{answer["title"]|safe}}>
+                                                                    </p>
+                                                                    </td>
+                                                                </tr>
 
-                </td>
-            </tr>
-        </tbody>
-
-      <tbody class="passed results-table-row">
-       <tr>
-           <td>
-                  {% if passed %}
-                      {% for element in data %}
-                        {% if element['status'] == 'Passed' %}
-                            <tr>
-                              <td class="col-result">Passed</td>
-                              <td class="col-name">{{element['story_name']}}</td>
-                              <td class="col-links"></td>
-                            </tr>
-                            <tr>
-                                <td class="extra" colspan="4">
+                                                            {%  elif answer["type"] == "youtube": %}
+                                                                <tr>
+                                                                    <td class = "chatbot-cell">
+                                                                        <p class = "chatbot-cell-p">
+                                                                            <a class="chatbot-cell-a"  href=https://youtu.be/{{answer["youtubeId"]|safe}}>{{answer["title"]|safe}}</a>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                            {% endfor %}
+                                            <tr><td class="chatbot-utter-description">
+                                                <strong>Bot</strong>
+                                            </td></tr>
+                                            <tr>
+                                                <td><div class="space-log"></div></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr>
+                                        <td><div class="space-log"/></td>
+                                    </tr>
+                                </table>
                                 </td>
                             </tr>
-                        {% endif %}
-                      {% endfor %}
-                  {% else %}
-                      {% for element in data %}
-                        {% if element['status'] == 'Passed' %}
-                            <tr>
-                              <td class="col-result">Passed</td>
-                              <td class="col-name">{{element['story_name']}}</td>
-                              <td class="col-links"></td>
-                            </tr>
-                            <tr>
-                                <td class="extra" colspan="4">
-                                </td>
-                            </tr>
-                        {% endif %}
-                      {% endfor %}
-                  {% endif %}
-          </td>
-       </tr>
+                        </table>
+                        </td>
+                    </tr>
+                {% endif %}
+              {% endfor %}
+          {% else %}
+              {% for element in data %}
+                {% if element['status'] == 'Passed' %}
+                    <tr>
+                      <td class="col-result">Passed</td>
+                      <td class="col-name">{{element['story_name']}}</td>
+                      <td class="col-links"></td>
+                    </tr>
+                    <tr>
+                        <td class="extra" colspan="4">
+                            <div class="empty-log">No log output captured.</div>
+                        </td>
+                    </tr>
+                {% endif %}
+              {% endfor %}
+          {% endif %}
       </tbody>
 </table></body></html>

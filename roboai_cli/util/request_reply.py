@@ -127,6 +127,7 @@ class Tests:
                             self.__successful_input += 1
 
                 data = {
+                    'story_id': id_story,
                     'story_name': true_file_title + ": " + story_name,
                     'steps': steps_running,
                     'status': 'Passed',
@@ -150,6 +151,7 @@ class Tests:
                     self.create_json_file(json_folder, id_story, tracker_response)
 
                 data = {
+                    'story_id': id_story,
                     'story_name': true_file_title + ": " + story_name,
                     'steps': steps_running,
                     'status': 'Failed',
