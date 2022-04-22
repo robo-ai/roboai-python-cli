@@ -32,6 +32,14 @@ class Tests:
             true_files_path: str,
             passed: bool
     ) -> None:
+        """
+
+        Args:
+            endpoint: message endpoint
+            headers: message headers
+            true_files_path: true files path
+            passed: boolean to check which command was run (export-all or export-only-failed (default) )
+        """
         self.__true_files_path = true_files_path
         self.__true_files_list = [true_files_path]
         self.__message = Message(endpoint=endpoint, headers=headers)
@@ -69,6 +77,11 @@ class Tests:
                 print(f"- {test}")
 
     def get_all_true_files(self, paths):
+        """
+        Args:
+            paths: true files directory
+
+        """
 
         while len(paths):
             path = paths.pop()
@@ -80,6 +93,12 @@ class Tests:
                 self.get_all_stories(path)
 
     def get_all_stories(self, path):
+        """
+        Will get the stories of each true file
+        Args:
+            path: true file path
+
+        """
         true_file = load_yaml(path)
         yml_file = trimming_yml_file(path)
         list_stories_steps = true_file.get('tests')
@@ -126,6 +145,13 @@ class Tests:
                             list_chatbot_reply = self.evaluate(list_chatbot_reply, dict_steps_value)
                             self.__successful_input += 1
 
+                if self.__passed:
+                    tracker_response = self.__message.request_message(TRACKER_PATH.format(id_story),
+                                                                      TRACKER_METHOD,
+                                                                      body={})
+                    json_folder = join(self.__report_folder_path, "trackers")
+                    self.create_json_file(json_folder, id_story, tracker_response)
+
                 data = {
                     'story_id': id_story,
                     'story_name': true_file_title + ": " + story_name,
@@ -144,11 +170,8 @@ class Tests:
 
                 tracker_response = self.__message.request_message(TRACKER_PATH.format(id_story), TRACKER_METHOD,
                                                                   body={})
-
-                if not self.__passed:
-
-                    json_folder = join(self.__report_folder_path, "trackers")
-                    self.create_json_file(json_folder, id_story, tracker_response)
+                json_folder = join(self.__report_folder_path, "trackers")
+                self.create_json_file(json_folder, id_story, tracker_response)
 
                 data = {
                     'story_id': id_story,
@@ -165,6 +188,13 @@ class Tests:
                 pass
 
     def evaluate(self, list_chatbot_reply, dict_steps_value):
+        """
+        Check if the chatbot responded correctly
+        Args:
+            list_chatbot_reply: chatbot reply
+            dict_steps_value: chatbot domain
+
+        """
         answers_list = list(dict_steps_value.values())[0]
         chatbot_reply = list_chatbot_reply.pop(0)
 
@@ -177,12 +207,18 @@ class Tests:
                         "Chatbot utter:\n"
                         f"{json.dumps(chatbot_reply['custom'], sort_keys=True, indent=4)}")
 
-    def create_html_file(self, report_folder_path: str):
+    def create_html_file(self, report_folder_dir: str):
+        """
+        Create html file where the tests results are shown
+        Args:
+            report_folder_path: directory where the report will be created
+
+        """
         loader = FileSystemLoader('util')
         env = Environment(loader=loader)
         template = env.get_template('report_draft.html')
 
-        file_dir = join(report_folder_path, "report.html")
+        file_dir = join(report_folder_dir, "report.html")
 
         with open(file_dir, "w") as htmlfile:
             render = template.render({'results': self.get_results(),
@@ -192,6 +228,9 @@ class Tests:
             htmlfile.close()
 
     def get_results(self):
+        """
+        Get tests results
+        """
         results = {
             'number_tests': self.__successful + self.__failed,
             'number_tests_successful': self.__successful,
@@ -204,6 +243,13 @@ class Tests:
         return results
 
     def create_json_file(self, path: str, filename: str, content: dict):
+        """
+        Create a json file
+        Args:
+            path: directory where the json file will be created
+            filename: json file name
+            content: json file content
+        """
 
         if not exists(path):
             os.makedirs(path)
@@ -222,10 +268,24 @@ class Message:
             endpoint: str,
             headers: dict,
     ) -> None:
+        """
+
+        Args:
+            endpoint: message endpoint
+            headers: message headers
+        """
         self.__endpoint = endpoint
         self.__headers = headers
 
     def request_message(self, path: str, method: str, body: dict) -> dict:
+        """
+        Sends a message to a specific endpoint
+        Args:
+            path: endpoint path
+            method: message method (GET OR POST)
+            body: message body
+
+        """
 
         reply_info = None
         reply_info_dict = {}
@@ -244,16 +304,31 @@ class Message:
 
 
 def generate_id_story():
+    """
+    Generates an id for each story
+    """
     return uuid.uuid4().hex
 
 
 def get_time():
+    """
+    Get irl time
+    Returns:
+
+    """
     now = datetime.now()
     time_string = now.strftime("%d%m%Y-%H%M%S")
     return time_string
 
 
 def create_folder_report(path: str, folder: str):
+    """
+
+    Args:
+        path: directory where the folder will be created
+        folder: folder name
+
+    """
     true_files_path_index = path.find(TRUE_FILES_FOLDER_NAME)
     folder_dir = join(path[:true_files_path_index], RESULTS_FOLDER_NAME, folder)
 
@@ -264,6 +339,11 @@ def create_folder_report(path: str, folder: str):
 
 
 def copy_assets(path: str):
+    """
+    Copy the assets file to the desired directory
+    Args:
+        path: report directory
+    """
 
     from_directory = assets_path()
     to_directory = join(path, "assets")
@@ -272,6 +352,11 @@ def copy_assets(path: str):
 
 
 def trimming_yml_file(path: str):
+    """
+    Transform the path of the yml file
+    Args:
+        path: yml file path
+    """
     yml_file_index = path.rfind('/')
     yml_file = path[yml_file_index:]
     yml_file = yml_file.replace("/", "")
@@ -279,6 +364,9 @@ def trimming_yml_file(path: str):
 
 
 def assets_path() -> str:
+    """
+    Finds where the assets file is located
+    """
     return pkg_resources.resource_filename(__name__, "assets")
 
 
