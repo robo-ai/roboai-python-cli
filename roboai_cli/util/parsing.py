@@ -1,14 +1,41 @@
-from os.path import exists
-
 import yaml
 import os.path
 
+from os.path import exists, join
+from typing import List
 from roboai_cli.util.cli import print_error
-
 from roboai_cli.util.input_output import load_yaml
 
 TEMPLATES_FOLDER_NAME = "tests_templates"
 TRUE_FILES_FOLDER_NAME = "tests_true_files"
+
+DOMAIN_FILE_NAME = "domain.yml"
+
+
+def create_true_files(domain_path: str, paths: List[str]):
+    """
+
+    Args:
+        domain_path: domain path
+        paths: list of templates
+
+    Returns:
+
+    """
+    if domain_path.endswith(DOMAIN_FILE_NAME):
+        domain_file_path = domain_path
+    else:
+        domain_file_path = join(domain_path, DOMAIN_FILE_NAME)
+
+    while len(paths):
+
+        path = paths.pop()
+
+        if os.path.isdir(path):
+            paths = paths + [os.path.join(path, name) for name in os.listdir(path)]
+
+        elif path.endswith(".yml"):
+            start_parsing(domain_file_path, path)
 
 
 def start_parsing(domain_path: str, template_path: str):
@@ -24,14 +51,14 @@ def start_parsing(domain_path: str, template_path: str):
         true_file_path = template_path[:index_yaml] + '_true_file' + template_path[index_yaml:]
 
     true_file_path = true_file_path.replace(TEMPLATES_FOLDER_NAME, TRUE_FILES_FOLDER_NAME)
-    path_exists(true_file_path)
+    create_true_file_folder(true_file_path)
 
     domain_file = load_yaml(domain_path)
     template_file = load_yaml(template_path)
     add_chatbot_reply(domain_file, template_file, template_path, true_file_path)
 
 
-def path_exists(true_file_path: str):
+def create_true_file_folder(true_file_path: str):
     """
     Verifies if the path exists and if not creates a new path
     Args:
@@ -183,6 +210,13 @@ def check_steps(dictionary: dict, template_path: str, story_name: str, component
 
 
 def utter_id_exists(domain_dic: dict, utter_id: str):
+    """
+    Checks if utter id exist in domain file
+    Args:
+        domain_dic: domain dictionary
+        utter_id: utter id that will be tested
+
+    """
     if utter_id in domain_dic.keys():
         return True
     return False

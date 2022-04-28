@@ -211,7 +211,7 @@ class Tests:
         """
         Create html file where the tests results are shown
         Args:
-            report_folder_path: directory where the report will be created
+            report_folder_dir: directory where the report will be created
 
         """
         loader = FileSystemLoader('util')

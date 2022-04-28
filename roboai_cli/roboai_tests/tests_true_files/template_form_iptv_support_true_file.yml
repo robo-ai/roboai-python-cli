@@ -9,7 +9,7 @@ tests:
       - custom:
           answers:
           - type: html
-            text: Sia haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
+            text: Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte
               Setttop-Box?
           - type: multichoice
             options:

@@ -1,0 +1,323 @@
+{
+    "active_form": {
+        "name": "form_iptv_support",
+        "rejected": false,
+        "trigger_message": {
+            "entities": [],
+            "intent": {
+                "confidence": 0.9122559428215027,
+                "name": "iptv_support"
+            },
+            "intent_ranking": [
+                {
+                    "confidence": 0.9122559428215027,
+                    "name": "iptv_support"
+                },
+                {
+                    "confidence": 0.025994768366217613,
+                    "name": "follow_up_no_connection"
+                },
+                {
+                    "confidence": 0.013293196447193623,
+                    "name": "fault_report"
+                },
+                {
+                    "confidence": 0.013036331161856651,
+                    "name": "report_issue"
+                },
+                {
+                    "confidence": 0.007292258553206921,
+                    "name": "cancel_notice"
+                },
+                {
+                    "confidence": 0.006855044048279524,
+                    "name": "change_name"
+                },
+                {
+                    "confidence": 0.006707585416734219,
+                    "name": "bot_intelligence"
+                },
+                {
+                    "confidence": 0.005627533886581659,
+                    "name": "contract_fallback_option"
+                },
+                {
+                    "confidence": 0.004643373657017946,
+                    "name": "change_tariff"
+                },
+                {
+                    "confidence": 0.0042939758859574795,
+                    "name": "cc_chicken_egg"
+                }
+            ],
+            "text": "Probleme mit TV Empfang"
+        },
+        "validate": true
+    },
+    "events": [
+        {
+            "confidence": null,
+            "event": "action",
+            "name": "action_session_start",
+            "policy": null,
+            "timestamp": 1651143330.359422
+        },
+        {
+            "event": "session_started",
+            "timestamp": 1651143330.3594291
+        },
+        {
+            "confidence": null,
+            "event": "action",
+            "name": "action_listen",
+            "policy": null,
+            "timestamp": 1651143330.359474
+        },
+        {
+            "event": "user",
+            "input_channel": "rest",
+            "message_id": "17fdc2be9ae7443781765c237d024728",
+            "metadata": {},
+            "parse_data": {
+                "entities": [],
+                "intent": {
+                    "confidence": 0.9122559428215027,
+                    "name": "iptv_support"
+                },
+                "intent_ranking": [
+                    {
+                        "confidence": 0.9122559428215027,
+                        "name": "iptv_support"
+                    },
+                    {
+                        "confidence": 0.025994768366217613,
+                        "name": "follow_up_no_connection"
+                    },
+                    {
+                        "confidence": 0.013293196447193623,
+                        "name": "fault_report"
+                    },
+                    {
+                        "confidence": 0.013036331161856651,
+                        "name": "report_issue"
+                    },
+                    {
+                        "confidence": 0.007292258553206921,
+                        "name": "cancel_notice"
+                    },
+                    {
+                        "confidence": 0.006855044048279524,
+                        "name": "change_name"
+                    },
+                    {
+                        "confidence": 0.006707585416734219,
+                        "name": "bot_intelligence"
+                    },
+                    {
+                        "confidence": 0.005627533886581659,
+                        "name": "contract_fallback_option"
+                    },
+                    {
+                        "confidence": 0.004643373657017946,
+                        "name": "change_tariff"
+                    },
+                    {
+                        "confidence": 0.0042939758859574795,
+                        "name": "cc_chicken_egg"
+                    }
+                ],
+                "text": "Probleme mit TV Empfang"
+            },
+            "text": "Probleme mit TV Empfang",
+            "timestamp": 1651143330.3864586
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "form_iptv_support",
+            "policy": "policy_0_MemoizationPolicy",
+            "timestamp": 1651143330.4038558
+        },
+        {
+            "data": {
+                "attachment": null,
+                "buttons": null,
+                "custom": {
+                    "answers": [
+                        {
+                            "text": "Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte Setttop-Box?",
+                            "type": "html"
+                        },
+                        {
+                            "options": [
+                                {
+                                    "label": "Ja",
+                                    "value": "Ja"
+                                },
+                                {
+                                    "label": "Nein",
+                                    "value": "Nein"
+                                },
+                                {
+                                    "label": "Abbrechen",
+                                    "value": "Abbrechen"
+                                }
+                            ],
+                            "type": "multichoice"
+                        }
+                    ]
+                },
+                "elements": null,
+                "image": null,
+                "quick_replies": null
+            },
+            "event": "bot",
+            "metadata": {},
+            "text": null,
+            "timestamp": 1651143330.4038627
+        },
+        {
+            "event": "form",
+            "name": "form_iptv_support",
+            "timestamp": 1651143330.4038668
+        },
+        {
+            "event": "slot",
+            "name": "requested_slot",
+            "timestamp": 1651143330.403872,
+            "value": "iptv_support"
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "action_listen",
+            "policy": "policy_3_FormPolicy",
+            "timestamp": 1651143330.4103723
+        }
+    ],
+    "followup_action": null,
+    "latest_action_name": "action_listen",
+    "latest_event_time": 1651143330.4103723,
+    "latest_input_channel": "rest",
+    "latest_message": {
+        "entities": [],
+        "intent": {
+            "confidence": 0.9122559428215027,
+            "name": "iptv_support"
+        },
+        "intent_ranking": [
+            {
+                "confidence": 0.9122559428215027,
+                "name": "iptv_support"
+            },
+            {
+                "confidence": 0.025994768366217613,
+                "name": "follow_up_no_connection"
+            },
+            {
+                "confidence": 0.013293196447193623,
+                "name": "fault_report"
+            },
+            {
+                "confidence": 0.013036331161856651,
+                "name": "report_issue"
+            },
+            {
+                "confidence": 0.007292258553206921,
+                "name": "cancel_notice"
+            },
+            {
+                "confidence": 0.006855044048279524,
+                "name": "change_name"
+            },
+            {
+                "confidence": 0.006707585416734219,
+                "name": "bot_intelligence"
+            },
+            {
+                "confidence": 0.005627533886581659,
+                "name": "contract_fallback_option"
+            },
+            {
+                "confidence": 0.004643373657017946,
+                "name": "change_tariff"
+            },
+            {
+                "confidence": 0.0042939758859574795,
+                "name": "cc_chicken_egg"
+            }
+        ],
+        "text": "Probleme mit TV Empfang"
+    },
+    "paused": false,
+    "sender_id": "3e9fad84b32f4be38d0727d0a5efb0e1",
+    "slots": {
+        "access_data_internet_more_info": null,
+        "access_data_question_yes": null,
+        "access_data_telephony_more_info": null,
+        "access_data_user_portal_more_info": null,
+        "availability": null,
+        "availability_customer": null,
+        "availability_product_no": null,
+        "bandwidth": null,
+        "bandwidth_upgrade": null,
+        "book_option": null,
+        "book_option_customer": null,
+        "book_option_netcom_customer": null,
+        "book_option_netcom_customer_no": null,
+        "bot_date": null,
+        "bot_introduced": false,
+        "bot_time": null,
+        "breakdown": null,
+        "call_forwarding": null,
+        "change_tariff": null,
+        "check_availability": null,
+        "contact_form": null,
+        "contact_form_city": null,
+        "contact_form_customer_number": null,
+        "contact_form_issue": null,
+        "contact_form_mail": null,
+        "contact_form_name": null,
+        "contact_form_other_contracts": null,
+        "contact_form_other_contracts_yes": null,
+        "contact_form_phone": null,
+        "contact_form_selection_1": null,
+        "contact_form_selection_2": null,
+        "contact_form_selection_title": null,
+        "contact_form_street": null,
+        "contract_relocation": null,
+        "contract_termination": null,
+        "contract_with_netcom": null,
+        "disconnections": null,
+        "disconnections_restart_no": null,
+        "evaluation": null,
+        "find_bill": null,
+        "follow_up_change_to_netcom": null,
+        "follow_up_full_contract_termination": null,
+        "follow_up_issue_reported_no": null,
+        "follow_up_issue_reported_yes": null,
+        "follow_up_lan_test_no": null,
+        "follow_up_lan_test_yes": null,
+        "follow_up_neckar_availability_check": null,
+        "follow_up_neckarcom_product": null,
+        "follow_up_netcom_product": null,
+        "follow_up_new_address_product_available_yes": null,
+        "follow_up_router_restart_yes": null,
+        "follow_up_settop_netcom_yes": null,
+        "follow_up_termination_special": null,
+        "follow_up_ticket_number": null,
+        "form_double_check": null,
+        "get_access_data": null,
+        "help_config": null,
+        "iptv_support": null,
+        "measure_bandwidth": null,
+        "ofs_event": null,
+        "ofs_form": null,
+        "previous_form": null,
+        "previous_form_info": null,
+        "relocation_neckarcom": null,
+        "relocation_netcom": null,
+        "report_issue": null,
+        "requested_slot": "iptv_support"
+    }
+}

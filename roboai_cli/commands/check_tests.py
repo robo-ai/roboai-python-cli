@@ -11,7 +11,7 @@ from roboai_cli.util.request_reply import RESULTS_FOLDER_NAME
 
 TESTS_FOLDER_NAME = os.path.join("roboai_tests", TRUE_FILES_FOLDER_NAME)
 TESTS_RESULTS_FOLDER_NAME = os.path.join("roboai_tests", RESULTS_FOLDER_NAME)
-COMMANDS_DIR = "robo_ai_cli"
+COMMANDS_DIR = "roboai_cli"
 
 
 @click.command(name="check_tests", help="Test Chatbot based on True Files")
@@ -58,9 +58,9 @@ def command(languages: tuple, endpoint: str, headers: dict, true_files_path: str
         dir_path_index = true_files_path.rfind('/')
         results_dir = join(true_files_path[:dir_path_index], RESULTS_FOLDER_NAME)
 
-        correct_path = check_path_and_run_tests(true_files_path, endpoint, headers, export_all)
+        check_path_and_run_tests(true_files_path, endpoint, headers, export_all)
 
-        if not exists(results_dir) and correct_path:
+        if not exists(results_dir):
             create_results_dir(results_dir)
 
     print_success("Tests ended successfully")
@@ -84,10 +84,9 @@ def check_path_and_run_tests(path, endpoint, headers, passed):
             passed=passed
         )
         tests.run_tests()
-        return True
     else:
         print_error(f"True files path not found: {path}")
-        return False
+        quit()
 
 
 def create_results_dir(path):
