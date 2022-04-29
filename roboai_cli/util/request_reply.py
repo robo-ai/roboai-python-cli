@@ -214,7 +214,7 @@ class Tests:
             report_folder_dir: directory where the report will be created
 
         """
-        loader = FileSystemLoader('util')
+        loader = FileSystemLoader(util_path())
         env = Environment(loader=loader)
         template = env.get_template('report_draft.html')
 
@@ -368,6 +368,13 @@ def assets_path() -> str:
     Finds where the assets file is located
     """
     return pkg_resources.resource_filename(__name__, "assets")
+
+
+def util_path() -> str:
+    """
+    Finds where the util file is located
+    """
+    return pkg_resources.resource_filename(__name__, "util")
 
 
 if __name__ == "__main__":
