@@ -322,8 +322,13 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                     <td class="extra" colspan="4">
                     <table class="side-by-side">
                       <tr>
-                        <td>
-                        <table class="result-logs">
+                        <td >
+                        <table class="highlight-border">
+                            <thead>
+                                <tr>
+                                    <th class="flag-conversation"> Start of conversation </th>
+                                </tr>
+                            </thead>
                             {% for dict_item in element['steps'] %}
                                {% for key, value in dict_item.items() %}
                                     {% if key == 'user' %}
@@ -447,10 +452,20 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                     {% endif %}
                                {% endfor %}
                             {% endfor %}
+                            <tfoot>
+                                <tr>
+                                    <th class="flag-conversation"> End of conversation </th>
+                                </tr>
+                            </tfoot>
                         </table>
                         </td>
                           <td>
-                        <table class="result-logs">
+                        <table class="highlight-border">
+                            <thead>
+                                <tr>
+                                    <th class="flag-conversation"> Start of conversation </th>
+                                </tr>
+                            </thead>
                             {% set events = element['tracker']['events'] %}
                             {%for item in events%}
                                 {%if item['event'] == "action"%}
@@ -578,9 +593,11 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                     </tr>
                                 {% endif %}
                             {% endfor %}
-                            <tr>
-                                <td><div class="space-log"/></td>
-                            </tr>
+                            <tfoot>
+                                <tr>
+                                    <th class="flag-conversation"> End of conversation </th>
+                                </tr>
+                            </tfoot>
                         </table>
                         </td>
                     </tr>

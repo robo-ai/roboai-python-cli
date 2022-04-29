@@ -214,7 +214,6 @@ class Tests:
             report_folder_dir: directory where the report will be created
 
         """
-        print(util_path())
         loader = FileSystemLoader(util_path())
         env = Environment(loader=loader)
         template = env.get_template('report_draft.html')
