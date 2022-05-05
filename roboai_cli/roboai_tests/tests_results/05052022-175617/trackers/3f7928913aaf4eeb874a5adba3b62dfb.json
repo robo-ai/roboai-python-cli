@@ -1,0 +1,704 @@
+{
+    "active_form": {
+        "name": "leave_form",
+        "rejected": false,
+        "trigger_message": {
+            "entities": [
+                {
+                    "confidence": 1.0,
+                    "end": 13,
+                    "entity": "MISC",
+                    "extractor": "SpacyConnector",
+                    "start": 0,
+                    "text": "Kannst du mir",
+                    "value": "Kannst du mir"
+                }
+            ],
+            "intent": {
+                "confidence": 0.9398437142372131,
+                "name": "features_date"
+            },
+            "intent_ranking": [
+                {
+                    "confidence": 0.9398437142372131,
+                    "name": "features_date"
+                },
+                {
+                    "confidence": 0.012078480795025826,
+                    "name": "expansion_duration"
+                },
+                {
+                    "confidence": 0.009666628204286098,
+                    "name": "expansion_responsability"
+                },
+                {
+                    "confidence": 0.007016015239059925,
+                    "name": "best_internet_provider"
+                },
+                {
+                    "confidence": 0.006051679607480764,
+                    "name": "measure_bandwidth"
+                },
+                {
+                    "confidence": 0.006018493324518204,
+                    "name": "comment_racist"
+                },
+                {
+                    "confidence": 0.005811202805489302,
+                    "name": "manage_phone_connection"
+                },
+                {
+                    "confidence": 0.004659636877477169,
+                    "name": "change_provider"
+                },
+                {
+                    "confidence": 0.00455143628641963,
+                    "name": "bot_color"
+                },
+                {
+                    "confidence": 0.004302700515836477,
+                    "name": "vocative_yes"
+                }
+            ],
+            "text": "Kannst du mir das Datum geben?"
+        },
+        "validate": true
+    },
+    "events": [
+        {
+            "confidence": null,
+            "event": "action",
+            "name": "action_session_start",
+            "policy": null,
+            "timestamp": 1651769786.6216724
+        },
+        {
+            "event": "session_started",
+            "timestamp": 1651769786.6216767
+        },
+        {
+            "confidence": null,
+            "event": "action",
+            "name": "action_listen",
+            "policy": null,
+            "timestamp": 1651769786.6217232
+        },
+        {
+            "event": "user",
+            "input_channel": "rest",
+            "message_id": "ea1c2db79dd84ba1933b0bf9e409a4e7",
+            "metadata": {},
+            "parse_data": {
+                "entities": [
+                    {
+                        "confidence": 1.0,
+                        "end": 7,
+                        "entity": "MISC",
+                        "extractor": "SpacyConnector",
+                        "start": 0,
+                        "text": "Mein TV",
+                        "value": "Mein TV"
+                    }
+                ],
+                "intent": {
+                    "confidence": 0.9302231073379517,
+                    "name": "iptv_support"
+                },
+                "intent_ranking": [
+                    {
+                        "confidence": 0.9302231073379517,
+                        "name": "iptv_support"
+                    },
+                    {
+                        "confidence": 0.012647967785596848,
+                        "name": "follow_up_no_connection"
+                    },
+                    {
+                        "confidence": 0.011237390339374542,
+                        "name": "waiputv_support"
+                    },
+                    {
+                        "confidence": 0.010091765783727169,
+                        "name": "password_not_working"
+                    },
+                    {
+                        "confidence": 0.009177342988550663,
+                        "name": "user_no_further_questions"
+                    },
+                    {
+                        "confidence": 0.006684858817607164,
+                        "name": "vocative_no"
+                    },
+                    {
+                        "confidence": 0.006319845095276833,
+                        "name": "fault_report"
+                    },
+                    {
+                        "confidence": 0.00478529604151845,
+                        "name": "user_dont_know"
+                    },
+                    {
+                        "confidence": 0.004584583453834057,
+                        "name": "bot_sites"
+                    },
+                    {
+                        "confidence": 0.004247817676514387,
+                        "name": "contract_fallback_option"
+                    }
+                ],
+                "text": "Mein TV geht nicht"
+            },
+            "text": "Mein TV geht nicht",
+            "timestamp": 1651769786.6534245
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "form_iptv_support",
+            "policy": "policy_0_MemoizationPolicy",
+            "timestamp": 1651769786.6744153
+        },
+        {
+            "data": {
+                "attachment": null,
+                "buttons": null,
+                "custom": {
+                    "answers": [
+                        {
+                            "text": "Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte Setttop-Box?",
+                            "type": "html"
+                        },
+                        {
+                            "options": [
+                                {
+                                    "label": "Ja",
+                                    "value": "Ja"
+                                },
+                                {
+                                    "label": "Nein",
+                                    "value": "Nein"
+                                },
+                                {
+                                    "label": "Abbrechen",
+                                    "value": "Abbrechen"
+                                }
+                            ],
+                            "type": "multichoice"
+                        }
+                    ]
+                },
+                "elements": null,
+                "image": null,
+                "quick_replies": null
+            },
+            "event": "bot",
+            "metadata": {},
+            "text": null,
+            "timestamp": 1651769786.674421
+        },
+        {
+            "event": "form",
+            "name": "form_iptv_support",
+            "timestamp": 1651769786.674425
+        },
+        {
+            "event": "slot",
+            "name": "requested_slot",
+            "timestamp": 1651769786.6744301,
+            "value": "iptv_support"
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "action_listen",
+            "policy": "policy_3_FormPolicy",
+            "timestamp": 1651769786.6812384
+        },
+        {
+            "event": "user",
+            "input_channel": "rest",
+            "message_id": "52c77091424b40f9956f277bec1f4ac2",
+            "metadata": {},
+            "parse_data": {
+                "entities": [
+                    {
+                        "confidence": 1.0,
+                        "end": 13,
+                        "entity": "MISC",
+                        "extractor": "SpacyConnector",
+                        "start": 0,
+                        "text": "Kannst du mir",
+                        "value": "Kannst du mir"
+                    }
+                ],
+                "intent": {
+                    "confidence": 0.9398437142372131,
+                    "name": "features_date"
+                },
+                "intent_ranking": [
+                    {
+                        "confidence": 0.9398437142372131,
+                        "name": "features_date"
+                    },
+                    {
+                        "confidence": 0.012078480795025826,
+                        "name": "expansion_duration"
+                    },
+                    {
+                        "confidence": 0.009666628204286098,
+                        "name": "expansion_responsability"
+                    },
+                    {
+                        "confidence": 0.007016015239059925,
+                        "name": "best_internet_provider"
+                    },
+                    {
+                        "confidence": 0.006051679607480764,
+                        "name": "measure_bandwidth"
+                    },
+                    {
+                        "confidence": 0.006018493324518204,
+                        "name": "comment_racist"
+                    },
+                    {
+                        "confidence": 0.005811202805489302,
+                        "name": "manage_phone_connection"
+                    },
+                    {
+                        "confidence": 0.004659636877477169,
+                        "name": "change_provider"
+                    },
+                    {
+                        "confidence": 0.00455143628641963,
+                        "name": "bot_color"
+                    },
+                    {
+                        "confidence": 0.004302700515836477,
+                        "name": "vocative_yes"
+                    }
+                ],
+                "text": "Kannst du mir das Datum geben?"
+            },
+            "text": "Kannst du mir das Datum geben?",
+            "timestamp": 1651769786.8052006
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "form_iptv_support",
+            "policy": "policy_3_FormPolicy",
+            "timestamp": 1651769786.823695
+        },
+        {
+            "event": "form",
+            "name": null,
+            "timestamp": 1651769786.8237007
+        },
+        {
+            "event": "slot",
+            "name": "requested_slot",
+            "timestamp": 1651769786.8237035,
+            "value": null
+        },
+        {
+            "event": "slot",
+            "name": "ofs_event",
+            "timestamp": 1651769786.8237064,
+            "value": {
+                "entities": [
+                    {
+                        "confidence": 1.0,
+                        "end": 13,
+                        "entity": "MISC",
+                        "extractor": "SpacyConnector",
+                        "start": 0,
+                        "text": "Kannst du mir",
+                        "value": "Kannst du mir"
+                    }
+                ],
+                "intent": {
+                    "confidence": 0.9398437142372131,
+                    "name": "features_date"
+                },
+                "intent_ranking": [
+                    {
+                        "confidence": 0.9398437142372131,
+                        "name": "features_date"
+                    },
+                    {
+                        "confidence": 0.012078480795025826,
+                        "name": "expansion_duration"
+                    },
+                    {
+                        "confidence": 0.009666628204286098,
+                        "name": "expansion_responsability"
+                    },
+                    {
+                        "confidence": 0.007016015239059925,
+                        "name": "best_internet_provider"
+                    },
+                    {
+                        "confidence": 0.006051679607480764,
+                        "name": "measure_bandwidth"
+                    },
+                    {
+                        "confidence": 0.006018493324518204,
+                        "name": "comment_racist"
+                    },
+                    {
+                        "confidence": 0.005811202805489302,
+                        "name": "manage_phone_connection"
+                    },
+                    {
+                        "confidence": 0.004659636877477169,
+                        "name": "change_provider"
+                    },
+                    {
+                        "confidence": 0.00455143628641963,
+                        "name": "bot_color"
+                    },
+                    {
+                        "confidence": 0.004302700515836477,
+                        "name": "vocative_yes"
+                    }
+                ],
+                "text": "Kannst du mir das Datum geben?"
+            }
+        },
+        {
+            "event": "slot",
+            "name": "ofs_form",
+            "timestamp": 1651769786.8237078,
+            "value": {
+                "name": "form_iptv_support",
+                "slot": "iptv_support"
+            }
+        },
+        {
+            "event": "followup",
+            "name": "leave_form",
+            "timestamp": 1651769786.8237092
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "leave_form",
+            "policy": null,
+            "timestamp": 1651769786.8341959
+        },
+        {
+            "data": {
+                "attachment": null,
+                "buttons": null,
+                "custom": {
+                    "answers": [
+                        {
+                            "text": "M\u00f6chten Sie das Thema wechseln?",
+                            "type": "html"
+                        },
+                        {
+                            "options": [
+                                {
+                                    "label": "Ja",
+                                    "value": "Ja"
+                                },
+                                {
+                                    "label": "Nein",
+                                    "value": "Nein"
+                                }
+                            ],
+                            "type": "multichoice"
+                        }
+                    ]
+                },
+                "elements": null,
+                "image": null,
+                "quick_replies": null
+            },
+            "event": "bot",
+            "metadata": {
+                "ofs_event": {
+                    "entities": [
+                        {
+                            "confidence": 1.0,
+                            "end": 13,
+                            "entity": "MISC",
+                            "extractor": "SpacyConnector",
+                            "start": 0,
+                            "text": "Kannst du mir",
+                            "value": "Kannst du mir"
+                        }
+                    ],
+                    "intent": {
+                        "confidence": 0.9398437142372131,
+                        "name": "features_date"
+                    },
+                    "intent_ranking": [
+                        {
+                            "confidence": 0.9398437142372131,
+                            "name": "features_date"
+                        },
+                        {
+                            "confidence": 0.012078480795025826,
+                            "name": "expansion_duration"
+                        },
+                        {
+                            "confidence": 0.009666628204286098,
+                            "name": "expansion_responsability"
+                        },
+                        {
+                            "confidence": 0.007016015239059925,
+                            "name": "best_internet_provider"
+                        },
+                        {
+                            "confidence": 0.006051679607480764,
+                            "name": "measure_bandwidth"
+                        },
+                        {
+                            "confidence": 0.006018493324518204,
+                            "name": "comment_racist"
+                        },
+                        {
+                            "confidence": 0.005811202805489302,
+                            "name": "manage_phone_connection"
+                        },
+                        {
+                            "confidence": 0.004659636877477169,
+                            "name": "change_provider"
+                        },
+                        {
+                            "confidence": 0.00455143628641963,
+                            "name": "bot_color"
+                        },
+                        {
+                            "confidence": 0.004302700515836477,
+                            "name": "vocative_yes"
+                        }
+                    ],
+                    "text": "Kannst du mir das Datum geben?"
+                },
+                "ofs_form": {
+                    "name": "form_iptv_support",
+                    "slot": "iptv_support"
+                }
+            },
+            "text": null,
+            "timestamp": 1651769786.8342013
+        },
+        {
+            "event": "form",
+            "name": "leave_form",
+            "timestamp": 1651769786.8342035
+        },
+        {
+            "event": "slot",
+            "name": "requested_slot",
+            "timestamp": 1651769786.8342059,
+            "value": "form_double_check"
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "action_listen",
+            "policy": "policy_3_FormPolicy",
+            "timestamp": 1651769786.8422136
+        }
+    ],
+    "followup_action": null,
+    "latest_action_name": "action_listen",
+    "latest_event_time": 1651769786.8422136,
+    "latest_input_channel": "rest",
+    "latest_message": {
+        "entities": [
+            {
+                "confidence": 1.0,
+                "end": 13,
+                "entity": "MISC",
+                "extractor": "SpacyConnector",
+                "start": 0,
+                "text": "Kannst du mir",
+                "value": "Kannst du mir"
+            }
+        ],
+        "intent": {
+            "confidence": 0.9398437142372131,
+            "name": "features_date"
+        },
+        "intent_ranking": [
+            {
+                "confidence": 0.9398437142372131,
+                "name": "features_date"
+            },
+            {
+                "confidence": 0.012078480795025826,
+                "name": "expansion_duration"
+            },
+            {
+                "confidence": 0.009666628204286098,
+                "name": "expansion_responsability"
+            },
+            {
+                "confidence": 0.007016015239059925,
+                "name": "best_internet_provider"
+            },
+            {
+                "confidence": 0.006051679607480764,
+                "name": "measure_bandwidth"
+            },
+            {
+                "confidence": 0.006018493324518204,
+                "name": "comment_racist"
+            },
+            {
+                "confidence": 0.005811202805489302,
+                "name": "manage_phone_connection"
+            },
+            {
+                "confidence": 0.004659636877477169,
+                "name": "change_provider"
+            },
+            {
+                "confidence": 0.00455143628641963,
+                "name": "bot_color"
+            },
+            {
+                "confidence": 0.004302700515836477,
+                "name": "vocative_yes"
+            }
+        ],
+        "text": "Kannst du mir das Datum geben?"
+    },
+    "paused": false,
+    "sender_id": "3f7928913aaf4eeb874a5adba3b62dfb",
+    "slots": {
+        "access_data_internet_more_info": null,
+        "access_data_question_yes": null,
+        "access_data_telephony_more_info": null,
+        "access_data_user_portal_more_info": null,
+        "availability": null,
+        "availability_customer": null,
+        "availability_product_no": null,
+        "bandwidth": null,
+        "bandwidth_upgrade": null,
+        "book_option": null,
+        "book_option_customer": null,
+        "book_option_netcom_customer": null,
+        "book_option_netcom_customer_no": null,
+        "bot_date": null,
+        "bot_introduced": false,
+        "bot_time": null,
+        "breakdown": null,
+        "call_forwarding": null,
+        "change_tariff": null,
+        "check_availability": null,
+        "contact_form": null,
+        "contact_form_city": null,
+        "contact_form_customer_number": null,
+        "contact_form_issue": null,
+        "contact_form_mail": null,
+        "contact_form_name": null,
+        "contact_form_other_contracts": null,
+        "contact_form_other_contracts_yes": null,
+        "contact_form_phone": null,
+        "contact_form_selection_1": null,
+        "contact_form_selection_2": null,
+        "contact_form_selection_title": null,
+        "contact_form_street": null,
+        "contract_relocation": null,
+        "contract_termination": null,
+        "contract_with_netcom": null,
+        "disconnections": null,
+        "disconnections_restart_no": null,
+        "evaluation": null,
+        "find_bill": null,
+        "follow_up_change_to_netcom": null,
+        "follow_up_full_contract_termination": null,
+        "follow_up_issue_reported_no": null,
+        "follow_up_issue_reported_yes": null,
+        "follow_up_lan_test_no": null,
+        "follow_up_lan_test_yes": null,
+        "follow_up_neckar_availability_check": null,
+        "follow_up_neckarcom_product": null,
+        "follow_up_netcom_product": null,
+        "follow_up_new_address_product_available_yes": null,
+        "follow_up_router_restart_yes": null,
+        "follow_up_settop_netcom_yes": null,
+        "follow_up_termination_special": null,
+        "follow_up_ticket_number": null,
+        "form_double_check": null,
+        "get_access_data": null,
+        "help_config": null,
+        "iptv_support": null,
+        "measure_bandwidth": null,
+        "ofs_event": {
+            "entities": [
+                {
+                    "confidence": 1.0,
+                    "end": 13,
+                    "entity": "MISC",
+                    "extractor": "SpacyConnector",
+                    "start": 0,
+                    "text": "Kannst du mir",
+                    "value": "Kannst du mir"
+                }
+            ],
+            "intent": {
+                "confidence": 0.9398437142372131,
+                "name": "features_date"
+            },
+            "intent_ranking": [
+                {
+                    "confidence": 0.9398437142372131,
+                    "name": "features_date"
+                },
+                {
+                    "confidence": 0.012078480795025826,
+                    "name": "expansion_duration"
+                },
+                {
+                    "confidence": 0.009666628204286098,
+                    "name": "expansion_responsability"
+                },
+                {
+                    "confidence": 0.007016015239059925,
+                    "name": "best_internet_provider"
+                },
+                {
+                    "confidence": 0.006051679607480764,
+                    "name": "measure_bandwidth"
+                },
+                {
+                    "confidence": 0.006018493324518204,
+                    "name": "comment_racist"
+                },
+                {
+                    "confidence": 0.005811202805489302,
+                    "name": "manage_phone_connection"
+                },
+                {
+                    "confidence": 0.004659636877477169,
+                    "name": "change_provider"
+                },
+                {
+                    "confidence": 0.00455143628641963,
+                    "name": "bot_color"
+                },
+                {
+                    "confidence": 0.004302700515836477,
+                    "name": "vocative_yes"
+                }
+            ],
+            "text": "Kannst du mir das Datum geben?"
+        },
+        "ofs_form": {
+            "name": "form_iptv_support",
+            "slot": "iptv_support"
+        },
+        "previous_form": null,
+        "previous_form_info": null,
+        "relocation_neckarcom": null,
+        "relocation_netcom": null,
+        "report_issue": null,
+        "requested_slot": "form_double_check"
+    }
+}

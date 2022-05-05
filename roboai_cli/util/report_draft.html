@@ -87,12 +87,17 @@ function addCollapse() {
 
     // Add show/hide link to each result
     findAll('.col-result').forEach(function(elem) {
-        const collapsed = getQueryParameter('collapsed') || 'Passed';
+
+        const collapsedFailed = getQueryParameter('collapsed') || 'Failed';
+        const collapsedPassed = getQueryParameter('collapsed') || 'Passed';
         const extras = elem.parentNode.nextElementSibling;
         const expandcollapse = document.createElement('span');
         if (extras.classList.contains('collapsed')) {
             expandcollapse.classList.add('expander');
-        } else if (collapsed.includes(elem.innerHTML)) {
+        } else if (collapsedFailed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        }else if (collapsedPassed.includes(elem.innerHTML)) {
             extras.classList.add('collapsed');
             expandcollapse.classList.add('expander');
         } else {
@@ -263,7 +268,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <td>31/03/2022 14:01:41 (1648735315.13631)</td></tr>
       <tr>
         <td>Model Fingerprint</td>
-        <td><a href="./fingerprint.json">fingerprint.json</a></td>
+        <td><a href="./fingerprint.json" target="_blank">fingerprint.json</a></td>
       </tr>
     </table>
     <h2>Summary</h2>
@@ -316,14 +321,16 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                 <tr>
                     <td class="col-result">Failed</td>
                     <td class="col-name">{{element['story_name']}}</td>
-                    <td class="col-links"><a href= "trackers/{{ element['story_id']}}.json">tracker.json</a></td>
+                    <td class="col-links"><a href= "trackers/{{ element['story_id']}}.json" target="_blank">tracker.json</a></td>
                 </tr>
                 <tr>
                     <td class="extra" colspan="4">
                     <table class="side-by-side">
                       <tr>
-                        <td >
+                        <td class ="highlight-border-td">
                         <table class="highlight-border">
+
+                            <caption><strong>Expected Chat</strong></caption>
                             <thead>
                                 <tr>
                                     <th class="flag-conversation"> Start of conversation </th>
@@ -353,7 +360,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                     {% elif answer['type'] == 'multichoice' %}
                                                         <tr><td class="chatbot-cell">
                                                         {% for option in answer['options'] %}
-                                                            <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                            <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </a>
                                                         {% endfor %}
@@ -411,7 +418,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                         <tr>
                                                             <td class = "chatbot-cell">
                                                                 <p class = "chatbot-cell-p">
-                                                                    <a class="chatbot-cell-a" title='{{answer["params"]["value"]|safe}}' href={{answer["params"]["key"]|safe}}>{{answer["name"]|safe}} </a>
+                                                                    <a class="chatbot-cell-a" title='value: {{answer["params"]["value"]|safe}}' href={{answer["params"]["key"]|safe}}>{{answer["name"]|safe}} </a>
                                                                 </p>
                                                             </td>
                                                         </tr>
@@ -426,7 +433,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                     {% elif answer['type'] == 'hints' %}
                                                         <tr><td class="chatbot-cell">
                                                         {% for option in answer['options'] %}
-                                                            <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                            <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </a>
                                                         {% endfor %}
@@ -434,7 +441,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                     {% elif answer['type'] == 'cms' %}
                                                         <tr><td class="chatbot-cell">
                                                         {% for option in answer['parameters'] %}
-                                                            <a class = "chatbot-cell-a" title='{{option["cmsId"]|safe}}'>
+                                                            <a class = "chatbot-cell-a" title='value: {{option["cmsId"]|safe}}'>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                             </a>
                                                         {% endfor %}
@@ -459,8 +466,9 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                             </tfoot>
                         </table>
                         </td>
-                          <td>
+                          <td class = "highlight-border-td">
                         <table class="highlight-border">
+                            <caption><strong>Tracker</strong></caption>
                             <thead>
                                 <tr>
                                     <th class="flag-conversation"> Start of conversation </th>
@@ -485,8 +493,22 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                       <div class="user-utter">{{item['text']}}</div>
                                     </td></tr>
                                     <tr><td class="user-utter-description">
-                                        <strong>You</strong> {{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}
+                                        <div class="dropdown">
+                                        <a class = "dropa">{{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}</a>  <strong>You</strong>
+
+                                          <div class="dropdown-content">
+                                            {%for entities_item in item['parse_data']['entities']%}
+                                              <a>{{entities_item}}</a>
+                                            {%endfor%}
+                                            {%for rank_item in range(3)%}
+                                              <a>{{item["parse_data"]["intent_ranking"][rank_item]["name"] ~ " : " ~ item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</a>
+                                            {%endfor%}
+                                          </div>
+                                        </div>
                                     </td></tr>
+                                    <tr>
+                                        <td><div class="space-log"></div></td>
+                                    </tr>
                                 {%elif item['event'] == "bot"%}
                                     {% set bot_answers = item['data']['custom']['answers'] %}
                                     {% for answer in bot_answers %}
@@ -497,7 +519,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                         {% elif answer['type'] == 'multichoice' %}
                                             <tr><td class="chatbot-cell">
                                             {% for option in answer['options'] %}
-                                                <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </a>
                                             {% endfor %}
@@ -555,7 +577,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                             <tr>
                                                 <td class = "chatbot-cell">
                                                     <p class = "chatbot-cell-p">
-                                                        <a class="chatbot-cell-a" title='{{answer["params"]["value"]|safe}}' href={{answer["params"]["key"]|safe}}>{{answer["name"]|safe}} </a>
+                                                        <a class="chatbot-cell-a" title='value: {{answer["params"]["value"]|safe}}' href={{answer["params"]["key"]|safe}}>{{answer["name"]|safe}} </a>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -570,7 +592,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                         {% elif answer['type'] == 'hints' %}
                                             <tr><td class="chatbot-cell">
                                             {% for option in answer['options'] %}
-                                                <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </a>
                                             {% endfor %}
@@ -578,7 +600,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                         {% elif answer['type'] == 'cms' %}
                                             <tr><td class="chatbot-cell">
                                             {% for option in answer['parameters'] %}
-                                                <a class = "chatbot-cell-a" title='{{option["cmsId"]|safe}}'>
+                                                <a class = "chatbot-cell-a" title='value: {{option["cmsId"]|safe}}'>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </a>
                                             {% endfor %}
@@ -622,8 +644,14 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                         <td class="extra" colspan="4">
                             <table class="side-by-side">
                               <tr>
-                                <td>
-                                <table class="result-logs">
+                                <td class ="highlight-border-td">
+                                <table class="highlight-border">
+                                    <caption><strong>Expected Chat</strong></caption>
+                                        <thead>
+                                            <tr>
+                                                <th class="flag-conversation"> Start of conversation </th>
+                                            </tr>
+                                        </thead>
                                     {% for dict_item in element['steps'] %}
                                        {% for key, value in dict_item.items() %}
                                             {% if key == 'user' %}
@@ -648,7 +676,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                             {% elif answer['type'] == 'multichoice' %}
                                                                 <tr><td class="chatbot-cell">
                                                                 {% for option in answer['options'] %}
-                                                                    <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                                    <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                                         &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                     </a>
                                                                 {% endfor %}
@@ -706,7 +734,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                                 <tr>
                                                                     <td class = "chatbot-cell">
                                                                         <p class = "chatbot-cell-p">
-                                                                            <a class="chatbot-cell-a" title='{{answer["params"]["value"]|safe}}' href={{answer["params"]["key"]|safe}}>{{answer["name"]|safe}} </a>
+                                                                            <a class="chatbot-cell-a" title='value: {{answer["params"]["value"]|safe}}' href={{answer["params"]["key"]|safe}}>{{answer["name"]|safe}} </a>
                                                                         </p>
                                                                     </td>
                                                                 </tr>
@@ -721,7 +749,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                             {% elif answer['type'] == 'hints' %}
                                                                 <tr><td class="chatbot-cell">
                                                                 {% for option in answer['options'] %}
-                                                                    <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                                    <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                                         &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                     </a>
                                                                 {% endfor %}
@@ -729,7 +757,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                             {% elif answer['type'] == 'cms' %}
                                                                 <tr><td class="chatbot-cell">
                                                                 {% for option in answer['parameters'] %}
-                                                                    <a class = "chatbot-cell-a" title='{{option["cmsId"]|safe}}'>
+                                                                    <a class = "chatbot-cell-a" title='value: {{option["cmsId"]|safe}}'>
                                                                         &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                     </a>
                                                                 {% endfor %}
@@ -748,10 +776,21 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                             {% endif %}
                                        {% endfor %}
                                     {% endfor %}
+                                    <tfoot>
+                                        <tr>
+                                            <th class="flag-conversation"> End of conversation </th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                                 </td>
-                                  <td>
-                                <table class="result-logs">
+                                  <td class ="highlight-border-td">
+                                <table class="highlight-border">
+                                    <caption><strong>Tracker</strong></caption>
+                                        <thead>
+                                            <tr>
+                                                <th class="flag-conversation"> Start of conversation </th>
+                                            </tr>
+                                        </thead>
                                     {% set events = element['tracker']['events'] %}
                                     {%for item in events%}
                                         {%if item['event'] == "action"%}
@@ -771,7 +810,17 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                               <div class="user-utter">{{item['text']}}</div>
                                             </td></tr>
                                             <tr><td class="user-utter-description">
-                                                <strong>You</strong> {{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}
+                                                <div class="dropdown">
+                                                <a class = "dropa">{{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}</a>  <strong>You</strong>
+                                                      <div class="dropdown-content">
+                                                        {%for entities_item in item['parse_data']['entities']%}
+                                                          <a>{{entities_item}}</a>
+                                                        {%endfor%}
+                                                        {%for rank_item in range(3)%}
+                                                          <a>{{item["parse_data"]["intent_ranking"][rank_item]["name"] ~ " : " ~ item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</a>
+                                                        {%endfor%}
+                                                      </div>
+                                                </div>
                                             </td></tr>
                                         {%elif item['event'] == "bot"%}
                                             {% set bot_answers = item['data']['custom']['answers'] %}
@@ -783,7 +832,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                 {% elif answer['type'] == 'multichoice' %}
                                                     <tr><td class="chatbot-cell">
                                                     {% for option in answer['options'] %}
-                                                        <a class = "chatbot-cell-a-multichoice" title='{{option["value"]|safe}}'>
+                                                        <a class = "chatbot-cell-a-multichoice" title='value: {{option["value"]|safe}}'>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;<span>{{option["label"]|safe}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                         </a>
                                                     {% endfor %}
@@ -879,9 +928,11 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                             </tr>
                                         {% endif %}
                                     {% endfor %}
-                                    <tr>
-                                        <td><div class="space-log"/></td>
-                                    </tr>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="flag-conversation"> End of conversation </th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                                 </td>
                             </tr>

@@ -1,0 +1,400 @@
+{
+    "active_form": {},
+    "events": [
+        {
+            "confidence": null,
+            "event": "action",
+            "name": "action_session_start",
+            "policy": null,
+            "timestamp": 1651769780.5492132
+        },
+        {
+            "event": "session_started",
+            "timestamp": 1651769780.5492206
+        },
+        {
+            "confidence": null,
+            "event": "action",
+            "name": "action_listen",
+            "policy": null,
+            "timestamp": 1651769780.5492604
+        },
+        {
+            "event": "user",
+            "input_channel": "rest",
+            "message_id": "276cab2a97d3457a83928edd2fcdd3e1",
+            "metadata": {},
+            "parse_data": {
+                "entities": [
+                    {
+                        "confidence": 1.0,
+                        "end": 7,
+                        "entity": "MISC",
+                        "extractor": "SpacyConnector",
+                        "start": 0,
+                        "text": "Mein TV",
+                        "value": "Mein TV"
+                    }
+                ],
+                "intent": {
+                    "confidence": 0.9302231669425964,
+                    "name": "iptv_support"
+                },
+                "intent_ranking": [
+                    {
+                        "confidence": 0.9302231669425964,
+                        "name": "iptv_support"
+                    },
+                    {
+                        "confidence": 0.012647967785596848,
+                        "name": "follow_up_no_connection"
+                    },
+                    {
+                        "confidence": 0.0112373698502779,
+                        "name": "waiputv_support"
+                    },
+                    {
+                        "confidence": 0.010091766715049744,
+                        "name": "password_not_working"
+                    },
+                    {
+                        "confidence": 0.009177343919873238,
+                        "name": "user_no_further_questions"
+                    },
+                    {
+                        "confidence": 0.006684847176074982,
+                        "name": "vocative_no"
+                    },
+                    {
+                        "confidence": 0.006319846026599407,
+                        "name": "fault_report"
+                    },
+                    {
+                        "confidence": 0.004785287659615278,
+                        "name": "user_dont_know"
+                    },
+                    {
+                        "confidence": 0.004584583919495344,
+                        "name": "bot_sites"
+                    },
+                    {
+                        "confidence": 0.0042478181421756744,
+                        "name": "contract_fallback_option"
+                    }
+                ],
+                "text": "Mein TV geht nicht"
+            },
+            "text": "Mein TV geht nicht",
+            "timestamp": 1651769780.5754368
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "form_iptv_support",
+            "policy": "policy_0_MemoizationPolicy",
+            "timestamp": 1651769780.592647
+        },
+        {
+            "data": {
+                "attachment": null,
+                "buttons": null,
+                "custom": {
+                    "answers": [
+                        {
+                            "text": "Sie haben Probleme mit dem TV-Empfang? Nutzen Sie eine von uns bereitgestellte Setttop-Box?",
+                            "type": "html"
+                        },
+                        {
+                            "options": [
+                                {
+                                    "label": "Ja",
+                                    "value": "Ja"
+                                },
+                                {
+                                    "label": "Nein",
+                                    "value": "Nein"
+                                },
+                                {
+                                    "label": "Abbrechen",
+                                    "value": "Abbrechen"
+                                }
+                            ],
+                            "type": "multichoice"
+                        }
+                    ]
+                },
+                "elements": null,
+                "image": null,
+                "quick_replies": null
+            },
+            "event": "bot",
+            "metadata": {},
+            "text": null,
+            "timestamp": 1651769780.5926518
+        },
+        {
+            "event": "form",
+            "name": "form_iptv_support",
+            "timestamp": 1651769780.5926547
+        },
+        {
+            "event": "slot",
+            "name": "requested_slot",
+            "timestamp": 1651769780.5926578,
+            "value": "iptv_support"
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "action_listen",
+            "policy": "policy_3_FormPolicy",
+            "timestamp": 1651769780.598956
+        },
+        {
+            "event": "user",
+            "input_channel": "rest",
+            "message_id": "bf2a78454a2a4c1eac33e274d4251c37",
+            "metadata": {},
+            "parse_data": {
+                "entities": [],
+                "intent": {
+                    "confidence": 0.8742848634719849,
+                    "name": "cancel"
+                },
+                "intent_ranking": [
+                    {
+                        "confidence": 0.8742848634719849,
+                        "name": "cancel"
+                    },
+                    {
+                        "confidence": 0.023566799238324165,
+                        "name": "vocative_yes"
+                    },
+                    {
+                        "confidence": 0.02282508835196495,
+                        "name": "vocative_no"
+                    },
+                    {
+                        "confidence": 0.018711840733885765,
+                        "name": "fault_report"
+                    },
+                    {
+                        "confidence": 0.017108378931879997,
+                        "name": "telephony_settings"
+                    },
+                    {
+                        "confidence": 0.009662169963121414,
+                        "name": "greeting_hello"
+                    },
+                    {
+                        "confidence": 0.008810050785541534,
+                        "name": "advantages_fibre_optic"
+                    },
+                    {
+                        "confidence": 0.008672552183270454,
+                        "name": "user_dont_know"
+                    },
+                    {
+                        "confidence": 0.008276701904833317,
+                        "name": "contract_relocation"
+                    },
+                    {
+                        "confidence": 0.008081549778580666,
+                        "name": "greeting_how_are_you"
+                    }
+                ],
+                "text": "abbrechen"
+            },
+            "text": "abbrechen",
+            "timestamp": 1651769780.7174008
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "form_iptv_support",
+            "policy": "policy_3_FormPolicy",
+            "timestamp": 1651769780.736064
+        },
+        {
+            "data": {
+                "attachment": null,
+                "buttons": null,
+                "custom": {
+                    "answers": [
+                        {
+                            "text": "Stellen Sie mir gerne weitere Fragen, falls Sie noch welche haben. \ud83d\ude42",
+                            "type": "html"
+                        }
+                    ]
+                },
+                "elements": null,
+                "image": null,
+                "quick_replies": null
+            },
+            "event": "bot",
+            "metadata": {},
+            "text": null,
+            "timestamp": 1651769780.736071
+        },
+        {
+            "event": "slot",
+            "name": "iptv_support",
+            "timestamp": 1651769780.736074,
+            "value": null
+        },
+        {
+            "event": "slot",
+            "name": "follow_up_settop_netcom_yes",
+            "timestamp": 1651769780.736078,
+            "value": null
+        },
+        {
+            "event": "form",
+            "name": null,
+            "timestamp": 1651769780.7360804
+        },
+        {
+            "event": "slot",
+            "name": "requested_slot",
+            "timestamp": 1651769780.7360835,
+            "value": null
+        },
+        {
+            "event": "followup",
+            "name": "action_listen",
+            "timestamp": 1651769780.7360854
+        },
+        {
+            "confidence": 1.0,
+            "event": "action",
+            "name": "action_listen",
+            "policy": null,
+            "timestamp": 1651769780.7366176
+        }
+    ],
+    "followup_action": null,
+    "latest_action_name": "action_listen",
+    "latest_event_time": 1651769780.7366176,
+    "latest_input_channel": "rest",
+    "latest_message": {
+        "entities": [],
+        "intent": {
+            "confidence": 0.8742848634719849,
+            "name": "cancel"
+        },
+        "intent_ranking": [
+            {
+                "confidence": 0.8742848634719849,
+                "name": "cancel"
+            },
+            {
+                "confidence": 0.023566799238324165,
+                "name": "vocative_yes"
+            },
+            {
+                "confidence": 0.02282508835196495,
+                "name": "vocative_no"
+            },
+            {
+                "confidence": 0.018711840733885765,
+                "name": "fault_report"
+            },
+            {
+                "confidence": 0.017108378931879997,
+                "name": "telephony_settings"
+            },
+            {
+                "confidence": 0.009662169963121414,
+                "name": "greeting_hello"
+            },
+            {
+                "confidence": 0.008810050785541534,
+                "name": "advantages_fibre_optic"
+            },
+            {
+                "confidence": 0.008672552183270454,
+                "name": "user_dont_know"
+            },
+            {
+                "confidence": 0.008276701904833317,
+                "name": "contract_relocation"
+            },
+            {
+                "confidence": 0.008081549778580666,
+                "name": "greeting_how_are_you"
+            }
+        ],
+        "text": "abbrechen"
+    },
+    "paused": false,
+    "sender_id": "e3b19a1058cb49c888e86c05bf0e60d8",
+    "slots": {
+        "access_data_internet_more_info": null,
+        "access_data_question_yes": null,
+        "access_data_telephony_more_info": null,
+        "access_data_user_portal_more_info": null,
+        "availability": null,
+        "availability_customer": null,
+        "availability_product_no": null,
+        "bandwidth": null,
+        "bandwidth_upgrade": null,
+        "book_option": null,
+        "book_option_customer": null,
+        "book_option_netcom_customer": null,
+        "book_option_netcom_customer_no": null,
+        "bot_date": null,
+        "bot_introduced": false,
+        "bot_time": null,
+        "breakdown": null,
+        "call_forwarding": null,
+        "change_tariff": null,
+        "check_availability": null,
+        "contact_form": null,
+        "contact_form_city": null,
+        "contact_form_customer_number": null,
+        "contact_form_issue": null,
+        "contact_form_mail": null,
+        "contact_form_name": null,
+        "contact_form_other_contracts": null,
+        "contact_form_other_contracts_yes": null,
+        "contact_form_phone": null,
+        "contact_form_selection_1": null,
+        "contact_form_selection_2": null,
+        "contact_form_selection_title": null,
+        "contact_form_street": null,
+        "contract_relocation": null,
+        "contract_termination": null,
+        "contract_with_netcom": null,
+        "disconnections": null,
+        "disconnections_restart_no": null,
+        "evaluation": null,
+        "find_bill": null,
+        "follow_up_change_to_netcom": null,
+        "follow_up_full_contract_termination": null,
+        "follow_up_issue_reported_no": null,
+        "follow_up_issue_reported_yes": null,
+        "follow_up_lan_test_no": null,
+        "follow_up_lan_test_yes": null,
+        "follow_up_neckar_availability_check": null,
+        "follow_up_neckarcom_product": null,
+        "follow_up_netcom_product": null,
+        "follow_up_new_address_product_available_yes": null,
+        "follow_up_router_restart_yes": null,
+        "follow_up_settop_netcom_yes": null,
+        "follow_up_termination_special": null,
+        "follow_up_ticket_number": null,
+        "form_double_check": null,
+        "get_access_data": null,
+        "help_config": null,
+        "iptv_support": null,
+        "measure_bandwidth": null,
+        "ofs_event": null,
+        "ofs_form": null,
+        "previous_form": null,
+        "previous_form_info": null,
+        "relocation_neckarcom": null,
+        "relocation_netcom": null,
+        "report_issue": null,
+        "requested_slot": null
+    }
+}

@@ -28,6 +28,11 @@ table {
   border-collapse: collapse;
 }
 
+caption {
+  padding: 10px;
+  color: black
+}
+
 /******************************
  * Environment INFORMATION
  ******************************/
@@ -56,6 +61,7 @@ table {
 span.passed,
 .passed .col-result {
   color: green;
+  cursor: pointer;
 }
 
 span.skipped,
@@ -65,6 +71,7 @@ span.rerun,
 .xfailed .col-result,
 .rerun .col-result {
   color: orange;
+  cursor: pointer;
 }
 
 span.error,
@@ -74,6 +81,7 @@ span.xpassed,
 .failed .col-result,
 .xpassed .col-result {
   color: red;
+  cursor: pointer;
 }
 
 /******************************
@@ -101,6 +109,10 @@ span.xpassed,
 }
 #results-table th {
   font-weight: bold;
+}
+
+#results-table .highlight-border-td {
+  border: 2px solid black;
 }
 
 .side-by-side {
@@ -142,6 +154,31 @@ span.xpassed,
 .highlight-border{
   border: 2px solid #004f6e;
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  margin-left: auto;
+  margin-right: 2%;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
 
 /*------------------
  * 2. Extra

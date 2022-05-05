@@ -30,11 +30,11 @@
                     "name": "cancel_notice"
                 },
                 {
-                    "confidence": 0.0068550435826182365,
+                    "confidence": 0.006855031009763479,
                     "name": "change_name"
                 },
                 {
-                    "confidence": 0.006707597989588976,
+                    "confidence": 0.006707585416734219,
                     "name": "bot_intelligence"
                 },
                 {
@@ -42,11 +42,11 @@
                     "name": "contract_fallback_option"
                 },
                 {
-                    "confidence": 0.004643382038921118,
+                    "confidence": 0.004643373657017946,
                     "name": "change_tariff"
                 },
                 {
-                    "confidence": 0.004293984267860651,
+                    "confidence": 0.0042939758859574795,
                     "name": "cc_chicken_egg"
                 }
             ],
@@ -60,23 +60,23 @@
             "event": "action",
             "name": "action_session_start",
             "policy": null,
-            "timestamp": 1651252824.1845944
+            "timestamp": 1651769778.4068968
         },
         {
             "event": "session_started",
-            "timestamp": 1651252824.184603
+            "timestamp": 1651769778.4069023
         },
         {
             "confidence": null,
             "event": "action",
             "name": "action_listen",
             "policy": null,
-            "timestamp": 1651252824.1846461
+            "timestamp": 1651769778.4069238
         },
         {
             "event": "user",
             "input_channel": "rest",
-            "message_id": "9ef009c951b44a578541068f3ee10ccd",
+            "message_id": "7691b4f9f9ee4da09ef80b352f20bf7b",
             "metadata": {},
             "parse_data": {
                 "entities": [],
@@ -106,11 +106,11 @@
                         "name": "cancel_notice"
                     },
                     {
-                        "confidence": 0.0068550435826182365,
+                        "confidence": 0.006855031009763479,
                         "name": "change_name"
                     },
                     {
-                        "confidence": 0.006707597989588976,
+                        "confidence": 0.006707585416734219,
                         "name": "bot_intelligence"
                     },
                     {
@@ -118,25 +118,25 @@
                         "name": "contract_fallback_option"
                     },
                     {
-                        "confidence": 0.004643382038921118,
+                        "confidence": 0.004643373657017946,
                         "name": "change_tariff"
                     },
                     {
-                        "confidence": 0.004293984267860651,
+                        "confidence": 0.0042939758859574795,
                         "name": "cc_chicken_egg"
                     }
                 ],
                 "text": "Probleme mit TV Empfang"
             },
             "text": "Probleme mit TV Empfang",
-            "timestamp": 1651252824.2110152
+            "timestamp": 1651769778.4333484
         },
         {
             "confidence": 1.0,
             "event": "action",
             "name": "form_iptv_support",
             "policy": "policy_0_MemoizationPolicy",
-            "timestamp": 1651252824.2280574
+            "timestamp": 1651769778.4510694
         },
         {
             "data": {
@@ -174,17 +174,17 @@
             "event": "bot",
             "metadata": {},
             "text": null,
-            "timestamp": 1651252824.2280648
+            "timestamp": 1651769778.4510765
         },
         {
             "event": "form",
             "name": "form_iptv_support",
-            "timestamp": 1651252824.2280686
+            "timestamp": 1651769778.4510794
         },
         {
             "event": "slot",
             "name": "requested_slot",
-            "timestamp": 1651252824.228073,
+            "timestamp": 1651769778.4510834,
             "value": "iptv_support"
         },
         {
@@ -192,12 +192,12 @@
             "event": "action",
             "name": "action_listen",
             "policy": "policy_3_FormPolicy",
-            "timestamp": 1651252824.2346117
+            "timestamp": 1651769778.4579678
         }
     ],
     "followup_action": null,
     "latest_action_name": "action_listen",
-    "latest_event_time": 1651252824.2346117,
+    "latest_event_time": 1651769778.4579678,
     "latest_input_channel": "rest",
     "latest_message": {
         "entities": [],
@@ -227,11 +227,11 @@
                 "name": "cancel_notice"
             },
             {
-                "confidence": 0.0068550435826182365,
+                "confidence": 0.006855031009763479,
                 "name": "change_name"
             },
             {
-                "confidence": 0.006707597989588976,
+                "confidence": 0.006707585416734219,
                 "name": "bot_intelligence"
             },
             {
@@ -239,18 +239,18 @@
                 "name": "contract_fallback_option"
             },
             {
-                "confidence": 0.004643382038921118,
+                "confidence": 0.004643373657017946,
                 "name": "change_tariff"
             },
             {
-                "confidence": 0.004293984267860651,
+                "confidence": 0.0042939758859574795,
                 "name": "cc_chicken_egg"
             }
         ],
         "text": "Probleme mit TV Empfang"
     },
     "paused": false,
-    "sender_id": "04ff55096b804ecc9fa218171c410f95",
+    "sender_id": "aba0b4688a5b4be5845b9948c336d9b9",
     "slots": {
         "access_data_internet_more_info": null,
         "access_data_question_yes": null,
