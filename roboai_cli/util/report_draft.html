@@ -251,7 +251,8 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 </script>
 
 <h1>RoboAI Test Suite Report</h1>
-    <p>Report generated on 31/03/2022 at 14:13:21 by RoboAI CLI</p>
+
+    <p>Report generated on {{time}} by RoboAI CLI</p>
     <h2>Environment</h2>
     <table id="environment">
       <tr>
@@ -497,12 +498,38 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                         <a class = "dropa">{{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}</a>  <strong>You</strong>
 
                                           <div class="dropdown-content">
-                                            {%for entities_item in item['parse_data']['entities']%}
-                                              <a>{{entities_item}}</a>
-                                            {%endfor%}
-                                            {%for rank_item in range(3)%}
-                                              <a>{{item["parse_data"]["intent_ranking"][rank_item]["name"] ~ " : " ~ item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</a>
-                                            {%endfor%}
+                                              {% if item['parse_data']['entities']|length > 0 %}
+                                              <table>
+                                                  <tr>
+                                                      <th>Entity</th>
+                                                      <th>Start</th>
+                                                      <th>End</th>
+                                                      <th>Value</th>
+                                                      <th>Extractor</th>
+                                                  </tr>
+                                                  {%for entities_item in item['parse_data']['entities']%}
+                                                  <tr>
+                                                      <td>{{entities_item['entity']}}</td>
+                                                      <td>{{entities_item['start']}}</td>
+                                                      <td>{{entities_item['end']}}</td>
+                                                      <td>{{entities_item['value']}}</td>
+                                                      <td>{{entities_item['extractor']}}</td>
+                                                  </tr>
+                                                  {%endfor%}
+                                              </table>
+                                              {% endif %}
+                                              <table>
+                                                  <tr>
+                                                      <th>Intent</th>
+                                                      <th>Confidence</th>
+                                                  </tr>
+                                                {%for rank_item in range(3)%}
+                                                      <tr>
+                                                  <td>{{item["parse_data"]["intent_ranking"][rank_item]["name"]}}</td>
+                                                  <td>{{item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</td>
+                                                      </tr>
+                                                {%endfor%}
+                                              </table>
                                           </div>
                                         </div>
                                     </td></tr>
@@ -813,12 +840,38 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                 <div class="dropdown">
                                                 <a class = "dropa">{{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}</a>  <strong>You</strong>
                                                       <div class="dropdown-content">
-                                                        {%for entities_item in item['parse_data']['entities']%}
-                                                          <a>{{entities_item}}</a>
-                                                        {%endfor%}
-                                                        {%for rank_item in range(3)%}
-                                                          <a>{{item["parse_data"]["intent_ranking"][rank_item]["name"] ~ " : " ~ item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</a>
-                                                        {%endfor%}
+                                                          {% if item['parse_data']['entities']|length > 0 %}
+                                                          <table>
+                                                              <tr>
+                                                                  <th>Entity</th>
+                                                                  <th>Start</th>
+                                                                  <th>End</th>
+                                                                  <th>Value</th>
+                                                                  <th>Extractor</th>
+                                                              </tr>
+                                                              {%for entities_item in item['parse_data']['entities']%}
+                                                              <tr>
+                                                                  <td>{{entities_item['entity']}}</td>
+                                                                  <td>{{entities_item['start']}}</td>
+                                                                  <td>{{entities_item['end']}}</td>
+                                                                  <td>{{entities_item['value']}}</td>
+                                                                  <td>{{entities_item['extractor']}}</td>
+                                                              </tr>
+                                                              {%endfor%}
+                                                          </table>
+                                                          {% endif %}
+                                                          <table>
+                                                              <tr>
+                                                                  <th>Intent</th>
+                                                                  <th>Confidence</th>
+                                                              </tr>
+                                                            {%for rank_item in range(3)%}
+                                                                  <tr>
+                                                              <td>{{item["parse_data"]["intent_ranking"][rank_item]["name"]}}</td>
+                                                              <td>{{item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</td>
+                                                                  </tr>
+                                                            {%endfor%}
+                                                          </table>
                                                       </div>
                                                 </div>
                                             </td></tr>

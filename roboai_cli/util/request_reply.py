@@ -220,10 +220,14 @@ class Tests:
 
         file_dir = join(report_folder_dir, "report.html")
 
+        time = datetime.now()
+        time_string = time.strftime("%d/%m/%Y at %H:%M:%S")
+
         with open(file_dir, "w") as htmlfile:
             render = template.render({'results': self.get_results(),
                                       'data': self.__data,
-                                      'passed': self.__passed})
+                                      'passed': self.__passed,
+                                      'time': time_string})
             htmlfile.write(render)
             htmlfile.close()
 
@@ -361,7 +365,6 @@ def trimming_yml_file(path: str):
     yml_file = path[yml_file_index:]
     yml_file = yml_file.replace("/", "")
     return yml_file
-
 
 def assets_path() -> str:
     """
