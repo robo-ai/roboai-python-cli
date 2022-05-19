@@ -257,16 +257,16 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
     <table id="environment">
       <tr>
         <td>Rasa Version</td>
-        <td>1.10.0</td></tr>
+        <td>{{model['fingerprint']['version']}}</td></tr>
       <tr>
         <td>Chatbot Version</td>
         <td>Not available</td></tr>
       <tr>
         <td>Model Name</td>
-        <td>languages/de/models/model-de-20220331-140141.tar.gz</td></tr>
+        <td>{{model['model_file']}}</td></tr>
       <tr>
         <td>Trained At</td>
-        <td>31/03/2022 14:01:41 (1648735315.13631)</td></tr>
+        <td>{{model['fingerprint']['trained_at']}}</td></tr>
       <tr>
         <td>Model Fingerprint</td>
         <td><a href="./fingerprint.json" target="_blank">fingerprint.json</a></td>
@@ -523,11 +523,13 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                       <th>Intent</th>
                                                       <th>Confidence</th>
                                                   </tr>
-                                                {%for rank_item in range(3)%}
+                                                {%for rank_item in item["parse_data"]["intent_ranking"]%}
+                                                  {% if loop.index - 1 < 3 %}
                                                       <tr>
-                                                  <td>{{item["parse_data"]["intent_ranking"][rank_item]["name"]}}</td>
-                                                  <td>{{item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</td>
+                                                  <td>{{item["parse_data"]["intent_ranking"][loop.index-1]["name"]}}</td>
+                                                  <td>{{item["parse_data"]["intent_ranking"][loop.index-1]["confidence"]}}</td>
                                                       </tr>
+                                                  {% endif %}
                                                 {%endfor%}
                                               </table>
                                           </div>
@@ -865,11 +867,13 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                                   <th>Intent</th>
                                                                   <th>Confidence</th>
                                                               </tr>
-                                                            {%for rank_item in range(3)%}
+                                                            {%for rank_item in item["parse_data"]["intent_ranking"]%}
+                                                              {% if loop.index - 1 < 3 %}
                                                                   <tr>
-                                                              <td>{{item["parse_data"]["intent_ranking"][rank_item]["name"]}}</td>
-                                                              <td>{{item["parse_data"]["intent_ranking"][rank_item]["confidence"]}}</td>
+                                                              <td>{{item["parse_data"]["intent_ranking"][loop.index-1]["name"]}}</td>
+                                                              <td>{{item["parse_data"]["intent_ranking"][loop.index-1]["confidence"]}}</td>
                                                                   </tr>
+                                                              {% endif %}
                                                             {%endfor%}
                                                           </table>
                                                       </div>

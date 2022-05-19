@@ -43,6 +43,7 @@ class Tests:
         self.__true_files_path = true_files_path
         self.__true_files_list = [true_files_path]
         self.__message = Message(endpoint=endpoint, headers=headers)
+        self.__model_info = []
         self.__report_folder_path = None
         self.__successful = 0
         self.__successful_input = 0
@@ -56,9 +57,10 @@ class Tests:
 
     def run_tests(self):
         meta_data_dict = self.__message.request_message(META_DATA_PATH, META_DATA_METHOD, body={})
-        print(json.dumps(meta_data_dict, sort_keys=True, indent=4))
+        self.__model_info = timestamp_to_datetime(meta_data_dict)
+        print(json.dumps(self.__model_info, sort_keys=True, indent=4))
         self.__report_folder_path = create_folder_report(self.__true_files_path, self.__time)
-        self.create_json_file(self.__report_folder_path, "fingerprint", meta_data_dict)
+        self.create_json_file(self.__report_folder_path, "fingerprint", self.__model_info)
         self.get_all_true_files(self.__true_files_list)
         self.create_html_file(self.__report_folder_path)
         print_success("Tests ended successfully\n")
@@ -225,6 +227,7 @@ class Tests:
 
         with open(file_dir, "w") as htmlfile:
             render = template.render({'results': self.get_results(),
+                                      'model': self.__model_info,
                                       'data': self.__data,
                                       'passed': self.__passed,
                                       'time': time_string})
@@ -317,12 +320,26 @@ def generate_id_story():
 def get_time():
     """
     Get irl time
-    Returns:
 
     """
     now = datetime.now()
     time_string = now.strftime("%d%m%Y-%H%M%S")
     return time_string
+
+
+def timestamp_to_datetime(model_dict: dict):
+    """
+
+    Convert timestamp into date time format
+
+    Args:
+        model_dict: fingerprint dictionary
+
+    """
+
+    if 'fingerprint' in model_dict and 'trained_at' in model_dict['fingerprint']:
+        model_dict['fingerprint']['trained_at'] = datetime.fromtimestamp(model_dict['fingerprint']['trained_at']).strftime("%d-%m-%Y %H:%M:%S")
+    return model_dict
 
 
 def create_folder_report(path: str, folder: str):
@@ -365,6 +382,7 @@ def trimming_yml_file(path: str):
     yml_file = path[yml_file_index:]
     yml_file = yml_file.replace("/", "")
     return yml_file
+
 
 def assets_path() -> str:
     """

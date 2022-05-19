@@ -7,7 +7,7 @@
         "nlg": "be5e5967d015905c4b2c97dc0ab7f283",
         "nlu-config": "fd02f070cf7c2e1d1008c0f8569c506a",
         "stories": 1738226216225808580,
-        "trained_at": 1646041905.1065223,
+        "trained_at": "28-02-2022 09:51:45",
         "version": "1.10.0"
     },
     "model_file": "models/model-de-20220228-095132.tar.gz",
