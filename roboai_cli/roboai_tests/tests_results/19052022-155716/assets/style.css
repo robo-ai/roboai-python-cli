@@ -135,10 +135,6 @@ span.xpassed,
   width: 50% ;
 }
 
-.side-by-side table{
-  width:100%;
-}
-
 .result-logs {
   border: 1px solid #e6e6e6;
   color: #999;
@@ -298,10 +294,6 @@ div.video video {
   margin-right: 0px;
   margin-top: 10px;
   border-radius: 4px;
-}
-
-.chatbot-cell a{
-  color:#FFFFFF !important;
 }
 
 .chatbot-cell-p {

@@ -260,7 +260,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <td>{{model['fingerprint']['version']}}</td></tr>
       <tr>
         <td>Chatbot Version</td>
-        <td>Not available</td></tr>
+        <td>{{version}}</td></tr>
       <tr>
         <td>Model Name</td>
         <td>{{model['model_file']}}</td></tr>
@@ -499,7 +499,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 
                                           <div class="dropdown-content">
                                               {% if item['parse_data']['entities']|length > 0 %}
-                                              <table>
+                                              <table class="dropdown-table">
                                                   <tr>
                                                       <th>Entity</th>
                                                       <th>Start</th>
@@ -843,7 +843,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
                                                 <a class = "dropa">{{item['parse_data']['intent']['name'] ~ " (" ~ item['parse_data']['intent']['confidence'] ~ ")"}}</a>  <strong>You</strong>
                                                       <div class="dropdown-content">
                                                           {% if item['parse_data']['entities']|length > 0 %}
-                                                          <table>
+                                                          <table class="dropdown-table">
                                                               <tr>
                                                                   <th>Entity</th>
                                                                   <th>Start</th>

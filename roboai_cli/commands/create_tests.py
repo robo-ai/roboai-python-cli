@@ -12,8 +12,8 @@ TEST_FOLDER_NAME = os.path.join("roboai_tests", TEMPLATES_FOLDER_NAME)
 @click.command(name="create_tests", help="Create tests in the desired format")
 @click.argument("languages", nargs=-1)
 @click.option("--domain-path", default=None, type=str, help="Specifies the domain path")
-@click.option("--template-path", "-tp", multiple=True, default=None, type=str, help="Specifies the templates path")
-@click.option("--template", "-t", multiple=True, default=None, type=str, help="Specifies the template name")
+@click.option("--template-path", "--tp", multiple=True, default=None, type=str, help="Specifies the templates path")
+@click.option("--template", "--t", multiple=True, default=None, type=str, help="Specifies the template name")
 def command(languages: tuple, domain_path: str, template_path: tuple, template: tuple):
 
     if not template:

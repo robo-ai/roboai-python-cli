@@ -1,0 +1,15 @@
+{
+    "fingerprint": {
+        "config": "99914b932bd37a50b983c5e7c90ae93b",
+        "core-config": "d6bdf2ae0129ed40a2a1cb0d3f611241",
+        "domain": 2104598477054814393,
+        "messages": 2280290877808763057,
+        "nlg": "06a1757092b0ef7686e5b4e68be7f2d4",
+        "nlu-config": "3a14789def417688045a461914c7b879",
+        "stories": 1501230210327300635,
+        "trained_at": "13-05-2022 15:16:55",
+        "version": "1.10.0"
+    },
+    "model_file": "languages/de/models/model-de-20220513-141641.tar.gz",
+    "num_active_training_jobs": 0
+}

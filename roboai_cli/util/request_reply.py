@@ -30,7 +30,8 @@ class Tests:
             endpoint: str,
             headers: dict,
             true_files_path: str,
-            passed: bool
+            passed: bool,
+            version: str
     ) -> None:
         """
 
@@ -43,6 +44,7 @@ class Tests:
         self.__true_files_path = true_files_path
         self.__true_files_list = [true_files_path]
         self.__message = Message(endpoint=endpoint, headers=headers)
+        self.__chatbot_version = version
         self.__model_info = []
         self.__report_folder_path = None
         self.__successful = 0
@@ -230,7 +232,9 @@ class Tests:
                                       'model': self.__model_info,
                                       'data': self.__data,
                                       'passed': self.__passed,
-                                      'time': time_string})
+                                      'version': self.__chatbot_version,
+                                      'time': time_string}
+                                     )
             htmlfile.write(render)
             htmlfile.close()
 
@@ -338,7 +342,8 @@ def timestamp_to_datetime(model_dict: dict):
     """
 
     if 'fingerprint' in model_dict and 'trained_at' in model_dict['fingerprint']:
-        model_dict['fingerprint']['trained_at'] = datetime.fromtimestamp(model_dict['fingerprint']['trained_at']).strftime("%d-%m-%Y %H:%M:%S")
+        model_dict['fingerprint']['trained_at'] = datetime.fromtimestamp(
+            model_dict['fingerprint']['trained_at']).strftime("%d-%m-%Y %H:%M:%S")
     return model_dict
 
 
