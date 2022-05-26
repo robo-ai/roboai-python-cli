@@ -2,6 +2,6 @@
 
 from roboai_cli import main
 
-__version__ = "1.1.3-rc.3"
+__version__ = "1.2.0"
 
 run = main.run

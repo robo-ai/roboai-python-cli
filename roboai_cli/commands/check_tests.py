@@ -14,7 +14,7 @@ TESTS_RESULTS_FOLDER_NAME = os.path.join("roboai_tests", RESULTS_FOLDER_NAME)
 COMMANDS_DIR = "roboai_cli"
 
 
-@click.command(name="check_tests", help="Test Chatbot based on True Files")
+@click.command(name="check_tests", help="Test chatbot based on true files.")
 @click.argument("languages", nargs=-1)
 @click.option("--endpoint", default="http://localhost:5005", type=str,
               help="Request URL (Default: http://localhost:5005)")
