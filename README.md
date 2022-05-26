@@ -429,13 +429,14 @@ This will generate markdown and yaml files containing the nlu and responses cont
 
 ### RoboAI Test Suit!
 
-**Test suit**
 The purpose of the test suite is to verify that the chatbot is working correctly. For this we have to create tests in the appropriate format, then compare these tests to the response given by the chatbot and finally show the results of this comparison.
 
 To fully understand how the test suite works, 3 files must be mentioned:
 
 *domain*: file where all chatbot responses are being stored.
+
 *templates*: file created by linguists or by someone who wants to test the chatbot.
+
 *true files*: files generated after running the *create_tests* command.
 
 **Creating tests**
