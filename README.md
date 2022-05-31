@@ -63,8 +63,10 @@ Options:
   --help     Show this message and exit.
 
 Commands:
+  check_tests  Test chatbot based on true files.
   clean        Clean the last package
   connect      Connect a local bot to a ROBO.AI server bot instance.
+  create_tests Create the true files in the desired format.
   data         Utility command to split, export and import data.
   deploy       Deploy the current bot into the ROBO.AI platform.
   diff         Check for structural differences between languages for the...
@@ -424,6 +426,170 @@ You can run
 roboai data import [nlu/responses/all] --input-path <path-where-your-file-is-saved> --output-path <path-to-where-you-want-to-save-the-file>
 ```
 This will generate markdown and yaml files containing the nlu and responses content, respectively.   
+
+### RoboAI Test Suit!
+
+The purpose of the test suite is to verify that the chatbot is working correctly. For this we have to create tests in the appropriate format, then compare these tests to the response given by the chatbot and finally show the results of this comparison.
+
+To fully understand how the test suite works, 3 files must be mentioned:
+
+*domain*: file where all chatbot responses are being stored.
+
+*templates*: file created by linguists or by someone who wants to test the chatbot.
+
+*true files*: files generated after running the *create_tests* command.
+
+**Creating tests**
+
+To create the **true files** you can use the ***create_tests*** command:
+
+```
+roboai create_tests
+```
+What the ***create_test*** command does is create a new file (**true file**) equal to the template file  and replace what is written in the utter step with the expected response from the chatbot (which is stored in the **domain file**). 
+
+After running this command, true files will be created for all found templates.
+
+**Alternative ways to run the command**
+
+If it is not necessary to test all templates, we can specify the templates we want to use for creating the true files.
+
+- ***Creating true files using single-language templates:***
+```
+roboai create_tests [language-code] 
+```
+*e.g.*
+```
+roboai create_tests de 
+```
+This command will search for all templates stored in the chosen language templates files folder and will create a true file for each template found.
+
+- ***Creating true files specifying the domain and the templates folder:***
+```
+roboai create_tests --domain-path <domain file path> --template-path <templates folder path>
+```
+*e.g.*
+```
+roboai create_test --domain-path languages/de/domain.yml --template-path languages/de/roboai_tests/tests_templates
+```
+The true files are generated through templates, so the number of true files created will be equal to the number of templates present in the specified folder.
+
+*Notes*:  
+1. *The parameters, domain_path and template_path, must always be used together.*
+2.  *You can use the abbreviation ```--tp``` instead of ```--template-path```*.
+			
+
+- ***Creating a true file for a specific template file:***
+```
+roboai create_test --template <template filename>
+```
+
+*e.g.*
+```
+roboai create_test --template all_stories.yml
+```
+
+*Notes*:  
+1. *To use multiple files you must leave a space between the filenames*.
+	```
+	roboai create_test --template all_stories1.yml all_stories2.yml
+	``` 
+2.  *You can use the abbreviation ```--t``` instead of ```--template```*.
+
+**Comparing and Checking the results**
+
+To compare and check the tests results you can use the ***check_tests*** command:
+
+```
+roboai check_tests
+```
+
+What the ***check_test*** command does is compare the **true files**, created earlier, with the **real answer** from the chatbot.
+
+After running this command, an html file will be created and there you can see the results of the tests.
+
+**Alternative ways to run the command**
+
+- ***Using single-language true files to do the comparison:***
+
+```
+roboai check_tests [language-code] 
+```
+*e.g.*
+```
+roboai check_tests de 
+```
+This command will search for all true files stored in the chosen language true files folder and will compare each one with the real answer from the chatbot.
+
+- ***Using a specific true files folder to do the comparison:***
+
+```
+roboai check_tests --true-files-path <true files folder path>
+```
+*e.g.*
+```
+roboai check_tests --true-files-path languages/de/roboai_tests/tests_true_files
+```
+This command will fetch all true files stored in the specified path and will compare each one with the real answer from the chatbot.
+
+- ***Specifying the message endpoint***
+```
+roboai check_tests --endpoint <message endpoint>
+```
+*e.g.*
+```
+roboai check_tests --endpoint http://rasa-training.development.robo-ai.com:5006/
+```
+
+When running the **check_tests** command, a message with the intents is sent to the chatbot. If for some reason we want to change the endpoint to which the message will be sent, we must use *```--endpoint```* and then write the desired endpoint.
+
+*Notes*:  
+
+1.  *By default the endpoint is ```http://localhost:5005```.*
+2. *We can also add headers to the message sent to the endpoint using *``--headers``*.*
+
+	*e.g.*
+	```
+	roboai check_tests --endpoint http://rasa-training.development.robo-ai.com:5006/ --headers [headers]
+	```
+3. *The parameter *``--headers``* can be used without *```--endpoint```*, adding headers to the message which will be sent by default to ```http://localhost:5005```.*
+
+- ***Getting the details of all tests***
+
+```
+roboai check_tests --export-all
+```
+
+*Notes*:  
+
+1. *By default only the details of the tests that ***failed*** will be shown in the report, so if you want to see the details of all tests you should use *```--export-all```*.*
+2. *You can also use the command *```--export-only-failed```* to only see the details of the tests that failed but the program will already do that by default.*
+
+- ***Adding the chatbot version***
+
+```
+roboai check_tests --chatbot-version <chatbot version>
+```
+*e.g.*
+```
+roboai check_tests --chatbot-version 2.5
+```
+By running this command the chatbot version will be added to the created html file.
+	
+*Notes*:  
+
+1. *By default, the place where the chatbot version should appear will say *"Not available"*.*
+2. *You can use the abbreviation ```--v``` instead of ```--chatbot-version```*.
+
+**Features worth mentioning**
+
+- ***Table of entities and Table of intents***
+	
+	While on the created html page, you can hover your mouse over the confidence value to see the entities present in that intent and see the top 3 intents that were considered.
+
+- ***Value of labels***
+
+	The value of labels can be different from the label name, so while on the created html page, you can hover the mouse over the label to check the label value.
 
 ## Code Style
 

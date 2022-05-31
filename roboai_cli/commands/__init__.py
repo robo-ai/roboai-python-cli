@@ -20,5 +20,7 @@ __all__ = [
     "interactive",
     "stories",
     "data",
-    "report_logs"
+    "report_logs",
+    "create_tests",
+    "check_tests"
 ]

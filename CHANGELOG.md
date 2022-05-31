@@ -1,6 +1,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/) starting with version 1.0.0.
 
+##[1.2.0] - 2022-05-26
+Features:
+* Test Suite implemented
+* Added command create_tests
+* Added command check_tests
+
 ## [1.1.2] - 2021-07-06
 
 Features:
